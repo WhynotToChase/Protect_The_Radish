@@ -1,0 +1,8 @@
+
+proj.win32
+proj.linux
+proj.ios_mac
+proj.android
+cocos2d
+CMakeLists.txt
+.cocos-project.json
