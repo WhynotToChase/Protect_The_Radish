@@ -8,7 +8,6 @@
 class SysMenu : public cocos2d::Layer
 {
 private:
-    Sprite* _ship;
     Size winSize;
 public:
 

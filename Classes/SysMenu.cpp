@@ -1,5 +1,5 @@
 #include "SysMenu.h"
-#include "resource.h"
+#include "Resource.h"
 
 using namespace cocos2d;
 
