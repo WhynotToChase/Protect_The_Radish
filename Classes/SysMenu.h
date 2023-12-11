@@ -3,13 +3,11 @@
 
 #include "cocos2d.h"
 #include "AppDelegate.h"
+#include "ui/CocosGUI.h"
 
 
 class SysMenu : public cocos2d::Layer
 {
-private:
-    Sprite* _ship;
-    Size winSize;
 public:
 
     virtual bool init();
@@ -18,19 +16,13 @@ public:
     static cocos2d::Scene* scene();
 
 
-    void onAbout(Ref* pSender);
+    void OnOption(Ref* pSender);
 
-    void onSettings(Ref* pSender);
+    void OnProduct(Ref* pSender);
 
-    void onButtonEffect();
+    void OnStart(Ref* pSender);
 
-    void flareEffect(Ref* pSender);
-
-
-    virtual void update(float dt);
-
-
-    void onNewGame();
+    void OnExit(Ref* pSender);
 
     CREATE_FUNC(SysMenu);
 };
