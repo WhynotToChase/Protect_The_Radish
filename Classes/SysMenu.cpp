@@ -1,5 +1,5 @@
 #include "SysMenu.h"
-#include "resource.h"
+#include "Resource.h"
 
 using namespace cocos2d;
 
@@ -25,16 +25,16 @@ bool SysMenu::init()
     {
         return false;
     }
-    SpriteFrameCache::getInstance()->addSpriteFramesWithFile(s_textureTransparentPack_plist);
-    SpriteFrameCache::getInstance()->addSpriteFramesWithFile(s_textureTextureOpaquePack_plist);
+    auto SysmenuPictures=SpriteFrameCache::getInstance();
+    SysmenuPictures->addSpriteFramesWithFile("sys_menu.plist");
 
 
     //////////////////
 
     winSize = Director::getInstance()->getWinSize();
     //Ìí¼Ó±³¾° 0 £»1£»
-
-    Sprite* sp = Sprite::create(s_loading_png);
+    
+    auto sp = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuBackground));
 
     sp->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
     sp->setScale(MW_SCALE);
