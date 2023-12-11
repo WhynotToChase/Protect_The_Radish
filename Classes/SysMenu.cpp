@@ -66,8 +66,8 @@ bool SysMenu::init()
 
     Sprite* OptionButtonSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuButton2Down));
     Sprite* OptionTitleSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(OptionScriptDown));
-    OptionTitleSelected->setPosition(116, 48);
-    OptionButtonSelected->setPosition(-8, 0);
+    OptionTitleSelected->setPosition(117, 49);
+    OptionButtonSelected->setPosition(-4, 0);
     OptionButtonSelected->addChild(OptionTitleSelected);
 
     Sprite* ProductButtonNormal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuButton3On));
