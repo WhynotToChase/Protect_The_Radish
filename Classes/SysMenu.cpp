@@ -1,5 +1,7 @@
 #include "SysMenu.h"
 #include "Resource.h"
+#include <iostream>
+#include <fstream>
 
 using namespace cocos2d;
 
@@ -30,15 +32,20 @@ bool SysMenu::init()
     ////////////////// 
     Size WinSize = Director::getInstance()->getWinSize();
 
-    //Ìí¼Ó±³¾° 0 £»1£»
+    //Ìí¼Ó±³¾° 
 
     auto sp = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuBackground));
 
     sp->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
     this->addChild(sp, -10, 1);
 
+    //Ìí¼Ólogo
+    auto logo = Sprite::create("logo.png");
+    logo->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+    logo->setPosition(1100, 800);
+    this->addChild(logo, -9, 1);
 
-    //Ìí¼Ótomb 2 £»1£»
+    //Ìí¼Ótomb
     auto tomb = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuSelection));
 
     tomb->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
@@ -91,13 +98,6 @@ bool SysMenu::init()
     ExitButtonSelected->addChild(ExitTitleSelected);
 
 
-
-
-
-    /*   auto flare = Sprite::create(s_flare_jpg);
-       this->addChild(flare, 15, 10);
-       flare->setVisible(false);
-       */
     MenuItemSprite* Start = MenuItemSprite::create(StartButtonNormal, StartButtonSelected,
         CC_CALLBACK_1(SysMenu::OnStart, this));
 
@@ -159,12 +159,34 @@ bool SysMenu::init()
 
 void SysMenu::OnStart(Ref* pSender)
 {
-   /* AudioEngine::stopAll();
-    Scene* scene = Scene::create();
-    scene->addChild(GameLayer::create());
-
-    Director::getInstance()->replaceScene(TransitionFade::create(1.2, scene));
-    */
+    using namespace std;
+    Vec2::condition
+    auto BGNormal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuButton4On));
+    auto BGSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuButton4Down));
+    Sprite* TitleNormal, * TitleSelected, * NewGameNormal, * NewGameSelected;
+    fstream saveData1("/saveData/gameOne.txt", std::ios::in | std::ios::out  );
+    if (saveData1.is_open()) {
+        TitleNormal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile1ScriptOn));
+        TitleSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile1ScriptDown));
+        TitleNormal->setPosition((0, 0));
+        TitleSelected->setPosition((0, 0));
+    }
+    else {
+        NewGameNormal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(NewGameScriptOn));
+        NewGameSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(NewGameScriptDown));
+        NewGameNormal->setPosition((0, 0));
+        NewGameSelected->setPosition()
+    }
+    fstream saveData2("/saveData/gameTwo.txt", std::ios::in | std::ios::out);
+    if (saveData2.is_open()) {
+        auto Title2Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile2ScriptOn));
+        auto Title2selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile2ScriptDown));
+    }
+    fstream saveData3("/saveData/gameThree.txt", std::ios::in | std::ios::out);
+    if (saveData1.is_open()) {
+        auto Title3Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile3ScriptOn));
+        auto Title3selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile3ScriptDown));
+    }
 }
 
 void SysMenu::OnOption(Ref* pSender)
@@ -189,5 +211,14 @@ void SysMenu::OnProduct(Ref* pSender)
 
 void SysMenu::OnExit(Ref* pSender)
 {
-    ExitProcess;
+    ExitProcess(1);
+}
+
+void SysMenu::StartGame(Ref* pSender,int num)
+{
+    /*Scene* scene = Scene::create();
+    scene->addChild(GameLayer::create());
+
+    Director::getInstance()->replaceScene(TransitionFade::create(1.2, scene));
+    */
 }

@@ -24,6 +24,8 @@ public:
 
     void OnExit(Ref* pSender);
 
+    void StartGame(Ref* pSender,int num);
+
     CREATE_FUNC(SysMenu);
 };
 
