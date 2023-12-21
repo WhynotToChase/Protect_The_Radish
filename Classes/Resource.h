@@ -65,3 +65,33 @@ void x::removeTouchListener()\
 }\
 
 #endif // !_MW_RESOURCE_H
+//¼àÊÓÆ÷µÄÄ£°å
+/*
+private:
+    bool onTouchBegan(cocos2d::Touch * touch, cocos2d::Event * event, cocos2d::Sprite * menu);
+    void monitor(cocos2d::Sprite * menu);
+    void removeTouchListener(); 
+
+
+bool %%%%%::onTouchBegan(Touch* touch, Event* event, Sprite* menu)
+{
+    Vec2 touchPoint = this->convertToNodeSpace(touch->getLocation());
+    Rect menuBoundingBox = menu->getBoundingBox();
+    if (!menuBoundingBox.containsPoint(touchPoint))
+    {
+        this->removeChild(menu);
+        removeTouchListener();
+    }
+    return true;
+}
+void %%%%%::monitor(Sprite* menu)
+{
+    auto touchListener = EventListenerTouchOneByOne::create();
+    touchListener->onTouchBegan = CC_CALLBACK_2(%%%%%::onTouchBegan, this, menu);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, menu);
+}
+void %%%%%::removeTouchListener()
+{
+    _eventDispatcher->removeEventListenersForTarget(this);
+}
+*/

@@ -5,10 +5,14 @@
 #include "AppDelegate.h"
 #include "ui/CocosGUI.h"
 #include "Resource.h"
+#include <string>
 
 class SysMenu : public cocos2d::Layer
 {
-    MONITOR_H();
+private: 
+    bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event, cocos2d::Sprite* menu); 
+    void monitor(cocos2d::Sprite* menu);
+    void removeTouchListener();
 public:
   
 
@@ -25,6 +29,8 @@ public:
     void OnExit(Ref* pSender);
 
     void StartGame(Ref* pSender,int num);
+
+    void SysMenu::FrameReturn(Ref* pSender, std::string name);
 
     CREATE_FUNC(SysMenu);
     
