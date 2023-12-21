@@ -1,10 +1,9 @@
 #include "SysMenu.h"
-#include "Resource.h"
 #include <iostream>
 #include <fstream>
 
 using namespace cocos2d;
-
+bool isMenu = false;
 Scene* SysMenu::scene()
 {
     // 'scene' is an autorelease object
@@ -32,6 +31,9 @@ bool SysMenu::init()
     ////////////////// 
     Size WinSize = Director::getInstance()->getWinSize();
 
+    
+    this->removeChildByName("temb");
+
     //添加背景 
 
     auto sp = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuBackground));
@@ -50,7 +52,7 @@ bool SysMenu::init()
 
     tomb->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
     tomb->setPosition(200, 0);
-    this->addChild(tomb, -5, 1);
+    this->addChild(tomb, 5, 1);
 
 
     //添加 七个按钮
@@ -160,53 +162,119 @@ bool SysMenu::init()
 void SysMenu::OnStart(Ref* pSender)
 {
     using namespace std;
-    Vec2::condition
-    auto BGNormal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuButton4On));
-    auto BGSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuButton4Down));
-    Sprite* TitleNormal, * TitleSelected, * NewGameNormal, * NewGameSelected;
-    fstream saveData1("/saveData/gameOne.txt", std::ios::in | std::ios::out  );
+    MenuItemSprite* gameOne, * gameTwo, * gameThree;
+
+
+    auto BG1Normal = Sprite::createWithSpriteFrameName(SysmenuButton4On);
+    auto BG1Selected = Sprite::createWithSpriteFrameName(SysmenuButton4Down);
+    auto size = BG1Normal->getContentSize();
+
+
+
+
+
+    fstream saveData1("/saveData/gameOne.txt", std::ios::in | std::ios::out);
     if (saveData1.is_open()) {
-        TitleNormal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile1ScriptOn));
-        TitleSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile1ScriptDown));
-        TitleNormal->setPosition((0, 0));
-        TitleSelected->setPosition((0, 0));
+        auto Title1Normal = Sprite::createWithSpriteFrameName(SaveFile1ScriptOn);
+        auto Title1Selected = Sprite::createWithSpriteFrameName(SaveFile1ScriptDown);
+        Title1Normal->setPosition(size.width / 2, size.height / 2);
+        Title1Selected->setPosition(size.width / 2 - 5, size.height / 2 - 10);
+        BG1Normal->addChild(Title1Normal, 3);
+        BG1Selected->addChild(Title1Selected, 3);
     }
     else {
-        NewGameNormal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(NewGameScriptOn));
-        NewGameSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(NewGameScriptDown));
-        NewGameNormal->setPosition((0, 0));
-        NewGameSelected->setPosition()
+        auto NewGame1Normal = Sprite::createWithSpriteFrameName(NewGameScriptOn);
+        auto NewGame1Selected = Sprite::createWithSpriteFrameName(NewGameScriptDown);
+        NewGame1Normal->setPosition(size.width / 2, size.height / 2);
+        NewGame1Selected->setPosition(size.width / 2 - 5, size.height / 2 - 10);
+        BG1Normal->addChild(NewGame1Normal, 3);
+        BG1Selected->addChild(NewGame1Selected, 3);
     }
+    gameOne = MenuItemSprite::create(BG1Normal, BG1Selected, [this](Ref* pSender) {
+        this->StartGame(pSender, 1); });
+
+
+
     fstream saveData2("/saveData/gameTwo.txt", std::ios::in | std::ios::out);
+    auto BG2Normal = Sprite::createWithSpriteFrameName(SysmenuButton4On);
+    auto BG2Selected = Sprite::createWithSpriteFrameName(SysmenuButton4Down);
     if (saveData2.is_open()) {
-        auto Title2Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile2ScriptOn));
-        auto Title2selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile2ScriptDown));
+        auto Title2Normal = Sprite::createWithSpriteFrameName(SaveFile2ScriptOn);
+        auto Title2Selected = Sprite::createWithSpriteFrameName(SaveFile2ScriptDown);
+        Title2Normal->setPosition(size.width / 2, size.height / 2);
+        Title2Selected->setPosition(size.width / 2 - 5, size.height / 2 - 10);
+        BG2Normal->addChild(Title2Normal, 3);
+        BG2Selected->addChild(Title2Selected, 3);
     }
+    else {
+        auto NewGame2Normal = Sprite::createWithSpriteFrameName(NewGameScriptOn);
+        auto NewGame2Selected = Sprite::createWithSpriteFrameName(NewGameScriptDown);
+        NewGame2Normal->setPosition(size.width / 2, size.height / 2);
+        NewGame2Selected->setPosition(size.width / 2 - 5, size.height / 2 - 10);
+        BG2Normal->addChild(NewGame2Normal, 3);
+        BG2Selected->addChild(NewGame2Selected, 3);
+    }
+    gameTwo = MenuItemSprite::create(BG2Normal, BG2Selected, [this](Ref* pSender) {
+        this->StartGame(pSender, 2); });
+
+
+
+    auto BG3Normal = Sprite::createWithSpriteFrameName(SysmenuButton4On);
+    auto BG3Selected = Sprite::createWithSpriteFrameName(SysmenuButton4Down);
     fstream saveData3("/saveData/gameThree.txt", std::ios::in | std::ios::out);
-    if (saveData1.is_open()) {
-        auto Title3Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile3ScriptOn));
-        auto Title3selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile3ScriptDown));
+    if (saveData3.is_open()) {
+        auto Title3Normal = Sprite::createWithSpriteFrameName(SaveFile3ScriptOn);
+        auto Title3Selected = Sprite::createWithSpriteFrameName(SaveFile3ScriptDown);
+        Title3Normal->setPosition(size.width / 2, size.height / 2);
+        Title3Selected->setPosition(size.width / 2 - 5, size.height / 2 - 10);
+        BG3Normal->addChild(Title3Normal, 3);
+        BG3Selected->addChild(Title3Selected, 3);
     }
+    else {
+        auto NewGame3Normal = Sprite::createWithSpriteFrameName(NewGameScriptOn);
+        auto NewGame3Selected = Sprite::createWithSpriteFrameName(NewGameScriptDown);
+        NewGame3Normal->setPosition(size.width / 2, size.height / 2);
+        NewGame3Selected->setPosition(size.width / 2 - 5, size.height / 2 - 10);
+        BG3Normal->addChild(NewGame3Normal, 3);
+        BG3Selected->addChild(NewGame3Selected, 3);
+    }
+    gameThree = MenuItemSprite::create(BG3Normal, BG3Selected, [this](Ref* pSender) {
+        this->StartGame(pSender, 3); });
+    Menu* miniMenu = Menu::create(gameOne, gameTwo, gameThree, NULL);
+    miniMenu->alignItemsVerticallyWithPadding(-20);
+    miniMenu->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+    miniMenu->setPosition(170, 200);
+
+
+
+    Sprite* temb = Sprite::createWithSpriteFrameName(SysmenuSecondSelection);
+    temb->addChild(miniMenu);
+    temb->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+    temb->setPosition(320, 70);
+    temb->setName("temb");
+    this->addChild(temb,0);
+    size = temb->getContentSize();
+    auto moveBy = MoveBy::create(0.5, Vec2(size.width - 70, 0));
+    temb->runAction(moveBy);
+    monitor(temb);
 }
 
 void SysMenu::OnOption(Ref* pSender)
 {
- /*   onButtonEffect();
-
-    //转到"SettingsLayer"
+  /*  onButtonEffect();
     Scene* scene = SettingsLayer::scene();
     Director::getInstance()->replaceScene(TransitionFade::create(1.2, scene));
     */
+
 }
 
 void SysMenu::OnProduct(Ref* pSender)
 {
    /* onButtonEffect();
-
-
     Scene* scene = AboutLayer::scene();
     Director::getInstance()->replaceScene(TransitionFade::create(1.2, scene));
     */
+
 }
 
 void SysMenu::OnExit(Ref* pSender)
@@ -214,7 +282,7 @@ void SysMenu::OnExit(Ref* pSender)
     ExitProcess(1);
 }
 
-void SysMenu::StartGame(Ref* pSender,int num)
+void SysMenu::StartGame( Ref* pSender,int num)
 {
     /*Scene* scene = Scene::create();
     scene->addChild(GameLayer::create());
@@ -222,3 +290,8 @@ void SysMenu::StartGame(Ref* pSender,int num)
     Director::getInstance()->replaceScene(TransitionFade::create(1.2, scene));
     */
 }
+
+MONITOR_CPP(SysMenu);
+
+
+

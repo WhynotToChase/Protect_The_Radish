@@ -32,5 +32,36 @@ static const char SmallFrame[] = "sys_menu_14.png";
 static const char ExitScriptOn[] = "sys_menu_16_1.png";
 static const char ExitScriptDown[] = "sys_menu_16_2.png";
 
-#endif // !_MW_RESOURCE_H
 
+
+#define MONITOR_H()  \
+private:\
+	bool onTouchBegan(cocos2d::Touch * touch, cocos2d::Event * event, cocos2d::Sprite * menu);\
+	void monitor(cocos2d::Sprite * menu);\
+	void removeTouchListener(); \
+
+
+#define MONITOR_CPP(x)\
+bool x::onTouchBegan(Touch* touch, Event* event, Sprite* menu)\
+{\
+    Vec2 touchPoint = this->convertToNodeSpace(touch->getLocation());\
+    Rect menuBoundingBox = menu->getBoundingBox();\
+    if (!menuBoundingBox.containsPoint(touchPoint))\
+    {\
+        this->removeChild(menu);\
+        removeTouchListener();\
+    }\
+    return true;\
+}\
+void x::monitor(Sprite* menu)\
+{\
+    auto touchListener = EventListenerTouchOneByOne::create();\
+    touchListener->onTouchBegan = CC_CALLBACK_2(x::onTouchBegan, this, menu);\
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, menu);\
+}\
+void x::removeTouchListener()\
+{\
+    _eventDispatcher->removeEventListenersForTarget(this);\
+}\
+
+#endif // !_MW_RESOURCE_H

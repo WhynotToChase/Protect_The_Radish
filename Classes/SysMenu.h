@@ -4,17 +4,17 @@
 #include "cocos2d.h"
 #include "AppDelegate.h"
 #include "ui/CocosGUI.h"
-
+#include "Resource.h"
 
 class SysMenu : public cocos2d::Layer
 {
+    MONITOR_H();
 public:
+  
 
     virtual bool init();
 
-
     static cocos2d::Scene* scene();
-
 
     void OnOption(Ref* pSender);
 
@@ -27,6 +27,7 @@ public:
     void StartGame(Ref* pSender,int num);
 
     CREATE_FUNC(SysMenu);
+    
 };
 
 #endif/*__MW_CPP_SYSMENU_H__*/
