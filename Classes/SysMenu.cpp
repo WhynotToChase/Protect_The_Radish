@@ -38,7 +38,6 @@ bool SysMenu::init()
 
     
     this->removeChildByName("temb");
-    this->removeChildByName("Setting");
     this->removeChildByName("Product");
 
     //Ìí¼Ó±³¾° 
@@ -165,7 +164,6 @@ void SysMenu::OnStart(Ref* pSender)
     using namespace std;
     this->removeChildByName("temb");
     this->removeChildByName("Product");
-    this->removeChildByName("Setting");
     MenuItemSprite* gameOne, * gameTwo, * gameThree;
 
 
@@ -275,17 +273,9 @@ void SysMenu::OnOption(Ref* pSender)
 
     this->removeChildByName("temb");
     this->removeChildByName("Product");
-    this->removeChildByName("Setting");
-    auto size = Director::getInstance()->getWinSize();
-    
-    auto frame = Sprite::createWithSpriteFrameName(LargeFrame);
-    auto frameSize = frame->getContentSize();
-    frame->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-    frame->setPosition(size.width / 2, size.height + frameSize.height / 2);
-    auto setEffect = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("setting02-0.PNG"));
-    auto switch1_0 = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("setting02-6.PNG"));
-    auto switch1_1 = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("setting02-11.PNG"));
-    MenuItem* _switch1 = MenuItemSprite::create(switch1_0, switch1_1, [this](Ref* pSender) {});
+
+    auto settingMenu = SettingMenu::create();
+    Director::getInstance()->pushScene(settingMenu);
 }
 
 void SysMenu::OnProduct(Ref* pSender)
@@ -294,7 +284,6 @@ void SysMenu::OnProduct(Ref* pSender)
 
     this->removeChildByName("temb");
     this->removeChildByName("Product");
-    this->removeChildByName("Setting");
     auto size = Director::getInstance()->getWinSize();
 
     auto frame = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SmallFrame));
@@ -335,7 +324,6 @@ void SysMenu::OnExit(Ref* pSender)
 
     this->removeChildByName("temb");
     this->removeChildByName("Product");
-    this->removeChildByName("Setting");
     ExitProcess(1);
 }
 

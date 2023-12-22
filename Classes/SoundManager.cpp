@@ -13,7 +13,6 @@ SoundManager::SoundManager() {
 
     AudioEngine::preload("../Resources/music/BGMusic.mp3");
     AudioEngine::preload("../Resources/music/Button.mp3");
-    this->buttonEffect = "../Resources/music/Button.mp3";
     this->lastSound = "../Resources/music/BGMusic.mp3";
     onPlaySoundID = AudioEngine::play2d(lastSound,true,soundPower);
     this->Sounds = true;
@@ -51,24 +50,18 @@ bool SoundManager::changeSound(const char* soundFilePath)
         lastSound = soundFilePath;
         return true;
     }
+    lastSound = soundFilePath;
     return false;
 }
 
-void SoundManager::controlSounds(const char* soundFilePath)
+void SoundManager::controlSounds()
 {
     if (Sounds)
         AudioEngine::stop(onPlaySoundID);
-    else {
-        if (soundFilePath == nullptr)
-            onPlaySoundID = AudioEngine::play2d(lastSound, true, soundPower);
-        else {
-            onPlaySoundID = AudioEngine::play2d(soundFilePath, true, soundPower);
-            lastSound = soundFilePath;
-        }
-    }
+    else
+        onPlaySoundID = AudioEngine::play2d(lastSound, true, soundPower);
+    Sounds = !Sounds;
 }
-
-
 
 
 #endif  //!__SOUNDMANAGER_CPP__
