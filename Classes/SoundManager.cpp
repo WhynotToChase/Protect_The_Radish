@@ -1,8 +1,4 @@
-#ifndef __SOUNDMANAGER_CPP__
-#define __SOUNDMANAGER_CPP__
-
 #include "SoundManager.h"
-#include "audio/include/AudioEngine.h"
 
 using namespace cocos2d;
 
@@ -62,6 +58,3 @@ void SoundManager::controlSounds()
         onPlaySoundID = AudioEngine::play2d(lastSound, true, soundPower);
     Sounds = !Sounds;
 }
-
-
-#endif  //!__SOUNDMANAGER_CPP__

@@ -1,6 +1,3 @@
-#ifndef  __SYSMENU_CPP_
-#define  __SYSMENU_CPP_
-
 
 #include "SysMenu.h"
 #include <iostream>
@@ -44,7 +41,7 @@ bool SysMenu::init()
 
     //添加背景 
 
-    auto sp = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuBackground));
+    auto sp = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_17.png"));
 
     sp->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
     this->addChild(sp, -10, 1);
@@ -56,7 +53,7 @@ bool SysMenu::init()
     this->addChild(logo, -9, 1);
 
     //添加tomb
-    auto tomb = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuSelection));
+    auto tomb = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_1.png"));
 
     tomb->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
     tomb->setPosition(200, 0);
@@ -65,45 +62,45 @@ bool SysMenu::init()
 
     //添加 四个按钮
     //start
-    Sprite* StartButtonNormal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuButton1On));
-    Sprite* StartTitleNormal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(StartScriptOn));
+    Sprite* StartButtonNormal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_2_1.png"));
+    Sprite* StartTitleNormal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_7_1.png"));
     StartTitleNormal->setPosition(120, 62);
     StartButtonNormal->addChild(StartTitleNormal);
 
-    Sprite* StartButtonSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuButton1Down));
-    Sprite* StartTitleSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(StartScriptDown));
+    Sprite* StartButtonSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_2_2.png"));
+    Sprite* StartTitleSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_7_2.png"));
     StartTitleSelected->setPosition(112, 56);
     StartButtonSelected->setPosition(4, -4);
     StartButtonSelected->addChild(StartTitleSelected);
 
-    Sprite* OptionButtonNormal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuButton2On));
-    Sprite* OptionTitleNormal = (Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(OptionScriptOn)));
+    Sprite* OptionButtonNormal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_3_1.png"));
+    Sprite* OptionTitleNormal = (Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_12_1.png")));
     OptionTitleNormal->setPosition(120, 52);
     OptionButtonNormal->addChild(OptionTitleNormal);
 
-    Sprite* OptionButtonSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuButton2Down));
-    Sprite* OptionTitleSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(OptionScriptDown));
+    Sprite* OptionButtonSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_3_2.png"));
+    Sprite* OptionTitleSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_12_2.png"));
     OptionTitleSelected->setPosition(117, 49);
     OptionButtonSelected->setPosition(-4, 0);
     OptionButtonSelected->addChild(OptionTitleSelected);
 
-    Sprite* ProductButtonNormal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuButton3On));
-    Sprite* ProductTitleNormal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(ProductScriptOn));
+    Sprite* ProductButtonNormal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_4_1.png"));
+    Sprite* ProductTitleNormal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_13_1.png"));
     ProductTitleNormal->setPosition(110, 48);
     ProductButtonNormal->addChild(ProductTitleNormal);
 
-    Sprite* ProductButtonSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuButton3Down));
-    Sprite* ProductTitleSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(ProductScriptDown));
+    Sprite* ProductButtonSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_4_2.png"));
+    Sprite* ProductTitleSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_13_2.png"));
     ProductTitleSelected->setPosition(104, 41);
     ProductButtonSelected->addChild(ProductTitleSelected);
 
-    Sprite* ExitButtonNormal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuButton3On));
-    Sprite* ExitTitleNormal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(ExitScriptOn));
+    Sprite* ExitButtonNormal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_4_1.png"));
+    Sprite* ExitTitleNormal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_16_1.png"));
     ExitTitleNormal->setPosition(110, 45);
     ExitButtonNormal->addChild(ExitTitleNormal);
 
-    Sprite* ExitButtonSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuButton3Down));
-    Sprite* ExitTitleSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(ExitScriptDown));
+    Sprite* ExitButtonSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_4_2.png"));
+    Sprite* ExitTitleSelected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_16_2.png"));
     ExitTitleSelected->setPosition(104, 41);
     ExitButtonSelected->addChild(ExitTitleSelected);
 
@@ -169,18 +166,18 @@ void SysMenu::OnStart(Ref* pSender)
     MenuItemSprite* gameOne, * gameTwo, * gameThree;
 
 
-    auto BG1Normal = Sprite::createWithSpriteFrameName(SysmenuButton4On);
-    auto BG1Selected = Sprite::createWithSpriteFrameName(SysmenuButton4Down);
+    auto BG1Normal = Sprite::createWithSpriteFrameName("sys_menu_6_1.png");
+    auto BG1Selected = Sprite::createWithSpriteFrameName("sys_menu_6_2.png");
     auto size = BG1Normal->getContentSize();
 
 
 
 
 
-    fstream saveData1("../saveData/gameOne.txt", std::ios::in | std::ios::out);
-    if (saveData1.is_open()) {
-        auto Title1Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile1ScriptOn));
-        auto Title1Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile1ScriptDown));
+    fstream saveData("../saveData/gameOne.txt", std::ios::in | std::ios::out);
+    if (saveData.is_open()) {
+        auto Title1Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_9_1.png"));
+        auto Title1Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_9_2.png"));
         Title1Normal->setPosition(size.width / 2-10, size.height / 2-4);
         Title1Selected->setPosition(size.width / 2 - 12, size.height / 2 - 10);
         Title1Normal->setScale(1.3f);
@@ -189,8 +186,8 @@ void SysMenu::OnStart(Ref* pSender)
         BG1Selected->addChild(Title1Selected, 3);
     }
     else {
-        auto NewGame1Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(NewGameScriptOn));
-        auto NewGame1Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(NewGameScriptDown));
+        auto NewGame1Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_8_1.png"));
+        auto NewGame1Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_8_2.png"));
         NewGame1Normal->setPosition(size.width / 2, size.height / 2);
         NewGame1Selected->setPosition(size.width / 2 - 5, size.height / 2 - 10);
         BG1Normal->addChild(NewGame1Normal, 3);
@@ -198,15 +195,15 @@ void SysMenu::OnStart(Ref* pSender)
     }
     gameOne = MenuItemSprite::create(BG1Normal, BG1Selected, [this](Ref* pSender) {
         this->StartGame(pSender, 1); });
+    saveData.close();
 
 
-
-    fstream saveData2("../saveData/gameTwo.txt", std::ios::in | std::ios::out);
-    auto BG2Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuButton4On));
-    auto BG2Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuButton4Down));
-    if (saveData2.is_open()) {
-        auto Title2Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile2ScriptOn));
-        auto Title2Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile2ScriptDown));
+    saveData.open("../saveData/gameTwo.txt", std::ios::in | std::ios::out);
+    auto BG2Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_6_1.png"));
+    auto BG2Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_6_2.png"));
+    if (saveData.is_open()) {
+        auto Title2Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_10_1.png"));
+        auto Title2Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_10_2.png"));
         Title2Normal->setPosition(size.width / 2-4, size.height / 2-4);
         Title2Selected->setPosition(size.width / 2 - 8, size.height / 2 - 11);
         Title2Normal->setScale(1.3f);
@@ -215,8 +212,8 @@ void SysMenu::OnStart(Ref* pSender)
         BG2Selected->addChild(Title2Selected, 3);
     }
     else {
-        auto NewGame2Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(NewGameScriptOn));
-        auto NewGame2Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(NewGameScriptDown));
+        auto NewGame2Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_8_1.png"));
+        auto NewGame2Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_8_2.png"));
         NewGame2Normal->setPosition(size.width / 2, size.height / 2);
         NewGame2Selected->setPosition(size.width / 2 - 5, size.height / 2 - 10);
         BG2Normal->addChild(NewGame2Normal, 3);
@@ -224,15 +221,15 @@ void SysMenu::OnStart(Ref* pSender)
     }
     gameTwo = MenuItemSprite::create(BG2Normal, BG2Selected, [this](Ref* pSender) {
         this->StartGame(pSender, 2); });
+    saveData.close();
 
 
-
-    auto BG3Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuButton4On));
-    auto BG3Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuButton4Down));
-    fstream saveData3("../saveData/gameThree.txt", std::ios::in | std::ios::out);
-    if (saveData3.is_open()) {
-        auto Title3Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile3ScriptOn));
-        auto Title3Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile3ScriptDown));
+    auto BG3Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_6_1.png"));
+    auto BG3Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_6_2.png"));
+    saveData.open("../saveData/gameThree.txt", std::ios::in | std::ios::out);
+    if (saveData.is_open()) {
+        auto Title3Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_11_1.png"));
+        auto Title3Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_11_2.png"));
         Title3Normal->setPosition(size.width / 2-6, size.height / 2-2);
         Title3Selected->setPosition(size.width / 2 - 15, size.height / 2 - 7); 
         Title3Normal->setScale(1.3f);
@@ -241,8 +238,8 @@ void SysMenu::OnStart(Ref* pSender)
         BG3Selected->addChild(Title3Selected, 3);
     }
     else {
-        auto NewGame3Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(NewGameScriptOn));
-        auto NewGame3Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(NewGameScriptDown));
+        auto NewGame3Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_8_1.png"));
+        auto NewGame3Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_8_2.png"));
         NewGame3Normal->setPosition(size.width / 2, size.height / 2);
         NewGame3Selected->setPosition(size.width / 2 - 5, size.height / 2 - 10);
         BG3Normal->addChild(NewGame3Normal, 3);
@@ -254,10 +251,10 @@ void SysMenu::OnStart(Ref* pSender)
     miniMenu->alignItemsVerticallyWithPadding(-20);
     miniMenu->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
     miniMenu->setPosition(170, 200);
+    saveData.close();
 
 
-
-    Sprite* temb = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuSecondSelection));
+    Sprite* temb = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_5.png"));
     temb->addChild(miniMenu);
     temb->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
     temb->setPosition(320, 70);
@@ -288,7 +285,7 @@ void SysMenu::OnProduct(Ref* pSender)
     this->removeChildByName("Product");
     auto size = Director::getInstance()->getWinSize();
 
-    auto frame = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SmallFrame));
+    auto frame = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_14.png"));
     auto frameSize = frame->getContentSize(); 
     frame->setName("Product");
     frame->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
@@ -315,7 +312,7 @@ void SysMenu::OnProduct(Ref* pSender)
     
     this->addChild(frame);
     frame->setPosition(size.width / 2, size.height + frameSize.width / 2);
-    auto moveBy = MoveBy::create(0.7, Vec2(0,-size.height / 2 - frameSize.width / 2));
+    auto moveBy = MoveBy::create(0.7f, Vec2(0,-size.height / 2 - frameSize.width / 2));
     frame->runAction(moveBy);
     monitor(frame);
 }
@@ -346,7 +343,7 @@ bool SysMenu::onTouchBegan(Touch* touch, Event* event, Sprite* menu)
         if (menu->getName() == "temb")
             moveby = MoveBy::create(0.5, Vec2(-menu->getContentSize().width + 70, 0));
         else if (menu->getName() == "Product")
-            moveby = MoveBy::create(0.8, Vec2(0, 1000));
+            moveby = MoveBy::create(0.8f, Vec2(0, 1000));
         auto dead = CallFunc::create([=]() {
             // 回调函数中执行销毁精灵的操作
             menu->removeFromParentAndCleanup(true);
@@ -374,7 +371,7 @@ void SysMenu::FrameReturn(Ref* pSender, std::string frame)
     music->onButtonEffect();
     auto p = this->getChildByName(frame);
     removeTouchListener();
-    auto moveUp = MoveBy::create(0.8, Vec2(0, 1000));
+    auto moveUp = MoveBy::create(0.8f, Vec2(0, 1000));
     auto dead = CallFunc::create([=]() {
         // 回调函数中执行销毁精灵的操作
         p->removeFromParentAndCleanup(true);
@@ -382,5 +379,3 @@ void SysMenu::FrameReturn(Ref* pSender, std::string frame)
     auto sequence = Sequence::create(moveUp, dead,NULL); 
     p->runAction(sequence);
 }
-
-#endif // ! __SYSMENU_CPP_

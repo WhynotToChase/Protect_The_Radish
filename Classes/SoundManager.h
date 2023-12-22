@@ -2,8 +2,8 @@
 #define __SOUNDMANAGER_H__
 
 #include "cocos2d.h"
-#include "audio/include/AudioEngine.h"
 #include <string>
+#include "audio/include/AudioEngine.h"
 
 class SoundManager {
 public:

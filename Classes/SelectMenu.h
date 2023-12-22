@@ -4,7 +4,6 @@
 #include "cocos2d.h"
 #include"SysMenu.h"
 #include "SelectMenu.h"
-#include "Resource.h"
 #include"SettingMenu.h"
 #include"SoundManager.h"
 #include"MousePosition.h"

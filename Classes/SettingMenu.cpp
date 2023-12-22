@@ -1,5 +1,3 @@
-#ifndef __SETTINGMENU_CPP__
-#define __SETTINGMENU_CPP__
 
 #include "SettingMenu.h"
 
@@ -66,8 +64,8 @@ bool SettingMenu::init()
     _switch2->setScale(2.0f);
 
     // ÉèÖÃ³õÊ¼×´Ì¬
-    _switch1->setSelectedIndex(music->getSounds());
-    _switch2->setSelectedIndex(music->getEffects());
+    _switch1->setSelectedIndex(!music->getSounds());
+    _switch2->setSelectedIndex(!music->getEffects());
     Menu* switchs = Menu::create(_switch1, _switch2, NULL);
     switchs->setAnchorPoint(Vec2::ANCHOR_MIDDLE_TOP);
     switchs->setPosition(size.width / 2, 400);
@@ -130,4 +128,3 @@ void SettingMenu::resetGame()
     music->onButtonEffect();
 }
 
-#endif // !__SETTINGMENU_CPP__

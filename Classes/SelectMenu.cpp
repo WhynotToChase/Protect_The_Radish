@@ -56,7 +56,7 @@ bool SelectMenu::init()
     The_middleSprite_menu->alignItemsVertically();
     this->addChild(The_middleSprite_menu, -5, 2);
     The_middleSprite_menu->setPosition(960, 540);
-    The_middleSprite_menu->setScale(0.1); // 设置初始缩放
+    The_middleSprite_menu->setScale(0.1f); // 设置初始缩放
 
     // 创建缩放动作
     auto scaleToAction = ScaleTo::create(0.5f, 1.0f); // 缩放到原始大小，持续0.5秒
@@ -66,15 +66,18 @@ bool SelectMenu::init()
 
 
     //添加 2个按钮选择上一个或下一关
-    Sprite* Selectleft = Sprite::create("../Resources/left.png");
-    Selectleft->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+    Sprite* Selectleft0 = Sprite::create("../Resources/left0.png");
+    Selectleft0->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+    Sprite* Selectleft1 = Sprite::create("../Resources/left1.png");
+    Selectleft0->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 
-    Sprite* Selectright = Sprite::create("../Resources/right.png");
-    Selectright->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+    Sprite* Selectright0 = Sprite::create("../Resources/right0.png");
+    Selectright0->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+    Sprite* Selectright1 = Sprite::create("../Resources/right1.png");
+    Selectright0->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 
 
-
-    MenuItemSprite* left = MenuItemSprite::create(Selectleft, Selectleft,
+    MenuItemSprite* left = MenuItemSprite::create(Selectleft0, Selectleft1,
         [this](Ref* pSender) {
             this_music->onButtonEffect();
             if (Level != 1) {
@@ -83,7 +86,7 @@ bool SelectMenu::init()
             }
         });
 
-    MenuItemSprite* right = MenuItemSprite::create(Selectright, Selectright,
+    MenuItemSprite* right = MenuItemSprite::create(Selectright0, Selectright1,
         [this](Ref* pSender) {
             this_music->onButtonEffect();
             if (Level != 10) {
@@ -92,10 +95,12 @@ bool SelectMenu::init()
             }
         });
 
-    Sprite* _set = Sprite::create("../Resources/touming-hd.pvr_28.PNG");
-    _set->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+    Sprite* _set0 = Sprite::create("../Resources/touming-hd.pvr_28.PNG");
+    _set0->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+    Sprite* _set1 = Sprite::create("../Resources/touming-hd.pvr_26.PNG");
+    _set1->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
 
-    MenuItemSprite* Menu_set = MenuItemSprite::create(_set, _set,
+    MenuItemSprite* Menu_set = MenuItemSprite::create(_set0, _set1,
         [this](Ref* pSender) {
             this_music->onButtonEffect();
             SelectMenu::ThisSet();
@@ -105,8 +110,8 @@ bool SelectMenu::init()
     menu_set->alignItemsVertically();
     this->addChild(menu_set, 99, 2);
     menu_set->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
-    menu_set->setPosition(1600, 70);
-    menu_set->setScale(1.5f);
+    menu_set->setPosition(1600, 1000);
+    menu_set->setScale(2.0f);
 
     //两个按钮left right
     // 最后一个参数要是NULL
@@ -115,22 +120,14 @@ bool SelectMenu::init()
     this->addChild(menu1, 10, 2);
     menu1->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
     menu1->setPosition(70, 540);
-    menu1->setScale(1.5f);
+    menu1->setScale(2.0f);
 
     Menu* menu2 = Menu::create(right, NULL);
     menu2->alignItemsVertically();
     this->addChild(menu2, 10, 2);
     menu2->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
     menu2->setPosition(1850, 540);
-    menu2->setScale(1.5f);
-
-
-    auto label = Label::createWithSystemFont("Power by Cocos2dx4.0 hkf lzh", "Arial", 40);
-    label->setColor(Color3B(31, 45, 150));
-    this->addChild(label, 100);
-    label->setAnchorPoint(Vec2::ANCHOR_MIDDLE_BOTTOM);
-    label->setPosition(WinSize.width / 2 + 70, 0);
-
+    menu2->setScale(2.0f);
 
     return true;
 }
@@ -147,12 +144,14 @@ std::string SelectMenu::SelectLevel(const int&level) {
         case 8:return "../Resources/eighth.png";
         case 9:return "../Resources/ninth.png";
         case 10:return "../Resources/tenth.png";
+        default:
+            break;
     }
+    return "";
 }
 
 void SelectMenu::ThisSet() {
-    auto p = SettingMenu::create();
-    p->inside = true;
+    auto p = SettingMenu::create(true);
     Director::getInstance()->pushScene(p);
 }
 

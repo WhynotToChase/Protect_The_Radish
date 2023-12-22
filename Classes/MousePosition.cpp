@@ -1,6 +1,3 @@
-#ifndef __MOUSEPOSITION_CPP__
-#define __MOUSEPOSITION_CPP__
-
 #include "MousePosition.h"
 
 using namespace cocos2d;
@@ -41,4 +38,3 @@ void MousePosition::updateMousePosition(const Vec2& position) {
     setString(StringUtils::format("Mouse Position: (%.2f, %.2f)", position.x, position.y));
 }
 
-#endif // !__MOUSEPOSITION_CPP__
