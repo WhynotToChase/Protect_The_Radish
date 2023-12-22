@@ -335,7 +335,7 @@ void SysMenu::StartGame( Ref* pSender,int num)
     music->onButtonEffect();
     changeSaveNum(num);
     auto p = SelectMenu::scene();
-    Director::getInstance()->replaceScene(p);
+    Director::getInstance()->pushScene(p);
 }
 
 bool SysMenu::onTouchBegan(Touch* touch, Event* event, Sprite* menu)

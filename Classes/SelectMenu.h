@@ -1,6 +1,5 @@
-#pragma once
-#ifndef __MW_CPP_SYSMENU_H__
-#define __MW_CPP_SYSMENU_H__
+#ifndef __SELECTMENU_H__
+#define __SELECTMENU_H__
 
 #include "cocos2d.h"
 #include"SysMenu.h"
@@ -8,13 +7,16 @@
 #include "Resource.h"
 #include"SettingMenu.h"
 #include"SoundManager.h"
+#include"MousePosition.h"
 #include<string>
 
 
 class SelectMenu : public cocos2d::Layer
 {
 private:
-    Sprite* middleSprite;
+    MousePosition* this_mouse;
+
+    cocos2d::Menu* The_middleSprite_menu;
 
     int Level;
 
@@ -38,4 +40,4 @@ public:
     CREATE_FUNC(SelectMenu);
 };
 
-#endif/*__MW_CPP_SYSMENU_H__*/
+#endif/*__SELECTMENU_H__*/

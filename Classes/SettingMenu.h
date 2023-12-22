@@ -30,7 +30,14 @@ public:
 
 	virtual bool init();
 
-	CREATE_FUNC(SettingMenu);
+	static SettingMenu* create() {
+		SettingMenu* pRet = new(std::nothrow) SettingMenu(); if (pRet && pRet->init()) {
+			pRet->autorelease(); return pRet;
+		}
+		else {
+			delete pRet; pRet = nullptr; return nullptr;
+		}
+	};
 };
 
 #endif //!__SETTINGMENU_H_
