@@ -7,7 +7,7 @@
 #include <fstream>
 
 using namespace cocos2d;
-bool isMenu = false;
+
 Scene* SysMenu::scene()
 {
     // 'scene' is an autorelease object

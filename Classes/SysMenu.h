@@ -2,8 +2,6 @@
 #define __SYSMENU_H__
 
 #include "cocos2d.h"
-#include "AppDelegate.h"
-#include "ui/CocosGUI.h"
 #include "Resource.h"
 #include <string>
 #include "SoundManager.h"
