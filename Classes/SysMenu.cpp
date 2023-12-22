@@ -8,6 +8,8 @@
 
 using namespace cocos2d;
 
+int SysMenu::saveNum = 0;
+
 Scene* SysMenu::scene()
 {
     // 'scene' is an autorelease object
@@ -275,6 +277,7 @@ void SysMenu::OnOption(Ref* pSender)
     this->removeChildByName("Product");
 
     auto settingMenu = SettingMenu::create();
+    settingMenu->inside = false;
     Director::getInstance()->pushScene(settingMenu);
 }
 

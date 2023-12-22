@@ -1,5 +1,5 @@
 #ifndef __SETTINGMENU_H__
-#define __SETTINGMWNU_H__
+#define __SETTINGMENU_H__
 
 #include "cocos2d.h"
 #include "SoundManager.h"
@@ -18,9 +18,15 @@ private:
 
 	void saveGame();
 
+	void resetGame();
+
 public:
 
-	bool inside = false;
+	bool inside;
+
+	void lastPage();
+
+	void returnHome();
 
 	virtual bool init();
 

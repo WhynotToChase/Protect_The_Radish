@@ -22,7 +22,7 @@ private:
 
     void removeTouchListener();
 
-    static void changeSaveNum(int i) { saveNum=i; }
+    void changeSaveNum(int i) { saveNum=i; }
 
 public:
     static int getSaveNum() { return saveNum; }
@@ -41,7 +41,7 @@ public:
 
     void StartGame(Ref* pSender,int num);
 
-    void SysMenu::FrameReturn(Ref* pSender, std::string name);
+    void FrameReturn(Ref* pSender, std::string name);
 
     CREATE_FUNC(SysMenu);
     

@@ -28,8 +28,7 @@ bool SettingMenu::init()
     auto back0 = Sprite::create("../Resources/close_normal.png");
     auto back1 = Sprite::create("../Resources/close_pressed.png");
     auto _back = MenuItemSprite::create(back0, back1, [this](Ref* pSender) {
-        music->onButtonEffect();
-        Director::getInstance()->popScene(); });
+        this->lastPage(); });
     auto back = Menu::create(_back, NULL);
     back->setAnchorPoint(Vec2(0, 0));
     back->setPosition(1320,750);
@@ -73,31 +72,60 @@ bool SettingMenu::init()
     switchs->alignItemsHorizontallyWithPadding(400);
     this->addChild(switchs,3);
 
-    if (inside) {
+    if (!inside) {
         auto home0 = Sprite::create("../Resources/Btn_Return.png");
         auto home1 = Sprite::create("../Resources/Btn_ReturnLight.png");
         auto _home = MenuItemSprite::create(home0, home1, [this](Ref* pSender) {
-            music->onButtonEffect();
-            Director::getInstance()->popToRootScene(); });
+            this->returnHome(); });
         auto home = Menu::create(_home, NULL);
         home->setAnchorPoint(Vec2(0, 0));
         home->setPosition(600, 750);
         home->setScale(1.5f);
         this->addChild(home, 3);
 
-        auto save0 = Sprite::create("../Resources/settting02-56.png");
-        auto save1 = Sprite::create("../Resources/setting02-57.png");
+        auto save0 = Sprite::create("../Resources/setting0256.png");
+        auto save1 = Sprite::create("../Resources/setting0257.png");
         auto _save = MenuItemSprite::create(save0, save1, [this](Ref* pSender) {
             saveGame(); });
         auto save = Menu::create(_save, NULL);
         save->setAnchorPoint(Vec2(0, 0));
-        save->setPosition(600, 750);
+        save->setPosition(670, 170);
         save->setScale(1.5f);
         this->addChild(save, 3);
+
+        auto reset0 = Sprite::create("../Resources/setting0255.png");
+        auto reset1 = Sprite::create("../Resources/setting0254.png");
+        auto _reset = MenuItemSprite::create(reset0, reset1, [this](Ref* pSender) {
+            resetGame(); });
+        auto reset = Menu::create(_reset, NULL);
+        reset->setAnchorPoint(Vec2(0, 0));
+        reset->setPosition(1250, 170);
+        reset->setScale(1.5f);
+        this->addChild(reset, 3);
     }
     return true;
 }
 
+void SettingMenu::lastPage()
+{
+    music->onButtonEffect();
+    Director::getInstance()->popScene();
+}
 
+void SettingMenu::returnHome() 
+{
+    music->onButtonEffect();
+    Director::getInstance()->popToRootScene();
+}
+
+void SettingMenu::saveGame()
+{
+    music->onButtonEffect();
+}
+
+void SettingMenu::resetGame()
+{
+    music->onButtonEffect();
+}
 
 #endif // !__SETTINGMENU_CPP__
