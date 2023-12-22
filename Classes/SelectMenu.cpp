@@ -1,5 +1,7 @@
 #include "SelectMenu.h"
 #include "Resource.h"
+#include"SettingMenu.h"
+#include"SoundManager.h"
 #include<string>
 
 using namespace cocos2d;
@@ -21,6 +23,7 @@ Scene* SelectMenu::scene()
 
 bool SelectMenu::init()
 {
+    this_music = SoundManager::getInstance();
 
     if (!Layer::init())
     {
@@ -77,12 +80,14 @@ bool SelectMenu::init()
 
     MenuItemSprite* left = MenuItemSprite::create(Selectleft, Selectleft,
         [this](Ref* pSender) {
+            this_music->onButtonEffect();
             IsChange = -1;
             SelectMenu::moveSprites;
         });
 
     MenuItemSprite* right = MenuItemSprite::create(Selectright, Selectright,
         [this](Ref* pSender) {
+            this_music->onButtonEffect();
             IsChange = 1;
             SelectMenu::moveSprites;
         });
@@ -90,10 +95,12 @@ bool SelectMenu::init()
     Sprite* _set = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("../Resources/Pictures/NormalMordel/touming-hd.pvr_28.PNG"));
     _set->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     _set->setPosition(1900, 20);
+    this->addChild(_set);
 
     MenuItemSprite* Menu_set = MenuItemSprite::create(_set, _set,
         [this](Ref* pSender) {
-            
+            this_music->onButtonEffect();
+            SelectMenu::ThisSet();
         });
 
     //Á½¸ö°´Å¥left right
@@ -118,16 +125,6 @@ bool SelectMenu::init()
     label->setPosition(WinSize.width / 2 + 70, 0);
 
 
-
-
-    /* if (GlobalResManager::getInstance()->getSoundFlag())
-     {
-
-         int mainMusicAudio = AudioEngine::play2d(s_mainMainMusic);
-         AudioEngine::setVolume(mainMusicAudio, 0.7);
-
-     }*/
-
     return true;
 }
 
@@ -146,6 +143,11 @@ std::string SelectMenu::SelectLevel(const int&level) {
     }
 }
 
+void SelectMenu::ThisSet() {
+    auto p = SettingMenu::create();
+    p->inside = true;
+    Director::getInstance()->replaceScene(p);
+}
 void SelectMenu::moveSprites(Ref* pSender)
 {
     if (IsChange == 0) {

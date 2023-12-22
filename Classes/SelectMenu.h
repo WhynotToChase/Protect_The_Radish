@@ -3,9 +3,11 @@
 #define __MW_CPP_SYSMENU_H__
 
 #include "cocos2d.h"
-#include "AppDelegate.h"
-#include "ui/CocosGUI.h"
 #include"SysMenu.h"
+#include "SelectMenu.h"
+#include "Resource.h"
+#include"SettingMenu.h"
+#include"SoundManager.h"
 #include<string>
 
 
@@ -17,6 +19,8 @@ private:
     int Level;
 
     int IsChange;
+
+    SoundManager* this_music;
 public:
 
     virtual bool init();
@@ -26,13 +30,9 @@ public:
 
     std::string SelectLevel(const int& level);
 
+    void ThisSet();
+
     void moveSprites(Ref* pSender);
-
-
-    void OnOption(Ref* pSender);
-
-
-    void OnStart(Ref* pSender);
 
 
     CREATE_FUNC(SelectMenu);
