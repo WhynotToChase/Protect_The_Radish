@@ -1,5 +1,5 @@
-#ifndef _MW_RESOURCE_H
-#define _MW_RESOURCE_H
+#ifndef __RESOURCE_H__
+#define __RESOURCE_H__
 
 //sys_menu
 static const char SysmenuBackground[] = "sys_menu_17.png";
@@ -64,7 +64,7 @@ void x::removeTouchListener()\
     _eventDispatcher->removeEventListenersForTarget(this);\
 }\
 
-#endif // !_MW_RESOURCE_H
+#endif // !__RESOURCE_H__
 //¼àÊÓÆ÷µÄÄ£°å
 /*
 private:

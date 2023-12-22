@@ -1,18 +1,25 @@
-#ifndef __MW_CPP_SYSMENU_H__
-#define __MW_CPP_SYSMENU_H__
+#ifndef __SYSMENU_H__
+#define __SYSMENU_H__
 
 #include "cocos2d.h"
 #include "AppDelegate.h"
 #include "ui/CocosGUI.h"
 #include "Resource.h"
 #include <string>
+#include "SoundManager.h"
 
 class SysMenu : public cocos2d::Layer
 {
 private: 
+
+    SoundManager* music;
+
     bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event, cocos2d::Sprite* menu); 
+
     void monitor(cocos2d::Sprite* menu);
+
     void removeTouchListener();
+
 public:
   
 
@@ -36,4 +43,4 @@ public:
     
 };
 
-#endif/*__MW_CPP_SYSMENU_H__*/
+#endif/*__SYSMENU_H__*/

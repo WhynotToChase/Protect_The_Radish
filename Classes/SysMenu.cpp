@@ -1,3 +1,7 @@
+#ifndef  __SYSMENU_CPP_
+#define  __SYSMENU_CPP_
+
+
 #include "SysMenu.h"
 #include <iostream>
 #include <fstream>
@@ -34,6 +38,8 @@ bool SysMenu::init()
 
     
     this->removeChildByName("temb");
+    this->removeChildByName("Setting");
+    this->removeChildByName("Product");
 
     //添加背景 
 
@@ -56,7 +62,7 @@ bool SysMenu::init()
     this->addChild(tomb, 5, 1);
 
 
-    //添加 七个按钮
+    //添加 四个按钮
     //start
     Sprite* StartButtonNormal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuButton1On));
     Sprite* StartTitleNormal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(StartScriptOn));
@@ -148,23 +154,18 @@ bool SysMenu::init()
 
 
 
-
-    /* if (GlobalResManager::getInstance()->getSoundFlag())
-     {
-
-         int mainMusicAudio = AudioEngine::play2d(s_mainMainMusic);
-         AudioEngine::setVolume(mainMusicAudio, 0.7);
-
-     }*/
+    music=SoundManager::getInstance();
 
     return true;
 }
 
 void SysMenu::OnStart(Ref* pSender)
 {
+    music->onButtonEffect();
     using namespace std;
     this->removeChildByName("temb");
     this->removeChildByName("Product");
+    this->removeChildByName("Setting");
     MenuItemSprite* gameOne, * gameTwo, * gameThree;
 
 
@@ -176,12 +177,14 @@ void SysMenu::OnStart(Ref* pSender)
 
 
 
-    fstream saveData1("/saveData/gameOne.txt", std::ios::in | std::ios::out);
+    fstream saveData1("../saveData/gameOne.txt", std::ios::in | std::ios::out);
     if (saveData1.is_open()) {
         auto Title1Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile1ScriptOn));
         auto Title1Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile1ScriptDown));
-        Title1Normal->setPosition(size.width / 2, size.height / 2);
-        Title1Selected->setPosition(size.width / 2 - 5, size.height / 2 - 10);
+        Title1Normal->setPosition(size.width / 2-10, size.height / 2-4);
+        Title1Selected->setPosition(size.width / 2 - 12, size.height / 2 - 10);
+        Title1Normal->setScale(1.3f);
+        Title1Selected->setScale(1.3f);
         BG1Normal->addChild(Title1Normal, 3);
         BG1Selected->addChild(Title1Selected, 3);
     }
@@ -198,14 +201,16 @@ void SysMenu::OnStart(Ref* pSender)
 
 
 
-    fstream saveData2("/saveData/gameTwo.txt", std::ios::in | std::ios::out);
+    fstream saveData2("../saveData/gameTwo.txt", std::ios::in | std::ios::out);
     auto BG2Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuButton4On));
     auto BG2Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuButton4Down));
     if (saveData2.is_open()) {
         auto Title2Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile2ScriptOn));
         auto Title2Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile2ScriptDown));
-        Title2Normal->setPosition(size.width / 2, size.height / 2);
-        Title2Selected->setPosition(size.width / 2 - 5, size.height / 2 - 10);
+        Title2Normal->setPosition(size.width / 2-4, size.height / 2-4);
+        Title2Selected->setPosition(size.width / 2 - 8, size.height / 2 - 11);
+        Title2Normal->setScale(1.3f);
+        Title2Selected->setScale(1.3f);
         BG2Normal->addChild(Title2Normal, 3);
         BG2Selected->addChild(Title2Selected, 3);
     }
@@ -224,12 +229,14 @@ void SysMenu::OnStart(Ref* pSender)
 
     auto BG3Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuButton4On));
     auto BG3Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SysmenuButton4Down));
-    fstream saveData3("/saveData/gameThree.txt", std::ios::in | std::ios::out);
+    fstream saveData3("../saveData/gameThree.txt", std::ios::in | std::ios::out);
     if (saveData3.is_open()) {
         auto Title3Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile3ScriptOn));
         auto Title3Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SaveFile3ScriptDown));
-        Title3Normal->setPosition(size.width / 2, size.height / 2);
-        Title3Selected->setPosition(size.width / 2 - 5, size.height / 2 - 10);
+        Title3Normal->setPosition(size.width / 2-6, size.height / 2-2);
+        Title3Selected->setPosition(size.width / 2 - 15, size.height / 2 - 7); 
+        Title3Normal->setScale(1.3f);
+        Title3Selected->setScale(1.3f);
         BG3Normal->addChild(Title3Normal, 3);
         BG3Selected->addChild(Title3Selected, 3);
     }
@@ -264,27 +271,30 @@ void SysMenu::OnStart(Ref* pSender)
 
 void SysMenu::OnOption(Ref* pSender)
 {
-  /*  onButtonEffect();
-    Scene* scene = SettingsLayer::scene();
-    Director::getInstance()->replaceScene(TransitionFade::create(1.2, scene));
-    */
+    music->onButtonEffect();
+
     this->removeChildByName("temb");
     this->removeChildByName("Product");
+    this->removeChildByName("Setting");
     auto size = Director::getInstance()->getWinSize();
-
-    auto frame = Sprite::createWithSpriteFrameName(SmallFrame);
-
-
+    
+    auto frame = Sprite::createWithSpriteFrameName(LargeFrame);
+    auto frameSize = frame->getContentSize();
+    frame->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+    frame->setPosition(size.width / 2, size.height + frameSize.height / 2);
+    auto setEffect = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("setting02-0.PNG"));
+    auto switch1_0 = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("setting02-6.PNG"));
+    auto switch1_1 = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("setting02-11.PNG"));
+    MenuItem* _switch1 = MenuItemSprite::create(switch1_0, switch1_1, [this](Ref* pSender) {});
 }
 
 void SysMenu::OnProduct(Ref* pSender)
 {
-   /* onButtonEffect();
-    Scene* scene = AboutLayer::scene();
-    Director::getInstance()->replaceScene(TransitionFade::create(1.2, scene));
-    */ 
+    music->onButtonEffect();
+
     this->removeChildByName("temb");
     this->removeChildByName("Product");
+    this->removeChildByName("Setting");
     auto size = Director::getInstance()->getWinSize();
 
     auto frame = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SmallFrame));
@@ -321,24 +331,24 @@ void SysMenu::OnProduct(Ref* pSender)
 
 void SysMenu::OnExit(Ref* pSender)
 {
+    music->onButtonEffect();
+
     this->removeChildByName("temb");
     this->removeChildByName("Product");
+    this->removeChildByName("Setting");
     ExitProcess(1);
 }
 
 void SysMenu::StartGame( Ref* pSender,int num)
 {
-    /*Scene* scene = Scene::create();
-    scene->addChild(GameLayer::create());
-
-    Director::getInstance()->replaceScene(TransitionFade::create(1.2, scene));
-    */
+    music->onButtonEffect();
 }
 
 bool SysMenu::onTouchBegan(Touch* touch, Event* event, Sprite* menu)
 {
     Vec2 touchPoint = this->convertToNodeSpace(touch->getLocation()); 
     Rect menuBoundingBox = menu->getBoundingBox(); if (!menuBoundingBox.containsPoint(touchPoint)) {
+        music->onButtonEffect();
         MoveBy* moveby;
         if (menu->getName() == "temb")
             moveby = MoveBy::create(0.5, Vec2(-menu->getContentSize().width + 70, 0));
@@ -368,8 +378,9 @@ void SysMenu::removeTouchListener() {
 
 void SysMenu::FrameReturn(Ref* pSender, std::string frame)
 {
+    music->onButtonEffect();
     auto p = this->getChildByName(frame);
-    p->removeAllChildren();
+    removeTouchListener();
     auto moveUp = MoveBy::create(0.8, Vec2(0, 1000));
     auto dead = CallFunc::create([=]() {
         // 回调函数中执行销毁精灵的操作
@@ -379,4 +390,4 @@ void SysMenu::FrameReturn(Ref* pSender, std::string frame)
     p->runAction(sequence);
 }
 
-
+#endif // ! __SYSMENU_CPP_
