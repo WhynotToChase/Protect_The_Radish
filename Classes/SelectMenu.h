@@ -11,6 +11,12 @@
 
 class SelectMenu : public cocos2d::Layer
 {
+private:
+    Sprite* middleSprite;
+
+    int Level;
+
+    int IsChange;
 public:
 
     virtual bool init();
@@ -19,6 +25,9 @@ public:
     static cocos2d::Scene* scene();
 
     std::string SelectLevel(const int& level);
+
+    void moveSprites(Ref* pSender);
+
 
     void OnOption(Ref* pSender);
 

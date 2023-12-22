@@ -31,40 +31,72 @@ bool SelectMenu::init()
     Size WinSize = Director::getInstance()->getWinSize();
 
     //添加背景 0 ；1；
-
+    //先建立一个大背景
     auto sp = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("background.png"));
 
     sp->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
     this->addChild(sp, -10, 1);
 
+    Level = 1;//记录关数
+
+    int Last_Next = 0;//判断前或后
+
+    // 创建精灵并设置初始缩放
+    middleSprite = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SelectLevel(1)));
+    middleSprite->setPosition(Vec2(240, 160));
+    middleSprite->setScale(0.1); // 设置初始缩放
+
+    // 创建缩放动作
+    auto scaleToAction = ScaleTo::create(0.5f, 0.5f); // 缩放到原始大小0.5倍，持续0.5秒
+
+    // 运行动作
+    middleSprite->runAction(scaleToAction);
+
+    // 将精灵添加到场景
+    this->addChild(middleSprite,-5,2);
 
     //添加tomb 2 ；1；
-    auto tomb = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SelectLevel(1)));
+    /*auto tomb = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SelectLevel(1)));
 
     tomb->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     tomb->setPosition(960, 540);
-    this->addChild(tomb, -5, 1);
+    this->addChild(tomb, -5, 1);*/
 
 
     //添加 2个按钮
     //start
-    Sprite* Selectleft = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SelectLevel(1)));
-    tomb->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+    Sprite* Selectleft = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("../Resources/Pictures/NormalMordel/left"));
+    Selectleft->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     Selectleft->setPosition(20,540);
 
-    Sprite* Selectright = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(SelectLevel(1)));
-    tomb->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+    Sprite* Selectright = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("../Resources/Pictures/NormalMordel/right"));
+    Selectright->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     Selectright->setPosition(1900, 540);
 
 
 
     MenuItemSprite* left = MenuItemSprite::create(Selectleft, Selectleft,
-        CC_CALLBACK_1(SelectMenu::OnStart, this));
+        [this](Ref* pSender) {
+            IsChange = -1;
+            SelectMenu::moveSprites;
+        });
 
     MenuItemSprite* right = MenuItemSprite::create(Selectright, Selectright,
-        CC_CALLBACK_1(SelectMenu::OnOption, this));
+        [this](Ref* pSender) {
+            IsChange = 1;
+            SelectMenu::moveSprites;
+        });
 
+    Sprite* _set = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("../Resources/Pictures/NormalMordel/touming-hd.pvr_28.PNG"));
+    _set->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
+    _set->setPosition(1900, 20);
 
+    MenuItemSprite* Menu_set = MenuItemSprite::create(_set, _set,
+        [this](Ref* pSender) {
+            
+        });
+
+    //两个按钮left right
     // 最后一个参数要是NULL
     Menu* menu1 = Menu::create(left, NULL);
     menu1->alignItemsVertically();
@@ -101,34 +133,64 @@ bool SelectMenu::init()
 
 std::string SelectMenu::SelectLevel(const int&level) {
     switch (level) {
-        case 1:return "first.png";
-        case 2:return "second.png";
-        case 3:return "third.png";
-        case 4:return "fourth.png";
-        case 5:return "fifth.png";
-        case 6:return "sixth.png";
-        case 7:return "seventh.png";
-        case 8:return "eighth.png";
-        case 9:return "ninth.png";
-        case 10:return "tenth.png";
+        case 1:return ".. / Resources / Pictures / level/first.png";
+        case 2:return ".. / Resources / Pictures / level/second.png";
+        case 3:return ".. / Resources / Pictures / level/third.png";
+        case 4:return ".. / Resources / Pictures / level/fourth.png";
+        case 5:return ".. / Resources / Pictures / level/fifth.png";
+        case 6:return ".. / Resources / Pictures / level/sixth.png";
+        case 7:return ".. / Resources / Pictures / level/seventh.png";
+        case 8:return ".. / Resources / Pictures / level/eighth.png";
+        case 9:return ".. / Resources / Pictures / level/ninth.png";
+        case 10:return ".. / Resources / Pictures / level/tenth.png";
     }
 }
-void SelectMenu::OnStart(Ref* pSender)
-{
-    /* AudioEngine::stopAll();
-     Scene* scene = Scene::create();
-     scene->addChild(GameLayer::create());
 
-     Director::getInstance()->replaceScene(TransitionFade::create(1.2, scene));
-     */
+void SelectMenu::moveSprites(Ref* pSender)
+{
+    if (IsChange == 0) {
+        return;
+    }
+    else if (IsChange == -1) {
+        // 移动中间精灵到左边屏幕外
+        auto moveOutAction = MoveBy::create(1.0f, Vec2(-960, 0));
+        middleSprite->runAction(moveOutAction);
+
+        // 创建新的精灵并设置初始位置在右边屏幕外
+        auto newSprite = Sprite::create(SelectLevel(Level + IsChange));
+        newSprite->setPosition(Vec2(2880, 540));
+        newSprite->setScale(0.5); // 设置初始缩放
+        addChild(newSprite);
+
+        // 移动新的精灵到中间
+        auto moveInAction = MoveTo::create(1.0f, Vec2(960, 540));
+
+        // 同时执行移动和创建精灵的动作
+        auto spawnAction = Spawn::create(moveInAction, nullptr);
+        newSprite->runAction(spawnAction);
+
+        middleSprite = newSprite;
+    }
+    else if (IsChange == 1) {
+        // 移动中间精灵到右边屏幕外
+        auto moveOutAction = MoveBy::create(1.0f, Vec2(2880, 0));
+        middleSprite->runAction(moveOutAction);
+
+        // 创建新的精灵并设置初始位置在左边屏幕外
+        auto newSprite = Sprite::create(SelectLevel(Level + IsChange));
+        newSprite->setPosition(Vec2(-960, 540));
+        newSprite->setScale(0.5); // 设置初始缩放
+        addChild(newSprite);
+
+        // 移动新的精灵到中间
+        auto moveInAction = MoveTo::create(1.0f, Vec2(960, 540));
+
+        // 同时执行移动和创建精灵的动作
+        auto spawnAction = Spawn::create(moveInAction, nullptr);
+        newSprite->runAction(spawnAction);
+
+        middleSprite = newSprite;
+    }
 }
 
-void SelectMenu::OnOption(Ref* pSender)
-{
-    /*   onButtonEffect();
 
-       //转到"SettingsLayer"
-       Scene* scene = SettingsLayer::scene();
-       Director::getInstance()->replaceScene(TransitionFade::create(1.2, scene));
-       */
-}
