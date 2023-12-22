@@ -25,15 +25,16 @@ bool SettingMenu::init()
     bg->setScale(size.width / bg->getContentSize().width, size.height / bg->getContentSize().height);
     this->addChild(bg);
 
-    auto home0 = Sprite::create("../Resources/Btn_Return.png");
-    auto home1 = Sprite::create("../Resources/Btn_ReturnLight.png");
-    auto _home = MenuItemSprite::create(home0, home1, [this](Ref* pSender) {
-        this->returnHome(pSender); });
-    auto home = Menu::create(_home, NULL); 
-    home->setAnchorPoint(Vec2(0,0));
-    home->setPosition(600, 750);
-    home->setScale(1.5f);
-    this->addChild(home,3);
+    auto back0 = Sprite::create("../Resources/close_normal.png");
+    auto back1 = Sprite::create("../Resources/close_pressed.png");
+    auto _back = MenuItemSprite::create(back0, back1, [this](Ref* pSender) {
+        music->onButtonEffect();
+        Director::getInstance()->popScene(); });
+    auto back = Menu::create(_back, NULL);
+    back->setAnchorPoint(Vec2(0, 0));
+    back->setPosition(1320,750);
+    back->setScale(1.5f);
+    this->addChild(back, 3);
 
     auto titleSound = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("setting02-2.PNG"));
     auto titleEffect = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("setting02-0.PNG"));
@@ -71,13 +72,32 @@ bool SettingMenu::init()
     switchs->setPosition(size.width / 2, 400);
     switchs->alignItemsHorizontallyWithPadding(400);
     this->addChild(switchs,3);
+
+    if (inside) {
+        auto home0 = Sprite::create("../Resources/Btn_Return.png");
+        auto home1 = Sprite::create("../Resources/Btn_ReturnLight.png");
+        auto _home = MenuItemSprite::create(home0, home1, [this](Ref* pSender) {
+            music->onButtonEffect();
+            Director::getInstance()->popToRootScene(); });
+        auto home = Menu::create(_home, NULL);
+        home->setAnchorPoint(Vec2(0, 0));
+        home->setPosition(600, 750);
+        home->setScale(1.5f);
+        this->addChild(home, 3);
+
+        auto save0 = Sprite::create("../Resources/settting02-56.png");
+        auto save1 = Sprite::create("../Resources/setting02-57.png");
+        auto _save = MenuItemSprite::create(save0, save1, [this](Ref* pSender) {
+            saveGame(); });
+        auto save = Menu::create(_save, NULL);
+        save->setAnchorPoint(Vec2(0, 0));
+        save->setPosition(600, 750);
+        save->setScale(1.5f);
+        this->addChild(save, 3);
+    }
     return true;
 }
 
-void SettingMenu::returnHome(Ref* pSender)
-{
-    music->onButtonEffect();
-    Director::getInstance()->popScene();
-}
+
 
 #endif // !__SETTINGMENU_CPP__

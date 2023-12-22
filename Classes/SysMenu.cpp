@@ -330,6 +330,7 @@ void SysMenu::OnExit(Ref* pSender)
 void SysMenu::StartGame( Ref* pSender,int num)
 {
     music->onButtonEffect();
+    changeSaveNum(num);
 }
 
 bool SysMenu::onTouchBegan(Touch* touch, Event* event, Sprite* menu)

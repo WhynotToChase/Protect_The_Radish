@@ -11,6 +11,8 @@ class SysMenu : public cocos2d::Layer
 {
 private: 
 
+    static int saveNum;
+
     SoundManager* music;
 
     bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event, cocos2d::Sprite* menu); 
@@ -19,8 +21,10 @@ private:
 
     void removeTouchListener();
 
+    static void changeSaveNum(int i) { saveNum=i; }
+
 public:
-  
+    static int getSaveNum() { return saveNum; }
 
     virtual bool init();
 
