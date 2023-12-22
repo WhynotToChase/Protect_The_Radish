@@ -276,8 +276,7 @@ void SysMenu::OnOption(Ref* pSender)
     this->removeChildByName("temb");
     this->removeChildByName("Product");
 
-    auto settingMenu = SettingMenu::create();
-    settingMenu->inside = false;
+    auto settingMenu = SettingMenu::create(false);
     Director::getInstance()->pushScene(settingMenu);
 }
 

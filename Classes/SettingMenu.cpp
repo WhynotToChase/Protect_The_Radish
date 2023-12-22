@@ -5,6 +5,8 @@
 
 using namespace cocos2d;
 
+bool SettingMenu::inside = false;
+
 bool SettingMenu::init()
 {
 
@@ -64,15 +66,15 @@ bool SettingMenu::init()
     _switch2->setScale(2.0f);
 
     // ÉèÖÃ³õÊ¼×´Ì¬
-    _switch1->setSelectedIndex(0);
-    _switch2->setSelectedIndex(0);
+    _switch1->setSelectedIndex(music->getSounds());
+    _switch2->setSelectedIndex(music->getEffects());
     Menu* switchs = Menu::create(_switch1, _switch2, NULL);
     switchs->setAnchorPoint(Vec2::ANCHOR_MIDDLE_TOP);
     switchs->setPosition(size.width / 2, 400);
     switchs->alignItemsHorizontallyWithPadding(400);
     this->addChild(switchs,3);
 
-    if (!inside) {
+    if (inside) {
         auto home0 = Sprite::create("../Resources/Btn_Return.png");
         auto home1 = Sprite::create("../Resources/Btn_ReturnLight.png");
         auto _home = MenuItemSprite::create(home0, home1, [this](Ref* pSender) {

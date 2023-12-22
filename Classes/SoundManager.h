@@ -26,6 +26,10 @@ public:
 
     //’Ω∂∑“Ù–ß
     bool fightEffect(const char* soundFilePath);
+
+    bool getSounds() { return Sounds; }
+
+    bool getEffects() { return Effects; }
 private:
     
     bool Sounds;

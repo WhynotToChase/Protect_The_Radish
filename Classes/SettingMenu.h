@@ -22,15 +22,15 @@ private:
 
 public:
 
-	bool inside;
+	static bool inside;
 
 	void lastPage();
 
 	void returnHome();
 
 	virtual bool init();
-
-	static SettingMenu* create() {
+	static SettingMenu* create(bool i) {
+		inside = i;
 		SettingMenu* pRet = new(std::nothrow) SettingMenu(); if (pRet && pRet->init()) {
 			pRet->autorelease(); return pRet;
 		}
@@ -38,6 +38,7 @@ public:
 			delete pRet; pRet = nullptr; return nullptr;
 		}
 	};
+
 };
 
 #endif //!__SETTINGMENU_H_
