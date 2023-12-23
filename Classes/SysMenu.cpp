@@ -31,7 +31,7 @@ bool SysMenu::init()
     }
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile("sys_menu.plist");
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile("settings.plist");
-
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("tower.plist");
     ////////////////// 
     Size WinSize = Director::getInstance()->getWinSize();
 
