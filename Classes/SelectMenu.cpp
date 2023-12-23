@@ -33,7 +33,6 @@ bool SelectMenu::init()
     ////////////////// 
     Size WinSize = Director::getInstance()->getWinSize();
     
-    //添加背景 0 ；1；
     //先建立一个大背景
     auto sp = Sprite::create("../Resources/background.png");
     Size spritesize = sp->getContentSize();
@@ -44,12 +43,13 @@ bool SelectMenu::init()
     Level = 1;//记录关数
 
     // 创建精灵并设置初始缩放
-    auto middleSprite = Sprite::create("../Resources/first.png");
+    auto middleSprite = Sprite::create("../Resources/level_1.png");
     
     MenuItemSprite* The_middleSprite = MenuItemSprite::create(middleSprite, middleSprite,
         [this](Ref* pSender) {
             this_music->onButtonEffect();
-            //第一关
+            auto p = ThisLevel::create(Level);
+            Director::getInstance()->pushScene(p);
         });
 
     The_middleSprite_menu = Menu::create(The_middleSprite, NULL);
@@ -132,18 +132,19 @@ bool SelectMenu::init()
     return true;
 }
 
+//选择文件名称
 std::string SelectMenu::SelectLevel(const int&level) {
     switch (level) {
-        case 1:return "../Resources/first.png";
-        case 2:return "../Resources/second.png";
-        case 3:return "../Resources/third.png";
-        case 4:return "../Resources/fourth.png";
-        case 5:return "../Resources/fifth.png";
-        case 6:return "../Resources/sixth.png";
-        case 7:return "../Resources/seventh.png";
-        case 8:return "../Resources/eighth.png";
-        case 9:return "../Resources/ninth.png";
-        case 10:return "../Resources/tenth.png";
+        case 1:return "../Resources/level_01.png";
+        case 2:return "../Resources/level_02.png";
+        case 3:return "../Resources/level_03.png";
+        case 4:return "../Resources/level_04.png";
+        case 5:return "../Resources/level_05.png";
+        case 6:return "../Resources/level_06.png";
+        case 7:return "../Resources/level_07.png";
+        case 8:return "../Resources/level_08.png";
+        case 9:return "../Resources/level_09.png";
+        case 10:return "../Resources/level_010.png";
         default:
             break;
     }
