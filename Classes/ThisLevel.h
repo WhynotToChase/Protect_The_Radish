@@ -14,11 +14,20 @@ private:
     SoundManager* this_music;
 
     MousePosition* this_mouse;
+
+    
 public:
+    int money;
+
+    cocos2d::Vec2 onMouseMove(cocos2d::Event* event);
+
+    cocos2d::MenuItemSprite* buttonItem;
 
     virtual bool init(const int& level);
 
     void update(float delta);
+
+    void createTower(const cocos2d::Vec2& centerPosition);
 
     std::string SelectLevel(const int& level);
 
