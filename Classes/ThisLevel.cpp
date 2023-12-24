@@ -69,10 +69,10 @@ std::string ThisLevel::SelectLevel(const int&level) {
         case 4:return "../Resources/level4.png";
         case 5:return "../Resources/level5.png";
         case 6:return "../Resources/level6.png";
-        case 7:return "../Resources/level7.png";
-        case 8:return "../Resources/level8.png";
-        case 9:return "../Resources/level9.png";
-        case 10:return "../Resources/level10.png";
+        case 7:return "../Resources/level007.png";
+        case 8:return "../Resources/level008.png";
+        case 9:return "../Resources/level009.png";
+        case 10:return "../Resources/level0010.png";
         default:
             break;
     }
@@ -101,8 +101,8 @@ void ThisLevel::onMouseMove(cocos2d::Event* event)
         (int(mouseX / 160) - 1 == position_x && int(mouseY / 135) == position_y) ||
         (int(mouseX / 160) == position_x && int(mouseY / 135)+1 == position_y) ||
         (int(mouseX / 160) == position_x && int(mouseY / 135)-1 == position_y)||
-        int(mouseY / 135) == 7) {
-        if (!(leftmenu || rightmenu || topmenu || bottommenu)&& int(mouseY / 135) != 7) {
+        !find()) {
+        if (!(leftmenu || rightmenu || topmenu || bottommenu)&& find()) {
             menu->setPosition(Vec2(float(int(mouseX / 160) * 160) + 80, float(int(mouseY / 135) * 135) + 67));
             position_x = int(mouseX / 160);
             position_y = int(mouseY / 135);
@@ -289,36 +289,49 @@ bool ThisLevel::find() {//
     };
     int level_7[12][8] = {//第七关
         //0                 1                2                  3
-        {0,0,1,1,1,1,1,0},{0,0,0,0,0,0,0,0},{0,1,0,1,1,1,1,0},{0,1,0,1,1,1,1,0},
+        {0,0,1,1,1,1,1,0},{0,0,0,0,0,0,1,0},{0,0,1,1,1,1,1,0},{0,0,1,1,1,1,1,0},
         //4                 5                6                  7
-        {1,1,0,0,1,1,1,0},{1,1,1,0,1,1,1,0},{1,1,1,0,1,1,1,0},{1,1,0,0,1,1,1,0},
+        {0,0,0,0,1,0,1,0},{1,1,1,0,1,0,1,0},{1,1,1,0,1,0,1,0},{1,1,1,0,1,0,1,0},
         //8                 9                10                 11
-        {0,1,0,1,1,1,1,0},{0,1,0,1,1,1,1,0} ,{0,0,0,0,0,0,0,0},{0,0,1,1,1,1,1,0}
+        {0,0,0,0,1,0,1,0},{0,0,1,1,1,0,1,0} ,{0,0,0,0,0,0,1,0},{0,0,1,1,1,1,1,0}
     };
     int level_8[12][8] = {//第八关
         //0                 1                2                  3
-        {0,0,1,1,1,1,1,0},{0,0,0,0,0,0,0,0},{0,1,0,1,1,1,1,0},{0,1,0,1,1,1,1,0},
+        {0,0,1,0,0,0,1,0},{0,0,1,0,0,0,1,0},{0,0,0,0,1,0,1,0},{0,0,1,1,1,0,1,0},
         //4                 5                6                  7
-        {1,1,0,0,1,1,1,0},{1,1,1,0,1,1,1,0},{1,1,1,0,1,1,1,0},{1,1,0,0,1,1,1,0},
+        {0,0,0,1,1,0,1,0},{1,1,0,0,0,0,1,0},{1,1,0,0,1,1,1,0},{0,1,0,0,1,1,1,0},
         //8                 9                10                 11
-        {0,1,0,1,1,1,1,0},{0,1,0,1,1,1,1,0} ,{0,0,0,0,0,0,0,0},{0,0,1,1,1,1,1,0}
+        {0,1,0,0,1,1,1,0},{0,1,1,0,1,1,1,0} ,{0,0,1,0,0,1,1,0},{0,0,1,1,1,1,1,0}
     };
     int level_9[12][8] = {//第九关
         //0                 1                2                  3
-        {0,0,1,1,1,1,1,0},{0,0,0,0,0,0,0,0},{0,1,0,1,1,1,1,0},{0,1,0,1,1,1,1,0},
+        {0,0,1,1,1,1,1,0},{0,0,0,0,0,0,1,0},{0,1,1,1,1,0,1,0},{0,1,1,1,0,0,1,0},
         //4                 5                6                  7
-        {1,1,0,0,1,1,1,0},{1,1,1,0,1,1,1,0},{1,1,1,0,1,1,1,0},{1,1,0,0,1,1,1,0},
+        {1,1,1,0,0,1,1,0},{1,1,0,0,1,1,1,0},{1,1,0,1,1,1,1,0},{1,1,0,0,1,1,1,0},
         //8                 9                10                 11
-        {0,1,0,1,1,1,1,0},{0,1,0,1,1,1,1,0} ,{0,0,0,0,0,0,0,0},{0,0,1,1,1,1,1,0}
+         {0,1,1,0,0,1,1,0},{0,1,1,1,0,0,1,0} ,{0,0,1,1,1,0,1,0},{0,0,1,1,1,0,1,0}
     };
     int level_10[12][8] = {//第十关
         //0                 1                2                  3
-        {0,0,1,1,1,1,1,0},{0,0,0,0,0,0,0,0},{0,1,0,1,1,1,1,0},{0,1,0,1,1,1,1,0},
+        {0,0,1,1,1,1,1,0},{0,0,0,0,1,1,1,0},{0,1,1,0,1,1,1,0},{0,1,1,0,0,0,1,0},
         //4                 5                6                  7
-        {1,1,0,0,1,1,1,0},{1,1,1,0,1,1,1,0},{1,1,1,0,1,1,1,0},{1,1,0,0,1,1,1,0},
+        {1,1,1,1,1,0,1,0},{1,0,0,1,1,0,1,0},{1,0,0,1,1,0,1,0},{0,0,0,1,1,0,1,0},
         //8                 9                10                 11
-        {0,1,0,1,1,1,1,0},{0,1,0,1,1,1,1,0} ,{0,0,0,0,0,0,0,0},{0,0,1,1,1,1,1,0}
+       {0,0,0,1,1,0,1,0},{0,0,0,0,0,0,1,0} ,{0,0,1,1,1,1,1,0},{0,0,1,1,1,1,1,0}
     };
-    return 0;
-
+    switch (this_level) {
+        case 1:return level_1[int(mouseX / 160)][int(mouseY / 135)];
+        case 2:return level_2[int(mouseX / 160)][int(mouseY / 135)];
+        case 3:return level_3[int(mouseX / 160)][int(mouseY / 135)];
+        case 4:return level_4[int(mouseX / 160)][int(mouseY / 135)];
+        case 5:return level_5[int(mouseX / 160)][int(mouseY / 135)];
+        case 6:return level_6[int(mouseX / 160)][int(mouseY / 135)];
+        case 7:return level_7[int(mouseX / 160)][int(mouseY / 135)];
+        case 8:return level_8[int(mouseX / 160)][int(mouseY / 135)];
+        case 9:return level_9[int(mouseX / 160)][int(mouseY / 135)];
+        case 10:return level_10[int(mouseX / 160)][int(mouseY / 135)];
+        default:
+            break;
+    }
+    return "";
 }
