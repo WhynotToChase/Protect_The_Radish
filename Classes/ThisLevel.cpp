@@ -52,7 +52,7 @@ bool ThisLevel::init(const int&level)
     // 注册鼠标事件监听器
     auto mouseListener = cocos2d::EventListenerMouse::create();
     mouseListener->onMouseMove = CC_CALLBACK_1(ThisLevel::onMouseMove, this);
-    _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, Director::getInstance()->getRunningScene());
 
     this->schedule(CC_SCHEDULE_SELECTOR(ThisLevel::update), 0.1f);
 
@@ -83,15 +83,19 @@ void ThisLevel::update(float delta) {
 
 }
 
-Vec2 ThisLevel::onMouseMove(cocos2d::Event* event)
+void ThisLevel::onMouseMove(cocos2d::Event* event)
 {
+    //判断选择框是否存在
+   // 。。。。。。
+
+    auto range=p->getBoundingBox();
     auto mouseEvent = static_cast<cocos2d::EventMouse*>(event);
 
     // 获取鼠标当前位置
-    float mouseX = mouseEvent->getCursorX();
-    float mouseY = mouseEvent->getCursorY();
-
-    return Vec2(mouseX, mouseY);
+    Vec2 position = mouseEvent->getLocation();
+     //是否在原来框的范围内，移动
+    //.......当前位置是否可用，不可用就禁用
+    
 }
 
 void ThisLevel::createTower(const Vec2& centerPosition)

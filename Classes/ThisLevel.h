@@ -15,11 +15,11 @@ private:
 
     MousePosition* this_mouse;
 
-    
+    Menu* p;
 public:
     int money;
 
-    cocos2d::Vec2 onMouseMove(cocos2d::Event* event);
+    void onMouseMove(cocos2d::Event* event);
 
     cocos2d::MenuItemSprite* buttonItem;
 

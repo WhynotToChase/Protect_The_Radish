@@ -209,7 +209,8 @@ void SelectMenu::moveSprites(Ref* pSender)
             [this](Ref* pSender) {
                 this_music->onButtonEffect();
                 //µÚn¹Ø
-
+                auto p = ThisLevel::create(Level);
+                Director::getInstance()->pushScene(p);
             });
 
         Menu* The_new_middleSprite_menu = Menu::create(The_middleSprite, NULL);
