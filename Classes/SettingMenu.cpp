@@ -14,10 +14,7 @@ bool SettingMenu::init()
     }
     music = SoundManager::getInstance();
 
-#ifdef MOUSE
-    position = MousePosition::create();
-    this->addChild(position,100);
-#endif//MOUSE
+    mouse = MousePosition::create();
 
     auto size = Director::getInstance()->getWinSize();
     auto bg = Sprite::create("../Resources/SettingBG.png");

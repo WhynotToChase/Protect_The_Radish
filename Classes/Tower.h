@@ -1,13 +1,15 @@
 #ifndef __TOWER_H__
 #define __TOWER_H__
 
+#include <set>
+#include <chrono>
 #include <vector>
 #include "cocos2d.h"
 #include "Resource.h"
-#include <chrono>
 #include "Monster.h"
 #include "Bullet.h"
 #include "SoundManager.h"
+#include "Effect.h"
 
 #define MOUSE
 
@@ -15,19 +17,21 @@ class Tower
 {
 private:
 
-    static SoundManager* music;
-
     static std::vector<Tower*> towers;
 
 public:
+ 
+    static bool isChoose;
+
+    static void changeChoose() { isChoose = false; }
 
     static float currentTime;
 
-    static cocos2d::Animate* createCartton();
-
-    static cocos2d::Animate* setAttackAction(int ID,int level);
+    static void setAttackAction(const int ID,const int level,cocos2d::Sprite* tower,cocos2d::Sequence* action=nullptr);
 
     static void clearup();
+
+    static bool hasBuilt(const cocos2d::Vec2& position);
 
     static void upDate();
 
@@ -105,11 +109,6 @@ private:
     static cocos2d::Menu* menu;
 
     void onMouseUp(cocos2d::Event* event);
-#ifdef MOUSE
-    void onMouseMove(cocos2d::Event* event);
-    cocos2d::Label* p;
-#endif // MOUSE
-
 
 public:
 

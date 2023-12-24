@@ -15,7 +15,7 @@ private:
 
     MousePosition* this_mouse;
 
-    Menu* p;
+    cocos2d::Menu* p;
 public:
     int money;
 

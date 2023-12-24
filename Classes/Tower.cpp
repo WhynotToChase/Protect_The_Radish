@@ -4,39 +4,27 @@ using namespace cocos2d;
 
 float Tower::currentTime = 0.0f;
 std::vector<Tower*> Tower::towers = std::vector<Tower*>();
-SoundManager* Tower::music = NULL;
+bool Tower::isChoose = false;
 
-Animate* Tower::createCartton()
+void Tower::setAttackAction(const int ID, const int level, Sprite* tower, Sequence* action)
 {
-    Vector<SpriteFrame*> frames;
-    frames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("Items02-hd_24.PNG"));
-    frames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("Items02-hd_208.PNG"));
-    frames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("Items02-hd_175.PNG"));
-    frames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName("Items02-hd_89.PNG"));
-    auto p = Animation::createWithSpriteFrames(frames, 0.1f);
-    auto q =Animate::create(p);
-    return q;
-}
-
-Animate* Tower::setAttackAction(int ID, int level)
-{
-    Animate* q;
-    Animation* p;
     Vector<SpriteFrame*> frames;
     auto& x = Resource::getTowerDataById(ID)->action;
     for (int j = 0; j < 3; j++) {
         frames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName(x[level][j]));
     }
     frames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName(x[level][0]));
-    p = Animation::createWithSpriteFrames(frames, 0.1f);
-    q = Animate::create(p);
-    frames.clear();
-    return q;
+    Animation* p = Animation::createWithSpriteFrames(frames, 0.2f);
+    Animate* q = Animate::create(p);
+    if (action != nullptr) {
+        auto se = Sequence::create(action, q, nullptr);
+        tower->runAction(se);
+    }
+    tower->runAction(q);
 }
 
 void Tower::clearup()
 {
-    music = NULL;
     currentTime = 0.0f;
     for (auto& p : towers) {
         delete p;
@@ -53,10 +41,17 @@ void Tower::getCurrentTime()
 
 void Tower::upDate()
 {
-    if (music == NULL)
-        music = SoundManager::getInstance();
     wholeAttack();
     TowerMenu::upDate();
+}
+
+bool Tower::hasBuilt(const Vec2& position)
+{
+    for (auto& p : towers) {
+        if (p->getPosition() == position)
+            return true;
+   }
+    return false;
 }
 
 void Tower::wholeAttack()
@@ -69,36 +64,37 @@ void Tower::wholeAttack()
 
 bool Tower::buildTower(const int ID ,const Vec2& position)
 {
-    Tower* p;
-    switch (ID) {
-        case 1:
-            p=new BottleTower(position);
-            break;
-      /* case 3:
-            p=new StarTower(position);
-            break;
-        case 4:
-            p= new FanTower(position);
-            break;
-        case 5:
-            p=new MagicTower(position);
-            break;*/ 
-        default:
-            return false;
+    if (!hasBuilt(position)) {
+        Tower* p;
+        switch (ID) {
+            case 1:
+                p = new BottleTower(position);
+                break;
+                /* case 3:
+                      p=new StarTower(position);
+                      break;
+                  case 4:
+                      p= new FanTower(position);
+                      break;
+                  case 5:
+                      p=new MagicTower(position);
+                      break;*/
+            default:
+                return false;
+        }
+        // ThisLevel::changeMoney(-getTowerDataById(ID).BLDC);
+        towers.push_back(p);
+        return true;
     }
-   // ThisLevel::changeMoney(-getTowerDataById(ID).BLDC);
-    towers.push_back(p);
-    return true;
+    return false;
 }
 
 void Tower::deleteTower()
 {
     auto sequence = Sequence::create(RemoveSelf::create(),nullptr);
     getMenu()->runAction(sequence);
-    auto z = Sequence::create(createCartton(), RemoveSelf::create(), nullptr);
-    auto node = Sprite::create();
-    node->setPosition(getPosition());
-    node->runAction(z);
+    Effect::create(CARTTON,getPosition());
+
     auto iter = std::find(towers.begin(), towers.end(), this);
     if (iter != towers.end()) {
         towers.erase(iter);
@@ -115,7 +111,7 @@ void Tower::attack()
         auto tower = getTowerBady();
         Vec2 enemy = Vec2(0, 0);//Monster::searchEnemy(place);
         if (enemy.distance(place) <= p->AR) {
-            tower->runAction(Sequence::create((setAttackAction(getID(),getLevel()), nullptr)));
+            setAttackAction(getID(), getLevel(), tower);
             //Bullet::setupBullet(place, enemy, getID());
         }
     }
@@ -123,12 +119,11 @@ void Tower::attack()
 
 void Tower::levelUp()
 {
-    auto z = Sequence::create(createCartton(), RemoveSelf::create(), nullptr);
-    auto node = Sprite::create();
-    node->setPosition(getPosition());
-    node->runAction(z);
-    getTowerBady()->setSpriteFrame(Resource::getTowerDataById(getID())->action[getLevel() + 1][0]);
-    addLevel();
+    if (getLevel() < 3) {
+        Effect::create(CARTTON,getPosition());
+        getTowerBady()->setSpriteFrame(Resource::getTowerDataById(getID())->action[getLevel() + 1][0]);
+        addLevel();
+    }
 }
 
 
@@ -142,18 +137,27 @@ BottleTower::BottleTower(const cocos2d::Vec2& p)
 
     bottle = Sprite::createWithSpriteFrameName("ID1_22.PNG");
     auto lamp = Sprite::createWithSpriteFrameName("ID1_11.PNG");
-    lamp->addChild(bottle);
-    auto _bottleTower = MenuItemSprite::create(lamp, lamp, [this](Ref* pSender) { TowerMenu::create(this); });
+    bottle->setScale(1.8f);
+    lamp->setScale(1.8f);
+    Sprite* x = Sprite::create();
+    x->setContentSize(Size(100, 80));
+    x->addChild(lamp);
+    x->addChild(bottle);
+    bottle->setPosition(50, 40);
+    lamp->setPosition(50, 40);
+    x->setAnchorPoint(Vec2(0.5, 0.5));
+   auto _bottleTower = MenuItemSprite::create(x,x, [this](Ref* pSender) {
+        SoundManager::getInstance()->onButtonEffect();
+        if (!isChoose) {
+            TowerMenu::create(this);
+            isChoose = true;
+        }});
     auto bottleTower = Menu::create(_bottleTower, NULL);
     mine = bottleTower;
-    bottleTower->setPosition(p);
-    Director::getInstance()->getRunningScene()->addChild(bottleTower,50);
-
-    auto z = Sequence::create(createCartton(), RemoveSelf::create(), nullptr);
-    auto node = Sprite::create();
-    node->setPosition(p);
-    node->runAction(z);
-    Director::getInstance()->getRunningScene()->addChild(node, 50);
+    bottleTower->setPosition(p); 
+    Director::getInstance()->getRunningScene()->addChild(bottleTower, 50);
+    Effect::create(CARTTON, getPosition());
+    
 }
 
 void BottleTower::attack()
@@ -169,7 +173,8 @@ void BottleTower::attack()
             float angle = CC_RADIANS_TO_DEGREES(atan2(normalizedDirection.y, normalizedDirection.x)) - bottle->getRotation();
             // 创建旋转动画
             auto rotateBy = RotateBy::create(angle / 360.0f, angle);
-            bottle->runAction(Sequence::create(rotateBy, setAttackAction(ID,level), nullptr));
+            auto action = Sequence::create(rotateBy, nullptr);
+            setAttackAction(ID, level, bottle,action);
            // Bullet::setupBullet(position, enemy, ID);
         }
     }
@@ -188,6 +193,7 @@ bool TowerMenu::init(Tower* tower)
     if (!Menu::init()) {
         return false;
     }
+
     _tower = tower;
     position = _tower->getPosition();
     data = Resource::getTowerDataById(_tower->getID());
@@ -198,20 +204,26 @@ bool TowerMenu::init(Tower* tower)
     TowerMenu::up = up;
     Sprite* destory = Sprite::createWithSpriteFrameName(Resource::getSellPrice(data->PR[level]));
     auto levelUp = MenuItemSprite::create(up, up, [this](Ref* pSender) {
+        SoundManager::getInstance()->onButtonEffect();
         if (canUp) {
             menu->removeFromParentAndCleanup(true);
+            menu = nullptr;
             _tower->levelUp();
+            Tower::changeChoose();
             /* ThisLevel::changeMoney(-data->UPGC[level]);*/
         }});
     auto remove = MenuItemSprite::create(destory, destory, [this](Ref* pSender) {
+        SoundManager::getInstance()->onButtonEffect();
         _tower->deleteTower();
         menu->removeFromParentAndCleanup(true);
+        menu = nullptr;
+        Tower::changeChoose();
         /*ThisLevel::changeMoney(data->PR[level]);*/ });
 
-    menu = Menu::create(remove, levelUp, NULL);
+    menu = Menu::create( levelUp,remove, NULL);
     menu->alignItemsVerticallyWithPadding(100);
     menu->setPosition(position);
-    auto fadeIn = FadeIn::create(0.4f);
+    auto fadeIn = FadeIn::create(0.2f);
     menu->setOpacity(0);
     menu->runAction(fadeIn);
     Director::getInstance()->getRunningScene()->addChild(menu,100);
@@ -219,13 +231,6 @@ bool TowerMenu::init(Tower* tower)
     // 注册鼠标移动事件监听器
     auto mouseListener = EventListenerMouse::create();
     mouseListener->onMouseUp = CC_CALLBACK_1(TowerMenu::onMouseUp, this);
-#ifdef MOUSE
-    mouseListener->onMouseMove = CC_CALLBACK_1(TowerMenu::onMouseMove, this);
-    p = Label::create();
-    p->setAnchorPoint(Vec2(1, 0));
-    p->setPosition(Director::getInstance()->getWinSize().width, 0);
-    p->setSystemFontSize(24);
-#endif // MOUSE
     _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, menu);
 
     return true;
@@ -248,23 +253,11 @@ void TowerMenu::onMouseUp(Event* event)
     {
         Rect boundingBox = menu->getBoundingBox();
         Vec2 mousePosition = Vec2(e->getCursorX(), e->getCursorY());
-        if (boundingBox.containsPoint(mousePosition))
+        if (boundingBox.containsPoint(mousePosition)) {
             menu->removeFromParentAndCleanup(true);
+            menu = nullptr;
+            Tower::changeChoose();
+        }
     }
 }
 
-#ifdef MOUSE
-void TowerMenu::onMouseMove(Event* event)
-{
-    EventMouse* e = dynamic_cast<EventMouse*>(event); // 将事件对象转换为鼠标事件对象
-
-    if (e)
-    {
-        Vec2 mousePosition = Vec2(e->getCursorX(), e->getCursorY());
-        p->setAnchorPoint(Vec2(1, 0));
-        p->setPosition(Director::getInstance()->getWinSize().width, 0);
-        p->setSystemFontSize(24);
-        p->setString(StringUtils::format("Mouse Position: (%.2f, %.2f)", position.x, position.y));
-    }
-}
-#endif // MOUSE

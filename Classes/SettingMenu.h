@@ -10,9 +10,8 @@
 
 class SettingMenu :public cocos2d::Scene {
 private:
-#ifdef MOUSE
-	MousePosition* position;
-#endif // MOUSE
+
+	MousePosition* mouse;
 
 	SoundManager* music;
 
