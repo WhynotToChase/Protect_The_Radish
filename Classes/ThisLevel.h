@@ -5,6 +5,7 @@
 #include "cocos2d.h"
 #include"SysMenu.h"
 #include "SelectMenu.h"
+#include<vector>
 #include"SettingMenu.h"
 #include"SoundManager.h"
 #include"MousePosition.h"
@@ -16,18 +17,39 @@ private:
     MousePosition* this_mouse;
 
     cocos2d::Menu* p;
+
+    int position_x;//上一个的格子x位置
+
+    int position_y;//上一个的格子y位置
+
+    float mouseY;
+
+    float mouseX;
 public:
     int money;
+
+    int this_level;
 
     void onMouseMove(cocos2d::Event* event);
 
     cocos2d::MenuItemSprite* buttonItem;
 
+    cocos2d::Menu* menu;
+
+    cocos2d::Menu* leftmenu;
+    cocos2d::Menu* rightmenu;
+    cocos2d::Menu* topmenu;
+    cocos2d::Menu* bottommenu;
+
     virtual bool init(const int& level);
 
     void update(float delta);
 
-    void createTower(const cocos2d::Vec2& centerPosition);
+    void createTower();
+
+    void ToNull();
+
+    bool  find();
 
     std::string SelectLevel(const int& level);
 
