@@ -4,6 +4,7 @@
 #include <set>
 #include <chrono>
 #include <vector>
+#include <string>
 #include "cocos2d.h"
 #include "Resource.h"
 #include "Monster.h"
@@ -20,10 +21,6 @@ private:
     static std::vector<Tower*> towers;
 
 public:
- 
-    static bool isChoose;
-
-    static void changeChoose() { isChoose = false; }
 
     static float currentTime;
 
@@ -52,8 +49,9 @@ public:
     virtual void addLevel() = 0;
     virtual float getLastTime() = 0;
     virtual void  setLastTime(float) = 0;
-    virtual cocos2d::Menu* getMenu() = 0;
+    virtual cocos2d::Sprite* getWhole() = 0;
     virtual cocos2d::Sprite* getTowerBady() = 0;
+    virtual cocos2d::Sprite* getTowerLamp() { return nullptr; }
     virtual const cocos2d::Vec2& getPosition() = 0;
 
 };
@@ -66,9 +64,9 @@ private:
 
     cocos2d::Vec2 position;
 
-    cocos2d::Menu* mine;
+    cocos2d::Sprite* whole;
 
-    cocos2d::Sprite* bottle;
+    cocos2d::Sprite* body;
 
     const static int ID;
 
@@ -81,8 +79,8 @@ public:
     virtual void addLevel() { level++; }
     virtual float getLastTime() { return lastTime; }
     virtual void  setLastTime(float i) { lastTime=i; }
-    virtual cocos2d::Menu* getMenu() { return mine; }
-    virtual cocos2d::Sprite* getTowerBady() { return bottle; }
+    virtual cocos2d::Sprite* getWhole() { return whole; }
+    virtual cocos2d::Sprite* getTowerBady() { return body; }
     virtual const cocos2d::Vec2& getPosition() { return position; }
 
     BottleTower(const cocos2d::Vec2& p);
@@ -90,19 +88,112 @@ public:
     virtual void attack()override;
 };
 
+
+class StarTower : public Tower
+{
+private:
+    int level;
+
+    cocos2d::Vec2 position;
+
+    cocos2d::Sprite* whole;
+
+    cocos2d::Sprite* body;
+
+    cocos2d::Sprite* lamp;
+
+    const static int ID;
+
+    float lastTime;
+
+public:
+
+    virtual const int getID() { return ID; }
+    virtual int getLevel() { return level; }
+    virtual void addLevel() { level++; }
+    virtual float getLastTime() { return lastTime; }
+    virtual void  setLastTime(float i) { lastTime = i; }
+    virtual cocos2d::Sprite* getWhole() { return whole; }
+    virtual cocos2d::Sprite* getTowerBady() { return body; }
+    virtual cocos2d::Sprite* getTowerLamp() override{ return lamp; }
+    virtual const cocos2d::Vec2& getPosition() { return position; }
+
+    StarTower(const cocos2d::Vec2& p);
+};
+
+class FanTower : public Tower
+{
+private:
+    int level;
+
+    cocos2d::Vec2 position;
+
+    cocos2d::Sprite* whole;
+
+    cocos2d::Sprite* body;
+
+    cocos2d::Sprite* lamp;
+
+    const static int ID;
+
+    float lastTime;
+
+public:
+
+    virtual const int getID() { return ID; }
+    virtual int getLevel() { return level; }
+    virtual void addLevel() { level++; }
+    virtual float getLastTime() { return lastTime; }
+    virtual void  setLastTime(float i) { lastTime = i; }
+    virtual cocos2d::Sprite* getWhole() { return whole; }
+    virtual cocos2d::Sprite* getTowerBady() { return body; }
+    virtual cocos2d::Sprite* getTowerLamp() override { return lamp; }
+    virtual const cocos2d::Vec2& getPosition() { return position; }
+
+   FanTower(const cocos2d::Vec2& p);
+};
+
+class MagicTower : public Tower
+{
+private:
+    int level;
+
+    cocos2d::Vec2 position;
+
+    cocos2d::Sprite* whole;
+
+    cocos2d::Sprite* body;
+
+    const static int ID;
+
+    float lastTime;
+
+public:
+
+    virtual const int getID() { return ID; }
+    virtual int getLevel() { return level; }
+    virtual void addLevel() { level++; }
+    virtual float getLastTime() { return lastTime; }
+    virtual void  setLastTime(float i) { lastTime = i; }
+    virtual cocos2d::Sprite* getWhole() { return whole; }
+    virtual cocos2d::Sprite* getTowerBady() { return body; }
+    virtual const cocos2d::Vec2& getPosition() { return position; }
+
+    MagicTower(const cocos2d::Vec2& p);
+};
+
+
 class TowerMenu :public cocos2d::Menu
 {
 private:
 
-    static cocos2d::Vec2 position;
+    static cocos2d::Rect range;
 
     static bool canUp;
 
     static Tower* _tower;
 
     static cocos2d::Sprite* up;
-
-    const static TowerData* data;
 
     static int level;
 
@@ -125,60 +216,6 @@ public:
         }
     };
 };
-/*class StarTower : public Tower
-{
-private:
-    int level;
-
-    cocos2d::Vec2 position;
-
-
-public:
-    const static ID3 attr;
-
-    StarTower(const cocos2d::Vec2& p, const int i = 1);
-
-    virtual void deleteTower();
-
-    virtual void attack(const float& time);
-};
-
-class FanTower : public Tower
-{
-private:
-    int level;
-
-    cocos2d::Vec2 position;
-
-
-public:
-    const static ID4 attr;
-
-    FanTower(const cocos2d::Vec2& p, const int i = 1);
-
-    virtual void deleteTower();
-
-    virtual void attack(const float& time);
-};
-
-class MagicTower : public Tower
-{
-private:
-    int level;
-
-    cocos2d::Vec2 position;
-
-
-public:
-    const static ID5 attr;
-
-    MagicTower(const cocos2d::Vec2& p, const int i = 1);
-
-    virtual void deleteTower();
-
-    virtual void attack(const float& time);
-};
-*/
 
 
 

@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include <vector>
 
 // 定义防御塔数据结构
 struct TowerData {
@@ -20,17 +21,21 @@ struct TowerData {
     int UPGC[4];
     //售价 60%
     int PR[4];
-    //攻击图片 3张为一组
-    std::string action[4][3];
+    //攻击图片
+    std::vector<std::vector<std::string>> action;
+    float actionDelay;
+    //底座
+    std::vector<std::string> lamp;
     //子弹图片
-    std::string bullte[4][3];
+    std::vector<std::vector<std::string>>bullet;
+    float bulletDelay;
     //爆炸特效
-    std::string effect[2];
+    std::vector<std::string> effect;
 };
 
 class Resource {
 public:
-    static const TowerData* getTowerDataById(int id);
+    static const TowerData& getTowerDataById(int id);
     static const std::string& getIcon(int price, bool i);
     static const std::string& getSellPrice(int price);
 

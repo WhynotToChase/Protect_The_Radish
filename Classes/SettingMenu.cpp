@@ -118,6 +118,9 @@ void SettingMenu::returnHome()
 void SettingMenu::saveGame()
 {
     Tower::buildTower(1, Vec2(500, 500));
+    Tower::buildTower(3, Vec2(1000, 500));
+    Tower::buildTower(4, Vec2(1500, 500));
+    Tower::buildTower(5, Vec2(1000, 250));
     music->onButtonEffect();
 }
 

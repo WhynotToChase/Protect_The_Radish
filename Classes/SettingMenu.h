@@ -7,7 +7,6 @@
 #include "SysMenu.h"
 
 
-
 class SettingMenu :public cocos2d::Scene {
 private:
 
