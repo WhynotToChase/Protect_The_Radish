@@ -21,9 +21,6 @@ bool SelectMenu::init()
 {
     this_music = SoundManager::getInstance();
 
-    this_mouse = MousePosition::create();
-    addChild(this_mouse);
-
     if (!Layer::init())
     {
         return false;

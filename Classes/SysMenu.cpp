@@ -29,9 +29,6 @@ bool SysMenu::init()
     {
         return false;
     }
-    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("sys_menu.plist");
-    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("settings.plist");
-    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("tower.plist");
     ////////////////// 
     Size WinSize = Director::getInstance()->getWinSize();
 
@@ -153,7 +150,6 @@ bool SysMenu::init()
 
 
     music=SoundManager::getInstance();
-
     return true;
 }
 
@@ -315,6 +311,7 @@ void SysMenu::OnProduct(Ref* pSender)
     auto moveBy = MoveBy::create(0.7f, Vec2(0,-size.height / 2 - frameSize.width / 2));
     frame->runAction(moveBy);
     monitor(frame);
+
 }
 
 void SysMenu::OnExit(Ref* pSender)

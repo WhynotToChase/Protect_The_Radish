@@ -6,14 +6,12 @@
 #include "SelectMenu.h"
 #include"SettingMenu.h"
 #include"SoundManager.h"
-#include"MousePosition.h"
 #include<string>
 
 
 class SelectMenu : public cocos2d::Layer
 {
 private:
-    MousePosition* this_mouse;
 
     cocos2d::Menu* The_middleSprite_menu;
 

@@ -7,13 +7,11 @@ class Bullet : public cocos2d::Sprite {
 public:
     virtual bool init();
 
-    void setupBullet(const cocos2d::Vec2& startPosition, const cocos2d::Vec2& targetPosition);
+    static void setupBullet(const cocos2d::Vec2& startPosition, const cocos2d::Vec2& targetPosition,const int ID);
 
     virtual void update(float delta);
 
-    static Bullet* create();
-
-    CREATE_FUNC(TowerBullet);
+    CREATE_FUNC(Bullet);
 
 protected:
     float speed;
@@ -26,8 +24,6 @@ public:
 
     // 如果RocketBullet有特定的行为，可以在这里添加自己的方法和属性
 
-    static RocketBullet* create();
-
     CREATE_FUNC(RocketBullet);
 
     // 重写基类的update方法
@@ -39,8 +35,6 @@ public:
     virtual bool init();
 
     // 如果LaserBullet有特定的行为，可以在这里添加自己的方法和属性
-
-    static LaserBullet* create();
 
     CREATE_FUNC(LaserBullet);
 

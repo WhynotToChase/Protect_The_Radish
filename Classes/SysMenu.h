@@ -6,6 +6,7 @@
 #include "SoundManager.h"
 #include "SettingMenu.h"
 #include"SelectMenu.h"
+#include "Tower.h"
 
 class SysMenu : public cocos2d::Layer
 {

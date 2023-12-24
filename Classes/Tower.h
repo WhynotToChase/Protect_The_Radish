@@ -1,58 +1,55 @@
 #ifndef __TOWER_H__
 #define __TOWER_H__
 
-#include <map>
+#include <vector>
 #include "cocos2d.h"
 #include "Resource.h"
 #include <chrono>
 #include "Monster.h"
+#include "Bullet.h"
+#include "SoundManager.h"
 
 class Tower 
 {
 private:
 
-    static std::map<cocos2d::Vec2,Tower*>towers;
+    static SoundManager* music;
+
+    static std::vector<Tower*> towers;
 
 public:
 
     static float currentTime;
 
-    static cocos2d::Animate* cartoon;
-
     static cocos2d::Animate* createCartton();
 
-    static cocos2d::Animate** setAttackAction(int ID);
+    static cocos2d::Animate* setAttackAction(int ID,int level);
 
-    void clearup();
+    static void clearup();
 
-    bool buildTower(const int ID,const cocos2d::Vec2&position);
+    static void upDate();
 
-    virtual void deleteTower()=0;
+    static bool buildTower(const int ID,const cocos2d::Vec2&position);
 
-    void wholeAttack();
+    static void wholeAttack();
 
-    virtual void levelUp() = 0;
+    virtual void deleteTower();
 
-    virtual void attack()=0;
+    virtual void levelUp();
 
-    float getCurrentTime();
+    virtual void attack();
 
-};
+    static void getCurrentTime();
 
-class TowerMenu
-{
-private:
+    virtual const int getID() = 0;
+    virtual int getLevel() = 0;
+    virtual void addLevel() = 0;
+    virtual float getLastTime() = 0;
+    virtual void  setLastTime(float) = 0;
+    virtual cocos2d::Menu* getMenu() = 0;
+    virtual cocos2d::Sprite* getTowerBady() = 0;
+    virtual const cocos2d::Vec2& getPosition() = 0;
 
-    static bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event, cocos2d::Menu* menu);
-
-    static void monitor(cocos2d::Menu* menu);
-
-    static void removeTouchListener();
-
-public:
-
-    static void create(Tower* tower);
-  
 };
 
 
@@ -67,24 +64,61 @@ private:
 
     cocos2d::Sprite* bottle;
 
-    static cocos2d::Animate** attackAction;
+    const static int ID;
+
+    float lastTime;
 
 public:
 
-    static float lastTime;
-
-    const static int ID;
+    virtual const int getID() { return ID; }
+    virtual int getLevel() { return level; }
+    virtual void addLevel() { level++; }
+    virtual float getLastTime() { return lastTime; }
+    virtual void  setLastTime(float i) { lastTime=i; }
+    virtual cocos2d::Menu* getMenu() { return mine; }
+    virtual cocos2d::Sprite* getTowerBady() { return bottle; }
+    virtual const cocos2d::Vec2& getPosition() { return position; }
 
     BottleTower(const cocos2d::Vec2& p);
 
-    virtual void deleteTower();
-
-    virtual void levelUp();
-
-    virtual void attack();
+    virtual void attack()override;
 };
 
+class TowerMenu :public cocos2d::Menu
+{
+private:
 
+    static cocos2d::Vec2 position;
+
+    static bool canUp;
+
+    static Tower* _tower;
+
+    static cocos2d::Sprite* up;
+
+    const static TowerData* data;
+
+    static int level;
+
+    static cocos2d::Menu* menu;
+
+    void onMouseUp(cocos2d::Event* event);
+
+public:
+
+    static void upDate();
+
+    virtual bool init(Tower* tower);
+
+    static TowerMenu* create(Tower* tower) {
+        TowerMenu* pRet = new(std::nothrow) TowerMenu(); if (pRet && pRet->init(tower)) {
+            pRet->autorelease(); return pRet;
+        }
+        else {
+            delete pRet; pRet = nullptr; return nullptr;
+        }
+    };
+};
 /*class StarTower : public Tower
 {
 private:

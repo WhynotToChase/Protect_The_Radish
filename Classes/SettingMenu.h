@@ -6,7 +6,7 @@
 #include "MousePosition.h"
 #include "SysMenu.h"
 
-#define MOUSE
+
 
 class SettingMenu :public cocos2d::Scene {
 private:
