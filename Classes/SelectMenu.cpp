@@ -40,7 +40,7 @@ bool SelectMenu::init()
     Level = 1;//记录关数
 
     // 创建精灵并设置初始缩放
-    auto middleSprite = Sprite::create("../Resources/level_1.png");
+    auto middleSprite = Sprite::create("../Resources/level_01.png");
     
     MenuItemSprite* The_middleSprite = MenuItemSprite::create(middleSprite, middleSprite,
         [this](Ref* pSender) {
