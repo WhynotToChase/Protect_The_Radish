@@ -6,6 +6,8 @@
 #include "SelectMenu.h"
 #include"SettingMenu.h"
 #include"SoundManager.h"
+#include"ThisLevel.h"
+
 #include<string>
 
 
@@ -27,7 +29,7 @@ public:
 
     static cocos2d::Scene* scene();
 
-    std::string SelectLevel(const int& level);
+    static std::string SelectLevel(const int& level);
 
     void ThisSet();
 

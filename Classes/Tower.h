@@ -9,6 +9,8 @@
 #include "Bullet.h"
 #include "SoundManager.h"
 
+#define MOUSE
+
 class Tower 
 {
 private:
@@ -103,6 +105,11 @@ private:
     static cocos2d::Menu* menu;
 
     void onMouseUp(cocos2d::Event* event);
+#ifdef MOUSE
+    void onMouseMove(cocos2d::Event* event);
+    cocos2d::Label* p;
+#endif // MOUSE
+
 
 public:
 

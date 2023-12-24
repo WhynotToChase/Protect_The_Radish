@@ -219,6 +219,13 @@ bool TowerMenu::init(Tower* tower)
     // 注册鼠标移动事件监听器
     auto mouseListener = EventListenerMouse::create();
     mouseListener->onMouseUp = CC_CALLBACK_1(TowerMenu::onMouseUp, this);
+#ifdef MOUSE
+    mouseListener->onMouseMove = CC_CALLBACK_1(TowerMenu::onMouseMove, this);
+    p = Label::create();
+    p->setAnchorPoint(Vec2(1, 0));
+    p->setPosition(Director::getInstance()->getWinSize().width, 0);
+    p->setSystemFontSize(24);
+#endif // MOUSE
     _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, menu);
 
     return true;
@@ -245,3 +252,19 @@ void TowerMenu::onMouseUp(Event* event)
             menu->removeFromParentAndCleanup(true);
     }
 }
+
+#ifdef MOUSE
+void TowerMenu::onMouseMove(Event* event)
+{
+    EventMouse* e = dynamic_cast<EventMouse*>(event); // 将事件对象转换为鼠标事件对象
+
+    if (e)
+    {
+        Vec2 mousePosition = Vec2(e->getCursorX(), e->getCursorY());
+        p->setAnchorPoint(Vec2(1, 0));
+        p->setPosition(Director::getInstance()->getWinSize().width, 0);
+        p->setSystemFontSize(24);
+        p->setString(StringUtils::format("Mouse Position: (%.2f, %.2f)", position.x, position.y));
+    }
+}
+#endif // MOUSE
