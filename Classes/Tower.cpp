@@ -1,4 +1,5 @@
 #include "Tower.h"
+#include <cmath>
 
 using namespace cocos2d;
 
@@ -41,9 +42,10 @@ void Tower::clearup()
 // 获取当前时间戳的函数
 void Tower::getCurrentTime()
 {
-    currentTime = std::chrono::duration_cast<std::chrono::milliseconds>(
-        std::chrono::system_clock::now().time_since_epoch()
-    ).count() / 1000.0f;
+    auto now = std::chrono::system_clock::now();
+    auto duration = now.time_since_epoch();
+    long long timestampInMilliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+    currentTime = timestampInMilliseconds % 1000000 / 1000.0f;
 }
 
 void Tower::upDate()
@@ -111,15 +113,18 @@ void Tower::deleteTower()
 
 void Tower::attack()
 {
-    auto p = Resource::getTowerDataById(getID());
+    auto& p = Resource::getTowerDataById(getID());
     if (currentTime -getLastTime() > p.AS[getLevel()]) {
         setLastTime(currentTime);
-        auto place = getPosition();
+        auto& place = getPosition();
         auto tower = getTowerBady();
-        Vec2 enemy = Vec2(0, 0);//Monster::searchEnemy(place);
-        if (enemy.distance(place) <= p.AR) {
+        Vec2 enemy = Vec2(1000,500);//Monster::searchEnemy(place);
+        if (place.distance(enemy)<= p.AR) {
             setAttackAction(getID(), getLevel(), tower);
-            //Bullet::setupBullet(place, enemy, getID());
+            if (getID() != 3)
+                Bullet::setupBullet(place, enemy, getID(), getLevel(), p.AR);
+            else
+                Bullet::setupBullet(place, enemy, 3, 1, p.AR);
         }
     }
 }
@@ -130,7 +135,7 @@ void Tower::levelUp()
         Effect::create(CARTTON,getPosition());
         getTowerBady()->setSpriteFrame(Resource::getTowerDataById(getID()).action[getLevel() + 1][0]);
         if (getID() == 3||getID()==4)
-            getTowerLamp()->setSpriteFrame(Resource::getTowerDataById(getID()).lamp[getLevel() + 1]);
+           getTowerLamp()->setSpriteFrame(Resource::getTowerDataById(getID()).lamp[getLevel() + 1]);
         addLevel();
     }
 }
@@ -141,14 +146,13 @@ const int BottleTower::ID = 1;
 BottleTower::BottleTower(const cocos2d::Vec2& p)
 {
     level = 1;
-    lastTime = 0.0f;  
+    lastTime = currentTime;  
     position = p;
    
     body= Sprite::createWithSpriteFrameName(Resource::getTowerDataById(ID).action[level][0]);
     auto lamp = Sprite::createWithSpriteFrameName(Resource::getTowerDataById(ID).lamp[level]);
     body->setScale(SIZE);
     lamp->setScale(SIZE);
-
 
     auto bg = Sprite::create("../Resources/1.png");
     bg->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
@@ -171,20 +175,19 @@ BottleTower::BottleTower(const cocos2d::Vec2& p)
 
 void BottleTower::attack()
 {
-    auto p = Resource::getTowerDataById(ID);
+    auto& p = Resource::getTowerDataById(ID);
     if (currentTime - lastTime > p.AS[level]) {
         lastTime = currentTime;
-        Vec2 enemy = Vec2(0, 0);// Monster::searchEnemy(bottle->getPosition());
+        Vec2 enemy = Vec2(1000, 500);// Monster::searchEnemy(bottle->getPosition());
         if (enemy.distance(position) <= p.AR) {
-            Vec2 direction = enemy - position;
-            Vec2 normalizedDirection = direction.getNormalized();
+            Vec2 normalizedDirection = (enemy-position).getNormalized();
             // 计算旋转角度（弧度）
-            float angle = CC_RADIANS_TO_DEGREES(atan2(normalizedDirection.y, normalizedDirection.x)) - body->getRotation();
+            float angle = CC_RADIANS_TO_DEGREES(atan2(normalizedDirection.y, normalizedDirection.x));
             // 创建旋转动画
-            auto rotateBy = RotateBy::create(angle / 360.0f, angle);
-            auto action = Sequence::create(rotateBy, nullptr);
+            auto rotateTo = RotateTo::create(fabs(angle / 360.0f), -angle);
+            auto action = Sequence::create(rotateTo, nullptr);
             setAttackAction(ID, level, body,action);
-           // Bullet::setupBullet(position, enemy, ID);
+            Bullet::setupBullet(position, enemy, ID,level,p.AR);
         }
     }
 }
@@ -194,14 +197,13 @@ const int StarTower::ID = 3;
 StarTower::StarTower(const cocos2d::Vec2& p)
 {
     level = 1;
-    lastTime = 0.0f;
+    lastTime = currentTime;
     position = p;
 
     body = Sprite::createWithSpriteFrameName(Resource::getTowerDataById(ID).action[level][0]);
     lamp = Sprite::createWithSpriteFrameName(Resource::getTowerDataById(ID).lamp[level]);
     body->setScale(SIZE);
     lamp->setScale(SIZE);
-
 
     auto bg = Sprite::create("../Resources/1.png");
     bg->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
@@ -226,14 +228,13 @@ const int FanTower::ID = 4;
 FanTower::FanTower(const cocos2d::Vec2& p)
 {
     level = 1;
-    lastTime = 0.0f;
+    lastTime = currentTime;
     position = p;
 
     body = Sprite::createWithSpriteFrameName(Resource::getTowerDataById(ID).action[level][0]);
     lamp = Sprite::createWithSpriteFrameName(Resource::getTowerDataById(ID).lamp[level]);
     body->setScale(SIZE);
     lamp->setScale(SIZE);
-
 
     auto bg = Sprite::create("../Resources/1.png");
     bg->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
@@ -259,7 +260,7 @@ const int MagicTower::ID = 5;
 MagicTower::MagicTower(const cocos2d::Vec2& p)
 {
     level = 1;
-    lastTime = 0.0f;
+    lastTime = currentTime;
     position = p;
 
     body = Sprite::createWithSpriteFrameName(Resource::getTowerDataById(ID).action[level][0]);
@@ -287,8 +288,9 @@ MagicTower::MagicTower(const cocos2d::Vec2& p)
 bool TowerMenu::canUp=false;
 Tower* TowerMenu::_tower=nullptr;
 int TowerMenu::level=1;
-cocos2d::Menu* TowerMenu::menu = nullptr;
-cocos2d::Sprite* TowerMenu::up = nullptr;
+Menu* TowerMenu::menu = nullptr;
+Sprite* TowerMenu::up = nullptr;
+MenuItem* TowerMenu::levelup = nullptr;
 Rect TowerMenu::range=Rect(0,0,0,0);
 
 bool TowerMenu::init(Tower* tower) 
@@ -318,12 +320,16 @@ bool TowerMenu::init(Tower* tower)
             _tower->levelUp();
             /* ThisLevel::changeMoney(-data->UPGC[level]);*/
         }});
+    levelUp->setScale(1.5f);
+    levelup = levelUp;
     auto remove = MenuItemSprite::create(destory, destory, [this](Ref* pSender) {
         SoundManager::getInstance()->onButtonEffect();
         _tower->deleteTower();
         menu->removeFromParentAndCleanup(true);
         menu = nullptr;
-        /*ThisLevel::changeMoney(data->PR[level]);*/ });
+        /*ThisLevel::changeMoney(data->PR[level]);*/ 
+        });
+    remove->setScale(1.5f);
     
     menu = Menu::create( levelUp,remove, NULL);
     menu->alignItemsVerticallyWithPadding(150);
@@ -331,12 +337,21 @@ bool TowerMenu::init(Tower* tower)
     auto fadeIn = FadeIn::create(0.2f);
     menu->setOpacity(0);
     menu->runAction(fadeIn);
-    Director::getInstance()->getRunningScene()->addChild(menu,100);
+
     // 注册鼠标移动事件监听器
     auto mouseListener = EventListenerMouse::create();
     mouseListener->onMouseUp = CC_CALLBACK_1(TowerMenu::onMouseUp, this);
     _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, menu);
 
+    auto theRange = Sprite::create("../Resources/AttackRange.PNG");
+    theRange->setScaleX(2*data.AR / theRange->getContentSize().width);
+    theRange->setScaleY(2*data.AR / theRange->getContentSize().height);
+    theRange->setOpacity(100); 
+    auto _theRange = MenuItem::create();
+    _theRange->addChild(theRange);
+    menu->addChild(_theRange, -10);
+
+    Director::getInstance()->getRunningScene()->addChild(menu,100);
     return true;
 }
 
@@ -346,6 +361,7 @@ void TowerMenu::upDate()
         return;
     if (canUp != false) {//(data->UPGC[level]<ThisLevel::getMenoy))
         up->setSpriteFrame(Resource::getIcon(Resource::getTowerDataById(_tower->getID()).UPGC[level], canUp));
+        up->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
     }
 }
 

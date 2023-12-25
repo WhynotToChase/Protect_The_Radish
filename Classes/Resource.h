@@ -14,7 +14,7 @@ struct TowerData {
     //穿透
     bool PEN;
     //攻击范围
-    int AR;
+    float AR;
     //建造花费
     int BLDC;
     //升级花费

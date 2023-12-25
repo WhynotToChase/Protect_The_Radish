@@ -587,68 +587,68 @@
                 <key>aliases</key>
                 <array/>
                 <key>anchor</key>
-                <string>{0.597222,0.479167}</string>
+                <string>{0.458333,0.478261}</string>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{23,24}</string>
+                <string>{24,23}</string>
                 <key>spriteSourceSize</key>
-                <string>{23,24}</string>
+                <string>{24,23}</string>
                 <key>textureRect</key>
-                <string>{{65,487},{23,24}}</string>
+                <string>{{65,487},{24,23}}</string>
                 <key>textureRotated</key>
-                <false/>
+                <true/>
             </dict>
             <key>ID3_81.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>anchor</key>
-                <string>{0.597222,0.479167}</string>
+                <string>{0.707317,0.47619}</string>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{21,41}</string>
+                <string>{41,21}</string>
                 <key>spriteSourceSize</key>
-                <string>{21,41}</string>
+                <string>{41,21}</string>
                 <key>textureRect</key>
-                <string>{{778,411},{21,41}}</string>
+                <string>{{778,411},{41,21}}</string>
                 <key>textureRotated</key>
-                <true/>
+                <false/>
             </dict>
             <key>ID3_82.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>anchor</key>
-                <string>{0.597222,0.479167}</string>
+                <string>{0.75,0.5}</string>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{22,44}</string>
+                <string>{44,22}</string>
                 <key>spriteSourceSize</key>
-                <string>{22,44}</string>
+                <string>{44,22}</string>
                 <key>textureRect</key>
-                <string>{{140,487},{22,44}}</string>
+                <string>{{140,487},{44,22}}</string>
                 <key>textureRotated</key>
-                <true/>
+                <false/>
             </dict>
             <key>ID3_83.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
                 <key>anchor</key>
-                <string>{0.597222,0.479167}</string>
+                <string>{0.758621,0.5}</string>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
-                <string>{16,29}</string>
+                <string>{29,16}</string>
                 <key>spriteSourceSize</key>
-                <string>{16,29}</string>
+                <string>{29,16}</string>
                 <key>textureRect</key>
-                <string>{{542,494},{16,29}}</string>
+                <string>{{542,494},{29,16}}</string>
                 <key>textureRotated</key>
-                <true/>
+                <false/>
             </dict>
             <key>ID3_84.PNG</key>
             <dict>
@@ -723,7 +723,7 @@
                 <key>aliases</key>
                 <array/>
                 <key>anchor</key>
-                <string>{0.483871,0.95122}</string>
+                <string>{0.483871,0.951219}</string>
                 <key>spriteOffset</key>
                 <string>{0,-3}</string>
                 <key>spriteSize</key>
@@ -876,7 +876,7 @@
                 <key>aliases</key>
                 <array/>
                 <key>anchor</key>
-                <string>{0.497222,0.479167}</string>
+                <string>{0.47541,0.43103}</string>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
@@ -1386,7 +1386,7 @@
                 <key>aliases</key>
                 <array/>
                 <key>anchor</key>
-                <string>{0.597222,0.479167}</string>
+                <string>{0.5,0.5}</string>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
@@ -1403,7 +1403,7 @@
                 <key>aliases</key>
                 <array/>
                 <key>anchor</key>
-                <string>{0.597222,0.479167}</string>
+                <string>{0.5,0.5}</string>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
@@ -1420,7 +1420,7 @@
                 <key>aliases</key>
                 <array/>
                 <key>anchor</key>
-                <string>{0.597222,0.479167}</string>
+                <string>{0.5,0.5}</string>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
@@ -1437,7 +1437,7 @@
                 <key>aliases</key>
                 <array/>
                 <key>anchor</key>
-                <string>{0.597222,0.479167}</string>
+                <string>{0.5,0.5}</string>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
@@ -1454,7 +1454,7 @@
                 <key>aliases</key>
                 <array/>
                 <key>anchor</key>
-                <string>{0.597222,0.479167}</string>
+                <string>{0.5,0.5}</string>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
@@ -1471,7 +1471,7 @@
                 <key>aliases</key>
                 <array/>
                 <key>anchor</key>
-                <string>{0.597222,0.479167}</string>
+                <string>{0.5,0.5}</string>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
@@ -1488,7 +1488,7 @@
                 <key>aliases</key>
                 <array/>
                 <key>anchor</key>
-                <string>{0.597222,0.479167}</string>
+                <string>{0.5,0.5}</string>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
@@ -1505,7 +1505,7 @@
                 <key>aliases</key>
                 <array/>
                 <key>anchor</key>
-                <string>{0.597222,0.479167}</string>
+                <string>{0.5,0.5}</string>
                 <key>spriteOffset</key>
                 <string>{0,0}</string>
                 <key>spriteSize</key>
@@ -1531,7 +1531,7 @@
             <key>size</key>
             <string>{1391,512}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:ce2107d38e699a1b3146949dfc7966d8:ae706e67196193451ead055e642c69e2:0e760ff8ddf4cb8c1511a36966d1a804$</string>
+            <string>$TexturePacker:SmartUpdate:b9f9c875db16f72a17484067bf46613b:008b5cf8fc8f381c4d75e9a150ceac26:0e760ff8ddf4cb8c1511a36966d1a804$</string>
             <key>textureFileName</key>
             <string>tower.png</string>
         </dict>

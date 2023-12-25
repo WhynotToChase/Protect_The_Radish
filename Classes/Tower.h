@@ -74,7 +74,7 @@ private:
 
 public:
 
-    virtual const int getID() { return ID; }
+    virtual const int getID() { return 1; }
     virtual int getLevel() { return level; }
     virtual void addLevel() { level++; }
     virtual float getLastTime() { return lastTime; }
@@ -108,7 +108,7 @@ private:
 
 public:
 
-    virtual const int getID() { return ID; }
+    virtual const int getID() { return 3; }
     virtual int getLevel() { return level; }
     virtual void addLevel() { level++; }
     virtual float getLastTime() { return lastTime; }
@@ -140,7 +140,7 @@ private:
 
 public:
 
-    virtual const int getID() { return ID; }
+    virtual const int getID() { return 4; }
     virtual int getLevel() { return level; }
     virtual void addLevel() { level++; }
     virtual float getLastTime() { return lastTime; }
@@ -170,7 +170,7 @@ private:
 
 public:
 
-    virtual const int getID() { return ID; }
+    virtual const int getID() { return 5; }
     virtual int getLevel() { return level; }
     virtual void addLevel() { level++; }
     virtual float getLastTime() { return lastTime; }
@@ -194,6 +194,8 @@ private:
     static Tower* _tower;
 
     static cocos2d::Sprite* up;
+
+    static cocos2d::MenuItem* levelup;
 
     static int level;
 

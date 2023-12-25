@@ -19,6 +19,8 @@ bool ThisLevel::init(const int&level)
     {
         return false;
     }
+    //物理世界
+    this->initWithPhysics();
 
 
     Size WinSize = Director::getInstance()->getWinSize();
@@ -58,6 +60,7 @@ bool ThisLevel::init(const int&level)
     
     this->schedule(CC_SCHEDULE_SELECTOR(ThisLevel::update), 0.1f);
 
+    Tower::clearup();
     return true;
 }
 
@@ -82,7 +85,7 @@ std::string ThisLevel::SelectLevel(const int&level) {
 
 //更新每时刻的变化
 void ThisLevel::update(float delta) {
-   
+    Tower::upDate();
 }
 
 void ThisLevel::onMouseMove(cocos2d::Event* event)
@@ -124,7 +127,7 @@ void ThisLevel::onMouseMove(cocos2d::Event* event)
 void ThisLevel::createTower()
 {
     // 在当前按钮中心位置创建四个按钮
-    money = 100;
+    money = 1000;
     float buttonWidth = 160.0f;
     float buttonHeight = 135.0f;
     Sprite* leftSprite;
@@ -168,7 +171,6 @@ void ThisLevel::createTower()
         [this](Ref* pSender) {
             this_music->onButtonEffect();
             if (money >= 100) {
-                money = money - 100;
                 auto firsttower = Tower::buildTower(1, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
             }
             ToNull();
@@ -181,8 +183,8 @@ void ThisLevel::createTower()
     auto rightButton = MenuItemSprite::create(rightSprite, rightSprite,
         [this](Ref* pSender) {
             this_music->onButtonEffect();
-            if (money >= 100) {
-                auto firsttower = Tower::buildTower(1, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
+            if (money >= 160) {
+                auto firsttower = Tower::buildTower(3, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
             }
             ToNull();
         });
@@ -194,8 +196,8 @@ void ThisLevel::createTower()
     auto topButton = MenuItemSprite::create(topSprite, topSprite,
        [this](Ref* pSender) {
             this_music->onButtonEffect();
-            if (money >= 100) {
-                auto firsttower = Tower::buildTower(1, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
+            if (money >= 160) {
+                auto firsttower = Tower::buildTower(4, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
             }
             ToNull();
         });
@@ -207,8 +209,8 @@ void ThisLevel::createTower()
     auto bottomButton = MenuItemSprite::create(bottomSprite, bottomSprite,
         [this](Ref* pSender) {
             this_music->onButtonEffect();
-            if (money >= 100) {
-                auto firsttower = Tower::buildTower(1, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
+            if (money >= 160) {
+                auto firsttower = Tower::buildTower(5, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
             }
             ToNull();
         });

@@ -2,45 +2,93 @@
 #define __BULLET_H__
 
 #include "cocos2d.h"
+#include "Resource.h"
 
-class Bullet : public cocos2d::Sprite {
+class Bullet
+{
+
 public:
-    virtual bool init();
 
-    static void setupBullet(const cocos2d::Vec2& startPosition, const cocos2d::Vec2& targetPosition,const int ID);
+    static void setupBullet(cocos2d::Vec2 startPosition, const cocos2d::Vec2& targetPosition,const int ID,const int level, const float AR);
 
-    virtual void update(float delta);
+    static cocos2d::Vec2 accFinal(cocos2d::Vec2& startPosition, const cocos2d::Vec2& targetPosition,const float AR, const bool i=false);
 
-    CREATE_FUNC(Bullet);
-
-protected:
-    float speed;
-    cocos2d::Vec2 target;
+    static cocos2d::Vec2 accFinal(cocos2d::Vec2& startPosition,const float angle,const float AR);
 };
 
-class RocketBullet : public Bullet {
+class TheBullet :public cocos2d::Sprite
+{
+
 public:
-    virtual bool init();
 
-    // 如果RocketBullet有特定的行为，可以在这里添加自己的方法和属性
+    int ID;
 
-    CREATE_FUNC(RocketBullet);
+    int ATK;
 
-    // 重写基类的update方法
-    virtual void update(float delta) override;
+    int getATK() { return ATK; }
+
+    virtual bool init(const cocos2d::Vec2& start, const cocos2d::Vec2& target, const int ID, const int level);
+
+   static TheBullet* create(const cocos2d::Vec2& startPosition, const cocos2d::Vec2& targetPosition, const int ID, const int level) {
+       TheBullet* pRet = new(std::nothrow) TheBullet(); if (pRet && pRet->init(startPosition, targetPosition, ID, level)) {
+            pRet->autorelease(); return pRet;
+        }
+        else {
+            delete pRet; pRet = nullptr; return nullptr;
+        }
+    };
+
+    virtual bool onContactBegin(cocos2d::PhysicsContact& contact);
 };
 
-class LaserBullet : public Bullet {
+class FanBullet : public cocos2d::Sprite 
+{
+
 public:
-    virtual bool init();
 
-    // 如果LaserBullet有特定的行为，可以在这里添加自己的方法和属性
+    int ID;
 
-    CREATE_FUNC(LaserBullet);
+    int ATK;
 
-    // 重写基类的update方法
-    virtual void update(float delta) override;
+    int getATK() { return ATK; }
+
+    virtual bool init(const cocos2d::Vec2& start, const cocos2d::Vec2& target, const int ID, const int level);
+
+    static FanBullet* create(const cocos2d::Vec2& startPosition, const cocos2d::Vec2& targetPosition, const int ID, const int level) {
+        FanBullet* pRet = new(std::nothrow) FanBullet(); if (pRet && pRet->init(startPosition, targetPosition, ID, level)) {
+            pRet->autorelease(); return pRet;
+        }
+        else {
+            delete pRet; pRet = nullptr; return nullptr;
+        }
+    };
+
+    virtual bool onContactBegin(cocos2d::PhysicsContact& contact);
 };
 
+class MagicBullet : public cocos2d::Sprite 
+{
+
+public:
+    int ID;
+
+    int ATK;
+
+    int getATK() { return ATK; }
+
+    virtual bool init(const cocos2d::Vec2& start, const cocos2d::Vec2& target, const int ID, const int level);
+
+    static MagicBullet* create(const cocos2d::Vec2& startPosition, const cocos2d::Vec2& targetPosition, const int ID, const int level) {
+        MagicBullet* pRet = new(std::nothrow) MagicBullet(); if (pRet && pRet->init(startPosition, targetPosition, ID, level)) {
+            pRet->autorelease(); return pRet;
+        }
+        else {
+            delete pRet; pRet = nullptr; return nullptr;
+        }
+    };
+
+    virtual bool onContactBegin(cocos2d::PhysicsContact& contact);
+
+};
 
 #endif // !__BULLET_H__

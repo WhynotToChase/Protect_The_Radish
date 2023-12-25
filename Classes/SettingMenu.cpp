@@ -117,7 +117,6 @@ void SettingMenu::returnHome()
 
 void SettingMenu::saveGame()
 {
-
     music->onButtonEffect();
 }
 
