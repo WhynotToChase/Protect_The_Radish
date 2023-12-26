@@ -72,11 +72,10 @@ public:
     static const LevelData& getLevelData(const int level);
     static bool find(const float mouseX, const float mouseY, const int this_level);
     static std::vector<int>gameData;
-    static bool setData(const int level, const int star);
     static bool saveGame();
-    static bool saveSetting(const bool sound, const bool effect);
     static void readData(const int which);
     static void removeData();
+    static std::vector<std::string>carret;
 private:
     static int myGame;
     static std::map<int, TowerData> towerDataMap;

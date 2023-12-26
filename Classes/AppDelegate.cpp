@@ -111,6 +111,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile("sys_menu.plist");
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile("settings.plist");
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile("tower.plist");
+    SoundManager::getInstance();
 
     // create a scene. it's an autorelease object
     auto scene = SysMenu::scene();

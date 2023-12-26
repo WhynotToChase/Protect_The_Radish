@@ -55,11 +55,12 @@ Vec2 Bullet::accFinal( Vec2& start, const float angle, const float AR)
 	return final;
 }
 
-bool TheBullet::init(const Vec2& start, const Vec2& final, const int ID, const int level)
+bool TheBullet::init(const Vec2& start, const Vec2 & final, const int ID, const int level)
 {
 	auto& data = Resource::getTowerDataById(ID);
+	SoundManager::getInstance()->onEffect(ID);
 
-	if (!Sprite::initWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(data.bullet[level ][0]))) {
+	if (!Sprite::initWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(data.bullet[level][0]))) {
 		return false;
 	}
 	TheBullet::ID = ID;
@@ -73,22 +74,19 @@ bool TheBullet::init(const Vec2& start, const Vec2& final, const int ID, const i
 	if (ID == 1)
 		animation = Animation::createWithSpriteFrames(frames, data.bulletDelay);
 	else
-		animation = Animation::createWithSpriteFrames(frames, data.AR/SPEED/data.bulletDelay);
+		animation = Animation::createWithSpriteFrames(frames, data.AR / SPEED / data.bulletDelay);
 	Animate* animate = Animate::create(animation);
 	animate->setDuration(data.AR / SPEED);
 	auto move = MoveTo::create(data.AR / SPEED, final);
 	auto act = Spawn::createWithTwoActions(animate, move);
-	Vector<SpriteFrame*> bombframes;
-	for (auto& x : data.effect)
-		bombframes.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName(x));
-	auto bombtion = Animation::createWithSpriteFrames(bombframes,0.2f);
-	auto bombte = Animate::create(bombtion);
-	auto sequence = Sequence::create(act, bombte, RemoveSelf::create(), nullptr);
+
+	auto fadeOut = FadeOut::create(0.1f);
+	auto sequence = Sequence::create(act, fadeOut, RemoveSelf::create(), nullptr);
 	this->runAction(sequence);
 
 	auto& size = SpriteFrameCache::getInstance()->getSpriteFrameByName(data.bullet[level][0])->getOriginalSize();
 
-	auto bulletBody = PhysicsBody::createCircle(size.height*SIZE/2);
+	auto bulletBody = PhysicsBody::createCircle(size.height * SIZE / 2);
 	bulletBody->setCategoryBitmask(0);
 	bulletBody->setDynamic(false);
 	bulletBody->setCollisionBitmask(0xFFFFFFFF);
@@ -97,12 +95,12 @@ bool TheBullet::init(const Vec2& start, const Vec2& final, const int ID, const i
 	this->setScale(SIZE);
 	this->setRotation(-CC_RADIANS_TO_DEGREES(atan2(final.y - start.y, final.x - start.x)));
 	this->setPosition(start);
-	Director::getInstance()->getRunningScene()->addChild(this,55);
+	Director::getInstance()->getRunningScene()->addChild(this, 55);
 
 
 	auto contactListener = EventListenerPhysicsContact::create();
-	contactListener->onContactBegin = CC_CALLBACK_1(TheBullet::onContactBegin,this);
-	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener,this);
+	contactListener->onContactBegin = CC_CALLBACK_1(TheBullet::onContactBegin, this);
+	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
 
 	return true;
 }
@@ -123,6 +121,7 @@ bool TheBullet::onContactBegin(PhysicsContact& contact)
 bool FanBullet::init(const Vec2& start, const Vec2 & final, const int ID, const int level)
 {
 	FanBullet::ID = ID;
+	SoundManager::getInstance()->onEffect(ID);
 	auto& data = Resource::getTowerDataById(ID);
 
 	if (!Sprite::initWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(data.bullet[level][0])))
@@ -134,12 +133,9 @@ bool FanBullet::init(const Vec2& start, const Vec2 & final, const int ID, const 
 	auto loop = RotateBy::create(data.AR / SPEED, 360.0f* data.AR / SPEED / data.bulletDelay);
 	auto move = MoveTo::create(data.AR / SPEED, final);
 	auto act = Spawn::create(loop, move, nullptr);
-	Vector<SpriteFrame*> bombframes;
-	for (auto& x : data.effect)
-		bombframes.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName(x));
-	auto bombtion = Animation::createWithSpriteFrames(bombframes, 0.2f);
-	auto bombte = Animate::create(bombtion);
-	auto sequence = Sequence::create(act, bombte, RemoveSelf::create(), nullptr);
+
+	auto fadeOut = FadeOut::create(0.1f);
+	auto sequence = Sequence::create(act, fadeOut, RemoveSelf::create(), nullptr);
 	this->runAction(sequence);
 
 	auto& size = SpriteFrameCache::getInstance()->getSpriteFrameByName(data.bullet[level][0])->getOriginalSize();
@@ -177,6 +173,7 @@ bool FanBullet::onContactBegin(PhysicsContact& contact)
 bool MagicBullet::init(const Vec2& start, const Vec2 & final, const int ID, const int level)
 {
 	MagicBullet::ID = ID;
+	SoundManager::getInstance()->onEffect(ID);
 	auto& data = Resource::getTowerDataById(ID);
 
 	if (!Sprite::create("../Resources/0.png"))
@@ -205,8 +202,9 @@ bool MagicBullet::init(const Vec2& start, const Vec2 & final, const int ID, cons
 	bulletBody->setDynamic(false);
 	this->setPhysicsBody(bulletBody);
 	
-	auto delay = DelayTime::create(0.5f);
+	auto delay = DelayTime::create(0.1f);
 	auto se = Sequence::create(delay, RemoveSelf::create(), nullptr);
+	this->runAction(se);
 
 	auto contactListener = EventListenerPhysicsContact::create();
 	contactListener->onContactBegin = CC_CALLBACK_1(MagicBullet::onContactBegin, this);

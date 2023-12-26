@@ -1,7 +1,5 @@
 #include "Resource.h"
 
-using namespace std;
-
 // 初始化静态成员变量
 std::map<int, TowerData> Resource::towerDataMap;
 bool Resource::isInitializeTowerData = false;
@@ -17,19 +15,16 @@ bool Resource::isSetLevelDataMap=false;
 
 int Resource::myGame = 0;
 int Resource::maxLevel=10;
-std::vector<int>Resource::gameData(0, maxLevel);
-//初始化怪物数据
-void Resource::initializeMonsterData() {
-    // 添加不同ID的怪物数据
-    vector<vector<string>> MoveName;
-    vector<vector<string>> DeadName;
-    //怪物数据
+std::vector<int>Resource::gameData(maxLevel+1,0 );
+std::vector<std::string>Resource::carret = { "../Resources/lock.PNG",
+                                          "../Resources/onestar.PNG",
+                                          "../Resources/twostar.PNG",
+                                          "../Resources/threestar.PNG",
+                                           "../Resources/fourstar.PNG" };
 
-    //Id：1
-
-}
 // 初始化防御塔数据映射
 void Resource::initializeTowerData() {
+    using namespace std;
     // 添加不同ID的防御塔数据
     vector<vector<string>> attackName;
     vector<vector<string>> bulletName;
@@ -193,7 +188,7 @@ const std::string& Resource::getIcon(const int price, bool i)
             return it->second.second;
     }
     else {
-        static string p = "";
+        static std::string p = "";
         return p;
     }
 }
@@ -219,7 +214,7 @@ const std::string& Resource::getSellPrice(const int price)
         return it->second;
     }
     else {
-        static string p = "";
+        static std::string p = "";
         return p;
     }
 }
@@ -356,29 +351,8 @@ bool Resource::saveGame()
         return false;
     }
     for (auto p : gameData) {
-        outFile << p << endl;
+        outFile << p << std::endl;
     }
-    outFile.close();
-    return true;
-}
-
-bool Resource::setData(const int level, const int star)
-{
-    if (level > maxLevel)
-        return false;
-    else {
-        gameData[level] = gameData[level] >= star ? gameData[level] : star;
-        return true;
-    }
-}
-
-bool Resource::saveSetting(const bool sound, const bool effect)
-{
-    std::fstream outFile("../saveData/settings.txt", std::ios::out | std::ios::trunc);
-    if (!outFile.is_open()) {
-        return false;
-    }
-    outFile << sound << effect << endl;
     outFile.close();
     return true;
 }
@@ -408,7 +382,7 @@ void Resource::readData(const int which)
     if (which == 0) {
         myGame = which;
         gameData.clear();
-        gameData.resize(maxLevel);
+        gameData.resize(maxLevel+1);
         return;
     }
     else {

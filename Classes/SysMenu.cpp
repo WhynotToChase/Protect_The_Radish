@@ -153,7 +153,7 @@ bool SysMenu::init()
 
 void SysMenu::OnStart(Ref* pSender)
 {
-    music->onButtonEffect();
+    music->onEffect();
     using namespace std;
     this->removeChildByName("temb");
     this->removeChildByName("Product");
@@ -262,7 +262,7 @@ void SysMenu::OnStart(Ref* pSender)
 
 void SysMenu::OnOption(Ref* pSender)
 {
-    music->onButtonEffect();
+    music->onEffect();
 
     this->removeChildByName("temb");
     this->removeChildByName("Product");
@@ -273,7 +273,7 @@ void SysMenu::OnOption(Ref* pSender)
 
 void SysMenu::OnProduct(Ref* pSender)
 {
-    music->onButtonEffect();
+    music->onEffect();
 
     this->removeChildByName("temb");
     this->removeChildByName("Product");
@@ -314,18 +314,18 @@ void SysMenu::OnProduct(Ref* pSender)
 
 void SysMenu::OnExit(Ref* pSender)
 {
-    music->onButtonEffect();
-
+    music->onEffect();
+    music->saveSetting();
     this->removeChildByName("temb");
     this->removeChildByName("Product");
-    ExitProcess(1);
+    Director::getInstance()->end();
 }
 
 void SysMenu::StartGame( Ref* pSender,int num)
 {
     this->removeChildByName("temb");
     this->removeChildByName("Product");
-    music->onButtonEffect();
+    music->onEffect();
     auto p = SelectMenu::scene();
     Resource::readData(num);
     Director::getInstance()->pushScene(p);
@@ -335,7 +335,7 @@ bool SysMenu::onTouchBegan(Touch* touch, Event* event, Sprite* menu)
 {
     Vec2 touchPoint = this->convertToNodeSpace(touch->getLocation()); 
     Rect menuBoundingBox = menu->getBoundingBox(); if (!menuBoundingBox.containsPoint(touchPoint)) {
-        music->onButtonEffect();
+        music->onEffect();
         MoveBy* moveby;
         if (menu->getName() == "temb")
             moveby = MoveBy::create(0.5, Vec2(-menu->getContentSize().width + 70, 0));
@@ -365,7 +365,7 @@ void SysMenu::removeTouchListener() {
 
 void SysMenu::FrameReturn(Ref* pSender, std::string frame)
 {
-    music->onButtonEffect();
+    music->onEffect();
     auto p = this->getChildByName(frame);
     removeTouchListener();
     auto moveUp = MoveBy::create(0.8f, Vec2(0, 1000));

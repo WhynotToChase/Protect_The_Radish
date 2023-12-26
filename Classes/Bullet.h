@@ -3,6 +3,7 @@
 
 #include "cocos2d.h"
 #include "Resource.h"
+#include "SoundManager.h"
 
 class Bullet
 {

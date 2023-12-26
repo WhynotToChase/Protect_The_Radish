@@ -50,7 +50,10 @@ void Tower::getCurrentTime()
 
 void Tower::upDate()
 {
-    wholeAttack();
+    getCurrentTime();
+    for (auto& tower : towers) {
+        tower->attack();
+   }
     TowerMenu::upDate();
 }
 
@@ -63,17 +66,10 @@ bool Tower::hasBuilt(const Vec2& position)
     return false;
 }
 
-void Tower::wholeAttack()
-{
-    getCurrentTime();
-    for (auto& tower : towers) {
-        tower->attack();
-   }
-}
-
 bool Tower::buildTower(const int ID ,const Vec2& position)
 {
     if (!hasBuilt(position)) {
+        SoundManager::getInstance()->onEffect(2);
         Tower* p;
         switch (ID) {
             case 1:
@@ -100,6 +96,7 @@ bool Tower::buildTower(const int ID ,const Vec2& position)
 
 void Tower::deleteTower()
 {
+    SoundManager::getInstance()->onEffect(6);
     auto sequence = Sequence::create(RemoveSelf::create(),nullptr);
     getWhole()->runAction(sequence);
     Effect::create(CARTTON,getPosition());
@@ -132,6 +129,7 @@ void Tower::attack()
 void Tower::levelUp()
 {
     if (getLevel() < 3) {
+        SoundManager::getInstance()->onEffect(7);
         Effect::create(CARTTON,getPosition());
         getTowerBady()->setSpriteFrame(Resource::getTowerDataById(getID()).action[getLevel() + 1][0]);
         if (getID() == 3||getID()==4)
@@ -158,7 +156,7 @@ BottleTower::BottleTower(const cocos2d::Vec2& p)
     bg->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     bg->setOpacity(0);
     auto _bg = MenuItemSprite::create(bg,bg, [this](Ref* pSender) {
-        SoundManager::getInstance()->onButtonEffect();
+        SoundManager::getInstance()->onEffect();
             TowerMenu::create(this);  });
     auto BG = Menu::create(_bg, NULL);
     BG->setPosition(0, 0);
@@ -209,7 +207,7 @@ StarTower::StarTower(const cocos2d::Vec2& p)
     bg->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     bg->setOpacity(0);
     auto _bg = MenuItemSprite::create(bg, bg, [this](Ref* pSender) {
-        SoundManager::getInstance()->onButtonEffect();
+        SoundManager::getInstance()->onEffect();
         TowerMenu::create(this);  });
     auto BG = Menu::create(_bg, NULL);
     BG->setPosition(0, 0);
@@ -240,7 +238,7 @@ FanTower::FanTower(const cocos2d::Vec2& p)
     bg->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     bg->setOpacity(0);
     auto _bg = MenuItemSprite::create(bg, bg, [this](Ref* pSender) {
-        SoundManager::getInstance()->onButtonEffect();
+        SoundManager::getInstance()->onEffect();
         TowerMenu::create(this);  });
     auto BG = Menu::create(_bg, NULL);
     BG->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
@@ -271,7 +269,7 @@ MagicTower::MagicTower(const cocos2d::Vec2& p)
     bg->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
     bg->setOpacity(0);
     auto _bg = MenuItemSprite::create(bg, bg, [this](Ref* pSender) {
-        SoundManager::getInstance()->onButtonEffect();
+        SoundManager::getInstance()->onEffect();
         TowerMenu::create(this);  });
     auto BG = Menu::create(_bg, NULL);
     BG->setPosition(0, 0);
@@ -313,7 +311,6 @@ bool TowerMenu::init(Tower* tower)
     TowerMenu::up = up;
     Sprite* destory = Sprite::createWithSpriteFrameName(Resource::getSellPrice(data.PR[level]));
     auto levelUp = MenuItemSprite::create(up, up, [this](Ref* pSender) {
-        SoundManager::getInstance()->onButtonEffect();
         if (canUp) {
             menu->removeFromParentAndCleanup(true);
             menu = nullptr;
@@ -323,7 +320,6 @@ bool TowerMenu::init(Tower* tower)
     levelUp->setScale(1.5f);
     levelup = levelUp;
     auto remove = MenuItemSprite::create(destory, destory, [this](Ref* pSender) {
-        SoundManager::getInstance()->onButtonEffect();
         _tower->deleteTower();
         menu->removeFromParentAndCleanup(true);
         menu = nullptr;
