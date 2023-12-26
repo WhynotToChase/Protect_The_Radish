@@ -32,11 +32,6 @@ bool ThisLevel::init(const int& level)
     //物理世界
     this->initWithPhysics();
 
-    //隔一段时间创建怪物
-    this->schedule([this](float dt) {
-        createMonster();
-        }, 1.0f, "monster_creation");
-
     Size WinSize = Director::getInstance()->getWinSize();
 
     //先建立一个大背景第level关的背景
@@ -262,11 +257,11 @@ void ThisLevel::createTower()
     auto bottomAction = MoveTo::create(0.2f, Vec2(float(position_x * 160) + 60, float((position_y) * 135) + 55 - buttonHeight));
     // 左边按钮
     auto leftButton = MenuItemSprite::create(leftSprite, leftSprite,
-        [this](Ref* pSender) {
-           
+        [this](Ref* pSender) {        
             if (money >= 100) {
                 auto firsttower = Tower::buildTower(1, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
                 ToNull();
+            }
         });
     leftmenu = Menu::create(leftButton, nullptr);
     leftmenu->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
