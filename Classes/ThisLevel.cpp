@@ -41,7 +41,7 @@ bool ThisLevel::init(const int&level)
 
     buttonItem = MenuItemSprite::create(buttonNormal, buttonNormal,
         [this](Ref* pSender) {
-           this_music->onButtonEffect();
+           this_music->onEffect();
            if (leftmenu || rightmenu || topmenu || bottommenu) {//存在tower就删除
                ToNull();
            }
@@ -170,7 +170,6 @@ void ThisLevel::createTower()
     // 左边按钮
     auto leftButton = MenuItemSprite::create(leftSprite, leftSprite,
         [this](Ref* pSender) {
-            this_music->onButtonEffect();
             if (money >= 100) {
                 auto firsttower = Tower::buildTower(1, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
             }
@@ -183,7 +182,6 @@ void ThisLevel::createTower()
     // 右边按钮
     auto rightButton = MenuItemSprite::create(rightSprite, rightSprite,
         [this](Ref* pSender) {
-            this_music->onButtonEffect();
             if (money >= 160) {
                 auto firsttower = Tower::buildTower(3, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
             }
@@ -196,7 +194,6 @@ void ThisLevel::createTower()
     // 上边按钮
     auto topButton = MenuItemSprite::create(topSprite, topSprite,
        [this](Ref* pSender) {
-            this_music->onButtonEffect();
             if (money >= 160) {
                 auto firsttower = Tower::buildTower(4, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
             }
@@ -209,7 +206,6 @@ void ThisLevel::createTower()
     // 下边按钮
     auto bottomButton = MenuItemSprite::create(bottomSprite, bottomSprite,
         [this](Ref* pSender) {
-            this_music->onButtonEffect();
             if (money >= 160) {
                 auto firsttower = Tower::buildTower(5, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
             }
@@ -222,10 +218,10 @@ void ThisLevel::createTower()
     // ... 其他创建按钮的代码 ...
 
     // 将新按钮添加到场景或层
-    this->addChild(leftmenu,55);
-    this->addChild(rightmenu,55);
-    this->addChild(topmenu,55);
-    this->addChild(bottommenu,55);
+    this->addChild(leftmenu,100);
+    this->addChild(rightmenu,100);
+    this->addChild(topmenu,100);
+    this->addChild(bottommenu,100);
 }
 
 //将四个选项置零

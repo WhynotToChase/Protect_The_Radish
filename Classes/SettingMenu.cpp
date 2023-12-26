@@ -48,14 +48,14 @@ bool SettingMenu::init()
 
     // 创建开关1
     auto _switch1 = MenuItemToggle::createWithCallback([this](Ref* pSender) {
-            music->onButtonEffect();
+            music->onEffect();
             music->controlSounds();
         }, MenuItemSprite::create(switch1_0, switch1_0), MenuItemSprite::create(switch1_1, switch1_1),nullptr );
     _switch1->setScale(2.0f);
 
     // 创建开关2
     auto _switch2 = MenuItemToggle::createWithCallback( [this](Ref* pSender) {
-            music->onButtonEffect();
+            music->onEffect();
             music->controlEffects();
         }, MenuItemSprite::create(switch2_0, switch2_0), MenuItemSprite::create(switch2_1, switch2_1),nullptr );
     _switch2->setScale(2.0f);
@@ -83,7 +83,7 @@ bool SettingMenu::init()
         auto save0 = Sprite::create("../Resources/setting0256.png");
         auto save1 = Sprite::create("../Resources/setting0257.png");
         auto _save = MenuItemSprite::create(save0, save1, [this](Ref* pSender) {
-            music->onButtonEffect();
+            music->onEffect();
             Resource::saveGame(); });
         auto save = Menu::create(_save, NULL);
         save->setAnchorPoint(Vec2(0, 0));
@@ -94,7 +94,7 @@ bool SettingMenu::init()
         auto reset0 = Sprite::create("../Resources/setting0255.png");
         auto reset1 = Sprite::create("../Resources/setting0254.png");
         auto _reset = MenuItemSprite::create(reset0, reset1, [this](Ref* pSender) {
-            music->onButtonEffect();
+            music->onEffect();
             Resource::removeData(); });
         auto reset = Menu::create(_reset, NULL);
         reset->setAnchorPoint(Vec2(0, 0));
@@ -107,13 +107,13 @@ bool SettingMenu::init()
 
 void SettingMenu::lastPage()
 {
-    music->onButtonEffect();
+    music->onEffect();
     Director::getInstance()->popScene();
 }
 
 void SettingMenu::returnHome() 
 {
-    music->onButtonEffect();
+    music->onEffect();
     Director::getInstance()->popToRootScene();
     Resource::readData(0);
 }

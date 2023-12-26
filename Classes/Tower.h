@@ -34,8 +34,6 @@ public:
 
     static bool buildTower(const int ID,const cocos2d::Vec2&position);
 
-    static void wholeAttack();
-
     virtual void deleteTower();
 
     virtual void levelUp();
