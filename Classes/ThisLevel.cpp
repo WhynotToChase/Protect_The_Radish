@@ -5,7 +5,7 @@ int ThisLevel::money;
 
 bool ThisLevel::init(const int&level)
 {
-    money = 0;
+    money = 1000;
     position_x = 0;
     position_y = 0;
     this_level = level;
@@ -23,6 +23,10 @@ bool ThisLevel::init(const int&level)
     //物理世界
     this->initWithPhysics();
 
+    //隔一段时间创建怪物
+    /*this->schedule([this](float dt) {
+        createMonster();
+        }, 1.0f, "monster_creation");*/
 
     Size WinSize = Director::getInstance()->getWinSize();
 
@@ -128,7 +132,6 @@ void ThisLevel::onMouseMove(cocos2d::Event* event)
 void ThisLevel::createTower()
 {
     // 在当前按钮中心位置创建四个按钮
-    money = 1000;
     float buttonWidth = 160.0f;
     float buttonHeight = 135.0f;
     Sprite* leftSprite;
@@ -172,6 +175,7 @@ void ThisLevel::createTower()
         [this](Ref* pSender) {
             this_music->onButtonEffect();
             if (money >= 100) {
+                money = money - 100;
                 auto firsttower = Tower::buildTower(1, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
             }
             ToNull();
@@ -185,6 +189,7 @@ void ThisLevel::createTower()
         [this](Ref* pSender) {
             this_music->onButtonEffect();
             if (money >= 160) {
+                money = money - 160;
                 auto firsttower = Tower::buildTower(3, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
             }
             ToNull();
@@ -198,6 +203,7 @@ void ThisLevel::createTower()
        [this](Ref* pSender) {
             this_music->onButtonEffect();
             if (money >= 160) {
+                money = money - 160;
                 auto firsttower = Tower::buildTower(4, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
             }
             ToNull();
@@ -211,6 +217,7 @@ void ThisLevel::createTower()
         [this](Ref* pSender) {
             this_music->onButtonEffect();
             if (money >= 160) {
+                money = money - 160;
                 auto firsttower = Tower::buildTower(5, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
             }
             ToNull();
@@ -240,3 +247,13 @@ void ThisLevel::ToNull() {
     bottommenu = nullptr;
 }
 
+void ThisLevel::createMonster()
+{
+    // 随机生成怪物ID和速度
+    int monsterID = cocos2d::random(1, 4);
+    float moveSpeed = cocos2d::random(50.0f, 150.0f);
+
+    // 创建怪物并添加到场景中
+    auto monster = Monster::create(monsterID, moveSpeed);
+    this->addChild(monster);
+}

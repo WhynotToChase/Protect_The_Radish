@@ -18,7 +18,16 @@ bool Resource::isSetLevelDataMap=false;
 int Resource::myGame = 0;
 int Resource::maxLevel=10;
 std::vector<int>Resource::gameData(0, maxLevel);
+//初始化怪物数据
+void Resource::initializeMonsterData() {
+    // 添加不同ID的怪物数据
+    vector<vector<string>> MoveName;
+    vector<vector<string>> DeadName;
+    //怪物数据
 
+    //Id：1
+
+}
 // 初始化防御塔数据映射
 void Resource::initializeTowerData() {
     // 添加不同ID的防御塔数据
@@ -139,6 +148,8 @@ void Resource::initializeTowerData() {
     effectName[1] = { "ID5_14.PNG" };
     towerDataMap.emplace(5, TowerData{ {0, 300, 450, 600}, {0, 0.7f, 0.6f, 0.5f}, false, 320.0f, 160, {0, 240, 320,INT_MAX}, {0, 96, 240, 432},
                           attackName,0.2f,lampName,bulletName,0.2f,effectName});
+
+
 }
 
 // 根据ID获取防御塔数据

@@ -58,6 +58,7 @@ public:
 
     void ToNull();
 
+    void createMonster();
 
     std::string SelectLevel(const int& level);
 
