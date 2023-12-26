@@ -12,6 +12,13 @@ bool Resource::isSetIconMap = false;
 std::map<int, std::string> Resource::sellPrice;
 bool Resource::isSetSellPrice = false;
 
+std::map<int, LevelData>Resource::levelDataMap;
+bool Resource::isSetLevelDataMap=false;
+
+int Resource::myGame = 0;
+int Resource::maxLevel=10;
+std::vector<int>Resource::gameData(0, maxLevel);
+
 // 初始化防御塔数据映射
 void Resource::initializeTowerData() {
     // 添加不同ID的防御塔数据
@@ -135,7 +142,7 @@ void Resource::initializeTowerData() {
 }
 
 // 根据ID获取防御塔数据
- const TowerData& Resource::getTowerDataById(int id)
+ const TowerData& Resource::getTowerDataById(const int id)
 {
     if (!isInitializeTowerData) {
         initializeTowerData();
@@ -161,7 +168,7 @@ void Resource::setIconMap()
     iconMap[INT_MAX] = { "ReachHighestLevel.PNG","ReachHighestLevel.PNG" };
 }
 
-const std::string& Resource::getIcon(int price, bool i)
+const std::string& Resource::getIcon(const int price, bool i)
 {
     if (!isSetIconMap) {
         setIconMap();
@@ -175,7 +182,8 @@ const std::string& Resource::getIcon(int price, bool i)
             return it->second.second;
     }
     else {
-        return nullptr;
+        static string p = "";
+        return p;
     }
 }
 
@@ -189,7 +197,7 @@ void Resource::setSellPrice()
     sellPrice[432] = "delete_432.png";
 }
 
-const std::string& Resource::getSellPrice(int price)
+const std::string& Resource::getSellPrice(const int price)
 {
     if (!isSetSellPrice) {
         setSellPrice();
@@ -200,6 +208,218 @@ const std::string& Resource::getSellPrice(int price)
         return it->second;
     }
     else {
-        return nullptr;
+        static string p = "";
+        return p;
     }
+}
+
+bool Resource::find(const float mouseX,const float mouseY,const int this_level) {//
+    int level_1[12][8] = {//第一关
+        //0                 1                2                  3
+        {0,0,1,1,1,1,1,0},{0,0,0,0,0,0,0,0},{0,1,0,1,1,1,1,0},{0,1,0,1,1,1,1,0},
+        //4                 5                6                  7
+        {1,1,0,0,1,1,1,0},{1,1,1,0,1,1,1,0},{1,1,1,0,1,1,1,0},{1,1,0,0,1,1,1,0},
+        //8                 9                10                 11
+        {0,1,0,1,1,1,1,0},{0,1,0,1,1,1,1,0} ,{0,0,0,0,0,0,0,0},{0,0,1,1,1,1,1,0}
+    };
+    int level_2[12][8] = {//第二关
+        //0                 1                2                  3
+        {0,0,1,1,1,1,1,0},{0,0,1,1,1,1,1,0},{0,0,0,0,1,1,1,0},{0,0,1,0,1,1,1,0},
+        //4                 5                6                  7
+        {1,0,1,0,1,0,1,0},{1,0,1,0,1,0,1,0},{1,0,1,0,1,0,1,0},{1,0,1,0,1,0,1,0},
+        //8                 9                10                 11
+        {0,0,1,0,1,0,1,0} ,{0,1,1,0,0,0,1,0} ,{0,0,1,1,1,1,1,0},{0,0,1,1,1,1,1,0}
+    };
+    int level_3[12][8] = {//第三关
+        //0                 1                2                  3
+        {0,1,1,1,1,1,1,0},{0,0,0,0,0,1,1,0},{0,0,1,1,1,1,1,0},{0,0,1,1,1,1,1,0},
+        //4                 5                6                  7
+        {1,0,1,1,1,1,1,0},{1,0,0,0,1,1,1,0},{1,1,1,0,1,1,1,0},{1,1,1,0,0,0,1,0},
+        //8                 9                10                 11
+        {1,1,1,1,0,0,1,0},{0,1,1,1,0,1,1,0} ,{0,1,1,1,0,1,1,0},{0,0,1,1,1,1,1,0}
+    };
+    int level_4[12][8] = {//第四关
+        //0                 1                2                  3
+        {0,0,1,1,0,1,1,0},{0,0,1,1,0,1,1,0},{0,0,0,0,0,1,1,0},{0,0,1,1,1,1,1,0},
+        //4                 5                6                  7
+        {1,0,0,0,1,1,1,0},{1,1,1,0,1,1,1,0},{1,1,1,0,1,1,1,0},{1,0,0,0,1,1,1,0},
+        //8                 9                10                 11
+        {0,0,1,1,1,1,1,0},{0,0,1,1,1,1,1,0} ,{0,0,0,0,0,0,1,0},{0,0,1,1,1,1,1,0}
+    };
+    int level_5[12][8] = {//第五关
+        //0                 1                2                  3
+        {0,0,1,1,1,1,1,0},{0,1,0,0,1,1,1,0},{0,0,0,0,1,1,1,0},{0,1,1,0,1,1,1,0},
+        //4                 5                6                  7
+        {0,1,1,0,0,1,1,0},{0,1,1,1,0,1,1,0},{0,1,1,1,0,1,1,0},{0,0,0,1,0,0,1,0},
+        //8                 9                10                 11
+        {0,1,1,1,1,0,1,0},{0,1,1,1,1,0,1,0} ,{0,0,0,0,0,0,1,0},{0,0,1,1,1,1,1,0}
+    };
+    int level_6[12][8] = {//第六关
+        //0                 1                2                  3
+        {0,0,1,1,1,0,1,0},{0,0,1,1,1,0,1,0},{0,1,1,1,1,0,1,0},{0,1,1,1,1,0,1,0},
+        //4                 5                6                  7
+        {1,1,1,1,1,0,1,0},{1,0,0,0,0,0,1,0},{1,0,1,1,1,1,1,0},{1,0,1,1,1,1,1,0},
+        //8                 9                10                 11
+        {0,0,1,1,1,1,1,0},{0,0,1,1,1,1,1,0} ,{0,0,1,1,1,1,1,0},{0,0,1,1,1,1,1,0}
+    };
+    int level_7[12][8] = {//第七关
+        //0                 1                2                  3
+        {0,0,1,1,1,1,1,0},{0,0,0,0,0,0,1,0},{0,0,1,1,1,1,1,0},{0,0,1,1,1,1,1,0},
+        //4                 5                6                  7
+        {0,0,0,0,1,0,1,0},{1,1,1,0,1,0,1,0},{1,1,1,0,1,0,1,0},{1,1,1,0,1,0,1,0},
+        //8                 9                10                 11
+        {0,0,0,0,1,0,1,0},{0,0,1,1,1,0,1,0} ,{0,0,0,0,0,0,1,0},{0,0,1,1,1,1,1,0}
+    };
+    int level_8[12][8] = {//第八关
+        //0                 1                2                  3
+        {0,0,1,0,0,0,1,0},{0,0,1,0,0,0,1,0},{0,0,0,0,1,0,1,0},{0,0,1,1,1,0,1,0},
+        //4                 5                6                  7
+        {0,0,0,1,1,0,1,0},{1,1,0,0,0,0,1,0},{1,1,0,0,1,1,1,0},{0,1,0,0,1,1,1,0},
+        //8                 9                10                 11
+        {0,1,0,0,1,1,1,0},{0,1,1,0,1,1,1,0} ,{0,0,1,0,0,1,1,0},{0,0,1,1,1,1,1,0}
+    };
+    int level_9[12][8] = {//第九关
+        //0                 1                2                  3
+        {0,0,1,1,1,1,1,0},{0,0,0,0,0,0,1,0},{0,1,1,1,1,0,1,0},{0,1,1,1,0,0,1,0},
+        //4                 5                6                  7
+        {1,1,1,0,0,1,1,0},{1,1,0,0,1,1,1,0},{1,1,0,1,1,1,1,0},{1,1,0,0,1,1,1,0},
+        //8                 9                10                 11
+         {0,1,1,0,0,1,1,0},{0,1,1,1,0,0,1,0} ,{0,0,1,1,1,0,1,0},{0,0,1,1,1,0,1,0}
+    };
+    int level_10[12][8] = {//第十关
+        //0                 1                2                  3
+        {0,0,1,1,1,1,1,0},{0,0,0,0,1,1,1,0},{0,1,1,0,1,1,1,0},{0,1,1,0,0,0,1,0},
+        //4                 5                6                  7
+        {1,1,1,1,1,0,1,0},{1,0,0,1,1,0,1,0},{1,0,0,1,1,0,1,0},{0,0,0,1,1,0,1,0},
+        //8                 9                10                 11
+       {0,0,0,1,1,0,1,0},{0,0,0,0,0,0,1,0} ,{0,0,1,1,1,1,1,0},{0,0,1,1,1,1,1,0}
+    };
+    switch (this_level) {
+        case 1:return level_1[int(mouseX / 160)][int(mouseY / 135)];
+        case 2:return level_2[int(mouseX / 160)][int(mouseY / 135)];
+        case 3:return level_3[int(mouseX / 160)][int(mouseY / 135)];
+        case 4:return level_4[int(mouseX / 160)][int(mouseY / 135)];
+        case 5:return level_5[int(mouseX / 160)][int(mouseY / 135)];
+        case 6:return level_6[int(mouseX / 160)][int(mouseY / 135)];
+        case 7:return level_7[int(mouseX / 160)][int(mouseY / 135)];
+        case 8:return level_8[int(mouseX / 160)][int(mouseY / 135)];
+        case 9:return level_9[int(mouseX / 160)][int(mouseY / 135)];
+        case 10:return level_10[int(mouseX / 160)][int(mouseY / 135)];
+        default:
+            break;
+    }
+    return false;
+}
+
+void Resource::setLevelDataMap()
+{
+    std::vector<MonsterPair> temp;
+    temp.resize(3);
+
+    levelDataMap.emplace();
+}
+
+const LevelData& Resource::getLevelData(const int level)
+{
+    if (!isSetLevelDataMap) {
+        setLevelDataMap();
+        isSetLevelDataMap = true;
+    }
+    auto it = levelDataMap.find(level);
+    if (it != levelDataMap.end()) {
+        return it->second;
+    }
+    else {
+        static LevelData p{ 0,{MonsterPair{0,0,0,0}} };
+        return p;
+    }
+}
+
+bool Resource::saveGame()
+{
+    std::string path = getPath(myGame);
+    if (path == "")
+        return false;
+    std::ofstream outFile(path, std::ios::out | std::ios::trunc);
+    if (!outFile.is_open()) {
+        return false;
+    }
+    for (auto p : gameData) {
+        outFile << p << endl;
+    }
+    outFile.close();
+    return true;
+}
+
+bool Resource::setData(const int level, const int star)
+{
+    if (level > maxLevel)
+        return false;
+    else {
+        gameData[level] = gameData[level] >= star ? gameData[level] : star;
+        return true;
+    }
+}
+
+bool Resource::saveSetting(const bool sound, const bool effect)
+{
+    std::fstream outFile("../saveData/settings.txt", std::ios::out | std::ios::trunc);
+    if (!outFile.is_open()) {
+        return false;
+    }
+    outFile << sound << effect << endl;
+    outFile.close();
+    return true;
+}
+
+std::string Resource::getPath(const int which)
+{
+    std::string path = "../saveData/game";
+    switch (which) {
+        case 1:
+            path += "one";
+            break;
+        case 2:
+            path += "two";
+            break;
+        case 3:
+            path += "three";
+            break;
+        default:
+            return "";
+    }
+    path += ".txt";
+    return path;
+}
+
+void Resource::readData(const int which)
+{
+    if (which == 0) {
+        myGame = which;
+        gameData.clear();
+        gameData.resize(maxLevel);
+        return;
+    }
+    else {
+        std::string path = getPath(which);
+        if (path == "")
+            return;
+        myGame = which;
+        std::fstream inFile(path, std::ios::in);
+        if (!inFile.is_open()) {
+            return ;
+        }
+        for (auto& p : gameData) {
+            inFile >> p;
+        }
+        inFile.close();
+    }
+}
+
+void Resource::removeData()
+{
+    std::string path = getPath(myGame);
+
+    // 使用 remove 函数删除文件
+    std::remove(path.c_str());
 }

@@ -5,16 +5,19 @@
 #include "cocos2d.h"
 #include"SysMenu.h"
 #include "SelectMenu.h"
-#include<vector>
+//#include<vector>
 #include"SettingMenu.h"
 #include"SoundManager.h"
 #include"MousePosition.h"
+#include "Resource.h"
 
 class ThisLevel :public cocos2d::Scene {
 private:
     SoundManager* this_music;
 
     MousePosition* this_mouse;
+
+    cocos2d::Sprite* moneyColumn;
 
     cocos2d::Menu* p;
 
@@ -26,7 +29,13 @@ private:
 
     float mouseX;
 public:
-    int money;
+    static int money;
+
+    static bool changeMoney(const int num);
+
+    static bool setMoney(const int num);
+
+    bool  changeMoneyColumn(const int money);
 
     int this_level;
 
@@ -49,7 +58,6 @@ public:
 
     void ToNull();
 
-    bool  find();
 
     std::string SelectLevel(const int& level);
 

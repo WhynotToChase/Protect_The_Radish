@@ -97,7 +97,7 @@ bool TheBullet::init(const Vec2& start, const Vec2& final, const int ID, const i
 	this->setScale(SIZE);
 	this->setRotation(-CC_RADIANS_TO_DEGREES(atan2(final.y - start.y, final.x - start.x)));
 	this->setPosition(start);
-	Director::getInstance()->getRunningScene()->addChild(this,45);
+	Director::getInstance()->getRunningScene()->addChild(this,55);
 
 
 	auto contactListener = EventListenerPhysicsContact::create();
@@ -157,7 +157,7 @@ bool FanBullet::init(const Vec2& start, const Vec2 & final, const int ID, const 
 
 	this->setScale(SIZE);
 	this->setPosition(start);
-	Director::getInstance()->getRunningScene()->addChild(this, 48);
+	Director::getInstance()->getRunningScene()->addChild(this, 55);
 	return true;
 }
 

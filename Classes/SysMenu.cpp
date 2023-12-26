@@ -5,8 +5,6 @@
 
 using namespace cocos2d;
 
-int SysMenu::saveNum = 0;
-
 Scene* SysMenu::scene()
 {
     // 'scene' is an autorelease object
@@ -325,9 +323,11 @@ void SysMenu::OnExit(Ref* pSender)
 
 void SysMenu::StartGame( Ref* pSender,int num)
 {
+    this->removeChildByName("temb");
+    this->removeChildByName("Product");
     music->onButtonEffect();
-    changeSaveNum(num);
     auto p = SelectMenu::scene();
+    Resource::readData(num);
     Director::getInstance()->pushScene(p);
 }
 

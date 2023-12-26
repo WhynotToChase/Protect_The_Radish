@@ -14,10 +14,6 @@ private:
 
 	SoundManager* music;
 
-	void saveGame();
-
-	void resetGame();
-
 public:
 
 	static bool inside;

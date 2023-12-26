@@ -83,7 +83,8 @@ bool SettingMenu::init()
         auto save0 = Sprite::create("../Resources/setting0256.png");
         auto save1 = Sprite::create("../Resources/setting0257.png");
         auto _save = MenuItemSprite::create(save0, save1, [this](Ref* pSender) {
-            saveGame(); });
+            music->onButtonEffect();
+            Resource::saveGame(); });
         auto save = Menu::create(_save, NULL);
         save->setAnchorPoint(Vec2(0, 0));
         save->setPosition(670, 170);
@@ -93,7 +94,8 @@ bool SettingMenu::init()
         auto reset0 = Sprite::create("../Resources/setting0255.png");
         auto reset1 = Sprite::create("../Resources/setting0254.png");
         auto _reset = MenuItemSprite::create(reset0, reset1, [this](Ref* pSender) {
-            resetGame(); });
+            music->onButtonEffect();
+            Resource::removeData(); });
         auto reset = Menu::create(_reset, NULL);
         reset->setAnchorPoint(Vec2(0, 0));
         reset->setPosition(1250, 170);
@@ -113,15 +115,7 @@ void SettingMenu::returnHome()
 {
     music->onButtonEffect();
     Director::getInstance()->popToRootScene();
+    Resource::readData(0);
 }
 
-void SettingMenu::saveGame()
-{
-    music->onButtonEffect();
-}
-
-void SettingMenu::resetGame()
-{
-    music->onButtonEffect();
-}
 

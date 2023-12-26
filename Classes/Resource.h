@@ -4,6 +4,9 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <iostream>
+#include <fstream>
+#include <cstdio>
 
 // 定义防御塔数据结构
 struct TowerData {
@@ -33,13 +36,37 @@ struct TowerData {
     std::vector<std::string> effect;
 };
 
+struct MonsterPair
+{
+    float time;
+    int ID;
+    int num;
+    float delay;
+};
+
+struct LevelData
+{
+    //关卡序号
+    int level;
+    //出怪时间，出怪种类，出怪数量，出怪间隔
+    std::vector<MonsterPair>monsters;
+};
+
 class Resource {
 public:
-    static const TowerData& getTowerDataById(int id);
-    static const std::string& getIcon(int price, bool i);
-    static const std::string& getSellPrice(int price);
-
+    static const TowerData& getTowerDataById(const int id);
+    static const std::string& getIcon(const int price, bool i);
+    static const std::string& getSellPrice(const int price);
+    static const LevelData& getLevelData(const int level);
+    static bool find(const float mouseX, const float mouseY, const int this_level);
+    static std::vector<int>gameData;
+    static bool setData(const int level, const int star);
+    static bool saveGame();
+    static bool saveSetting(const bool sound, const bool effect);
+    static void readData(const int which);
+    static void removeData();
 private:
+    static int myGame;
     static std::map<int, TowerData> towerDataMap;
     static bool isInitializeTowerData;
     static void initializeTowerData();
@@ -51,6 +78,13 @@ private:
     static std::map<int, std::string> sellPrice;
     static bool isSetSellPrice;
     static void setSellPrice();
+
+    static std::map<int, LevelData>levelDataMap;
+    static bool isSetLevelDataMap;
+    static void setLevelDataMap();
+
+    static std::string getPath(const int which);
+    static int maxLevel;
 };
 
 #endif // !__RESOURCE_H__
