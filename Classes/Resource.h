@@ -38,10 +38,10 @@ struct TowerData {
 
 struct MonsterPair
 {
-    float time;
-    int ID;
-    int num;
-    float delay;
+    float time;//出的时间
+    int ID;//怪的类型
+    int num;//数量
+    float delay;//延时
 };
 
 struct LevelData
@@ -50,6 +50,18 @@ struct LevelData
     int level;
     //出怪时间，出怪种类，出怪数量，出怪间隔
     std::vector<MonsterPair>monsters;
+};
+
+struct MonsterData 
+{
+    //怪物的血量
+    int BLOOD[4];
+    //移动速度
+    int SPEED[4];
+    //移动图片
+    std::vector<std::vector<std::string>> monsteraction;
+    //死亡图片
+    std::vector<std::vector<std::string>> monsterdead;
 };
 
 class Resource {
@@ -69,6 +81,7 @@ private:
     static std::map<int, TowerData> towerDataMap;
     static bool isInitializeTowerData;
     static void initializeTowerData();
+    static void initializeMonsterData();
 
     static std::map<int, std::pair<std::string, std::string>> iconMap;
     static bool isSetIconMap;

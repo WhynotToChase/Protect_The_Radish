@@ -32,6 +32,10 @@ bool ThisLevel::init(const int& level)
     //物理世界
     this->initWithPhysics();
 
+    //隔一段时间创建怪物
+    this->schedule([this](float dt) {
+        createMonster();
+        }, 1.0f, "monster_creation");
 
     Size WinSize = Director::getInstance()->getWinSize();
 
@@ -259,6 +263,8 @@ void ThisLevel::createTower()
     // 左边按钮
     auto leftButton = MenuItemSprite::create(leftSprite, leftSprite,
         [this](Ref* pSender) {
+           
+            if (money >= 100) {
                 auto firsttower = Tower::buildTower(1, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
                 ToNull();
         });
@@ -269,7 +275,11 @@ void ThisLevel::createTower()
     // 右边按钮
     auto rightButton = MenuItemSprite::create(rightSprite, rightSprite,
         [this](Ref* pSender) {
-            auto firsttower = Tower::buildTower(3, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
+           
+            
+            if (money >= 160) {
+                auto firsttower = Tower::buildTower(3, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
+            }
             ToNull();
         });
     rightmenu = Menu::create(rightButton, nullptr);
@@ -278,8 +288,12 @@ void ThisLevel::createTower()
     rightmenu->runAction(rightAction);
     // 上边按钮
     auto topButton = MenuItemSprite::create(topSprite, topSprite,
-        [this](Ref* pSender) {
-            auto firsttower = Tower::buildTower(4, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
+       
+        
+       [this](Ref* pSender) {
+            if (money >= 160) {
+                auto firsttower = Tower::buildTower(4, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
+            }
             ToNull();
         });
     topmenu = Menu::create(topButton, nullptr);
@@ -289,7 +303,10 @@ void ThisLevel::createTower()
     // 下边按钮
     auto bottomButton = MenuItemSprite::create(bottomSprite, bottomSprite,
         [this](Ref* pSender) {
-            auto firsttower = Tower::buildTower(5, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
+         
+            if (money >= 160) {
+                auto firsttower = Tower::buildTower(5, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
+            }
             ToNull();
         });
     bottommenu = Menu::create(bottomButton, nullptr);

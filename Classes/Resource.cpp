@@ -143,6 +143,8 @@ void Resource::initializeTowerData() {
     effectName[1] = { "ID5_14.PNG" };
     towerDataMap.emplace(5, TowerData{ {0, 300, 450, 600}, {0, 1.0f, 1.0f, 1.0f}, false, 320.0f, 160, {0, 240, 320,INT_MAX}, {0, 96, 240, 432},
                           attackName,0.2f,lampName,bulletName,0.2f,effectName});
+
+
 }
 
 // 根据ID获取防御塔数据
