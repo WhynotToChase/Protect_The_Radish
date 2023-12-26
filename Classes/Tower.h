@@ -11,6 +11,7 @@
 #include "Bullet.h"
 #include "SoundManager.h"
 #include "Effect.h"
+#include "ThisLevel.h"
 
 #define MOUSE
 
@@ -22,15 +23,13 @@ private:
 
 public:
 
-    static float currentTime;
-
     static void setAttackAction(const int ID,const int level,cocos2d::Sprite* tower,cocos2d::Sequence* action=nullptr);
 
     static void clearup();
 
     static bool hasBuilt(const cocos2d::Vec2& position);
 
-    static void upDate();
+    static void upDate(const float delat);
 
     static bool buildTower(const int ID,const cocos2d::Vec2&position);
 
@@ -38,15 +37,13 @@ public:
 
     virtual void levelUp();
 
-    virtual void attack();
-
-    static void getCurrentTime();
+    virtual void attack(const float& delat);
 
     virtual const int getID() = 0;
     virtual int getLevel() = 0;
     virtual void addLevel() = 0;
-    virtual float getLastTime() = 0;
-    virtual void  setLastTime(float) = 0;
+    virtual float& getLastTime() = 0;
+    virtual void  setLastTime() = 0;
     virtual cocos2d::Sprite* getWhole() = 0;
     virtual cocos2d::Sprite* getTowerBady() = 0;
     virtual cocos2d::Sprite* getTowerLamp() { return nullptr; }
@@ -75,15 +72,15 @@ public:
     virtual const int getID() { return 1; }
     virtual int getLevel() { return level; }
     virtual void addLevel() { level++; }
-    virtual float getLastTime() { return lastTime; }
-    virtual void  setLastTime(float i) { lastTime=i; }
+    virtual float& getLastTime() { return lastTime; }
+    virtual void  setLastTime() { lastTime=0; }
     virtual cocos2d::Sprite* getWhole() { return whole; }
     virtual cocos2d::Sprite* getTowerBady() { return body; }
     virtual const cocos2d::Vec2& getPosition() { return position; }
 
     BottleTower(const cocos2d::Vec2& p);
 
-    virtual void attack()override;
+    virtual void attack(const float& delat)override;
 };
 
 
@@ -109,8 +106,8 @@ public:
     virtual const int getID() { return 3; }
     virtual int getLevel() { return level; }
     virtual void addLevel() { level++; }
-    virtual float getLastTime() { return lastTime; }
-    virtual void  setLastTime(float i) { lastTime = i; }
+    virtual float& getLastTime() { return lastTime; }
+    virtual void  setLastTime() { lastTime = 0.0f; }
     virtual cocos2d::Sprite* getWhole() { return whole; }
     virtual cocos2d::Sprite* getTowerBady() { return body; }
     virtual cocos2d::Sprite* getTowerLamp() override{ return lamp; }
@@ -141,8 +138,8 @@ public:
     virtual const int getID() { return 4; }
     virtual int getLevel() { return level; }
     virtual void addLevel() { level++; }
-    virtual float getLastTime() { return lastTime; }
-    virtual void  setLastTime(float i) { lastTime = i; }
+    virtual float& getLastTime() { return lastTime; }
+    virtual void setLastTime() { lastTime = 0.0f; }
     virtual cocos2d::Sprite* getWhole() { return whole; }
     virtual cocos2d::Sprite* getTowerBady() { return body; }
     virtual cocos2d::Sprite* getTowerLamp() override { return lamp; }
@@ -171,8 +168,8 @@ public:
     virtual const int getID() { return 5; }
     virtual int getLevel() { return level; }
     virtual void addLevel() { level++; }
-    virtual float getLastTime() { return lastTime; }
-    virtual void  setLastTime(float i) { lastTime = i; }
+    virtual float& getLastTime() { return lastTime; }
+    virtual void  setLastTime() { lastTime = 0.0f; }
     virtual cocos2d::Sprite* getWhole() { return whole; }
     virtual cocos2d::Sprite* getTowerBady() { return body; }
     virtual const cocos2d::Vec2& getPosition() { return position; }

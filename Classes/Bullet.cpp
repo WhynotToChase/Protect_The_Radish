@@ -59,7 +59,6 @@ bool TheBullet::init(const Vec2& start, const Vec2 & final, const int ID, const 
 {
 	auto& data = Resource::getTowerDataById(ID);
 	SoundManager::getInstance()->onEffect(ID);
-
 	if (!Sprite::initWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(data.bullet[level][0]))) {
 		return false;
 	}

@@ -5,7 +5,6 @@ using namespace cocos2d;
 
 #define SIZE 1.8f
 
-float Tower::currentTime = 0.0f;
 std::vector<Tower*> Tower::towers = std::vector<Tower*>();
 
 void Tower::setAttackAction(const int ID, const int level, Sprite* tower, Sequence* action)
@@ -33,26 +32,16 @@ void Tower::setAttackAction(const int ID, const int level, Sprite* tower, Sequen
 
 void Tower::clearup()
 {
-    currentTime = 0.0f;
     for (auto& p : towers) {
         delete p;
     }
+    towers.clear();
 }
 
-// 获取当前时间戳的函数
-void Tower::getCurrentTime()
+void Tower::upDate(const float delat)
 {
-    auto now = std::chrono::system_clock::now();
-    auto duration = now.time_since_epoch();
-    long long timestampInMilliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
-    currentTime = timestampInMilliseconds % 1000000 / 1000.0f;
-}
-
-void Tower::upDate()
-{
-    getCurrentTime();
     for (auto& tower : towers) {
-        tower->attack();
+        tower->attack(delat);
    }
     TowerMenu::upDate();
 }
@@ -68,7 +57,7 @@ bool Tower::hasBuilt(const Vec2& position)
 
 bool Tower::buildTower(const int ID ,const Vec2& position)
 {
-    if (!hasBuilt(position)) {
+    if (!hasBuilt(position)&&ThisLevel::changeMoney(-Resource::getTowerDataById(ID).BLDC)) {
         SoundManager::getInstance()->onEffect(2);
         Tower* p;
         switch (ID) {
@@ -87,7 +76,6 @@ bool Tower::buildTower(const int ID ,const Vec2& position)
             default:
                 return false;
         }
-        // ThisLevel::changeMoney(-getTowerDataById(ID).BLDC);
         towers.push_back(p);
         return true;
     }
@@ -108,11 +96,11 @@ void Tower::deleteTower()
     }
 }
 
-void Tower::attack()
+void Tower::attack(const float& delat)
 {
     auto& p = Resource::getTowerDataById(getID());
-    if (currentTime -getLastTime() > p.AS[getLevel()]) {
-        setLastTime(currentTime);
+    if ((getLastTime() += delat) > p.AS[getLevel()]) {
+        setLastTime();
         auto& place = getPosition();
         auto tower = getTowerBady();
         Vec2 enemy = Vec2(1000,500);//Monster::searchEnemy(place);
@@ -144,7 +132,7 @@ const int BottleTower::ID = 1;
 BottleTower::BottleTower(const cocos2d::Vec2& p)
 {
     level = 1;
-    lastTime = currentTime;  
+    lastTime = -1.0f;  
     position = p;
    
     body= Sprite::createWithSpriteFrameName(Resource::getTowerDataById(ID).action[level][0]);
@@ -171,11 +159,11 @@ BottleTower::BottleTower(const cocos2d::Vec2& p)
     
 }
 
-void BottleTower::attack()
+void BottleTower::attack(const float& delat)
 {
     auto& p = Resource::getTowerDataById(ID);
-    if (currentTime - lastTime > p.AS[level]) {
-        lastTime = currentTime;
+    if ((lastTime+=delat) > p.AS[level]) {
+        lastTime = 0.0f;
         Vec2 enemy = Vec2(1000, 500);// Monster::searchEnemy(bottle->getPosition());
         if (enemy.distance(position) <= p.AR) {
             Vec2 normalizedDirection = (enemy-position).getNormalized();
@@ -195,7 +183,7 @@ const int StarTower::ID = 3;
 StarTower::StarTower(const cocos2d::Vec2& p)
 {
     level = 1;
-    lastTime = currentTime;
+    lastTime = -1.0f;
     position = p;
 
     body = Sprite::createWithSpriteFrameName(Resource::getTowerDataById(ID).action[level][0]);
@@ -226,7 +214,7 @@ const int FanTower::ID = 4;
 FanTower::FanTower(const cocos2d::Vec2& p)
 {
     level = 1;
-    lastTime = currentTime;
+    lastTime = -1.0f;
     position = p;
 
     body = Sprite::createWithSpriteFrameName(Resource::getTowerDataById(ID).action[level][0]);
@@ -258,7 +246,7 @@ const int MagicTower::ID = 5;
 MagicTower::MagicTower(const cocos2d::Vec2& p)
 {
     level = 1;
-    lastTime = currentTime;
+    lastTime = -1.0f;
     position = p;
 
     body = Sprite::createWithSpriteFrameName(Resource::getTowerDataById(ID).action[level][0]);
@@ -306,24 +294,23 @@ bool TowerMenu::init(Tower* tower)
     auto& pos = tower->getPosition();
     range = Rect(pos.x - 80.0f, pos.y - 67.5f, 160.0f, 135.0f);
 
-    canUp = true;//data.UPGC[level] < ThisLevel::getMoney();
+    canUp = data.UPGC[level] < ThisLevel::money;
     Sprite* up = Sprite::createWithSpriteFrameName(Resource::getIcon(data.UPGC[level], canUp));
     TowerMenu::up = up;
     Sprite* destory = Sprite::createWithSpriteFrameName(Resource::getSellPrice(data.PR[level]));
     auto levelUp = MenuItemSprite::create(up, up, [this](Ref* pSender) {
-        if (canUp) {
+        if (canUp&&ThisLevel::changeMoney(-Resource::getTowerDataById(_tower->getID()).UPGC[level])) {
             menu->removeFromParentAndCleanup(true);
             menu = nullptr;
             _tower->levelUp();
-            /* ThisLevel::changeMoney(-data->UPGC[level]);*/
         }});
     levelUp->setScale(1.5f);
     levelup = levelUp;
-    auto remove = MenuItemSprite::create(destory, destory, [this](Ref* pSender) {
+    auto remove = MenuItemSprite::create(destory, destory, [this](Ref* pSender) {   
+        ThisLevel::changeMoney(Resource::getTowerDataById(_tower->getID()).PR[level]);
         _tower->deleteTower();
         menu->removeFromParentAndCleanup(true);
         menu = nullptr;
-        /*ThisLevel::changeMoney(data->PR[level]);*/ 
         });
     remove->setScale(1.5f);
     
@@ -355,7 +342,7 @@ void TowerMenu::upDate()
 {
     if (!menu)
         return;
-    if (canUp != false) {//(data->UPGC[level]<ThisLevel::getMenoy))
+    if (canUp = Resource::getTowerDataById(_tower->getID()).UPGC[level]<ThisLevel::money){
         up->setSpriteFrame(Resource::getIcon(Resource::getTowerDataById(_tower->getID()).UPGC[level], canUp));
         up->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
     }

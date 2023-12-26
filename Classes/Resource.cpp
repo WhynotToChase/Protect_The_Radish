@@ -56,7 +56,7 @@ void Resource::initializeTowerData() {
     effectName.resize(2);
     effectName[0]="ID1_10.PNG";
     effectName[1]="ID1_20.PNG";
-    towerDataMap.emplace(1, TowerData{ {0, 200, 300, 400}, {0, 0.8f, 0.8f, 0.8f}, false, 320.0f, 100, {0, 150, 200,INT_MAX}, {0, 60, 150, 270},
+    towerDataMap.emplace(1, TowerData{ {0, 200, 300, 400}, {0, 1.0f, 1.0f, 1.0f}, false, 320.0f, 100, {0, 150, 200,INT_MAX}, {0, 60, 150, 270},
                           attackName, 0.2f,lampName,bulletName,0.2f,effectName });
 
     //防御塔数据
@@ -86,7 +86,7 @@ void Resource::initializeTowerData() {
     effectName[0] = "ID3_85.PNG";
     effectName[1] = "ID3_73.PNG";
 
-    towerDataMap.emplace(3, TowerData{ {0, 200, 250, 300}, {0, 1.2f, 1.2f, 1.2f},false, 400.0f, 160, {0,  240, 320,INT_MAX},{0, 96, 240, 432},
+    towerDataMap.emplace(3, TowerData{ {0, 200, 250, 300}, {0, 1.5f, 1.5f, 1.5f},false, 400.0f, 160, {0,  240, 320,INT_MAX},{0, 96, 240, 432},
                        attackName,0.5f,lampName,bulletName,4.0f,effectName });
 
     //防御塔数据
@@ -117,7 +117,7 @@ void Resource::initializeTowerData() {
     effectName.resize(2);
     effectName[0] = { "ID4_14.PNG" };
     effectName[1] = { "ID4_15.PNG" };
-    towerDataMap.emplace(4,TowerData{ {0, 200, 300, 400}, {0, 1.5f, 1.5f,1.5f}, true, 560.0f, 160, {0, 240, 320,INT_MAX}, {0, 96, 240, 432},
+    towerDataMap.emplace(4,TowerData{ {0, 200, 300, 400}, {0, 1.8f, 1.8f,1.8f}, true, 560.0f, 160, {0, 240, 320,INT_MAX}, {0, 96, 240, 432},
                           attackName,0.5f,lampName,bulletName,0.5f,effectName });
 
     //防御塔数据
@@ -141,7 +141,7 @@ void Resource::initializeTowerData() {
     effectName.resize(2);
     effectName[0] = { "ID5_23.PNG" };
     effectName[1] = { "ID5_14.PNG" };
-    towerDataMap.emplace(5, TowerData{ {0, 300, 450, 600}, {0, 0.7f, 0.6f, 0.5f}, false, 320.0f, 160, {0, 240, 320,INT_MAX}, {0, 96, 240, 432},
+    towerDataMap.emplace(5, TowerData{ {0, 300, 450, 600}, {0, 1.0f, 1.0f, 1.0f}, false, 320.0f, 160, {0, 240, 320,INT_MAX}, {0, 96, 240, 432},
                           attackName,0.2f,lampName,bulletName,0.2f,effectName});
 }
 
@@ -381,6 +381,7 @@ void Resource::readData(const int which)
         myGame = which;
         gameData.clear();
         gameData.resize(maxLevel+1);
+        gameData[1] = 4;
         return;
     }
     else {
@@ -402,7 +403,9 @@ void Resource::readData(const int which)
 void Resource::removeData()
 {
     std::string path = getPath(myGame);
-
+    gameData.clear();
+    gameData.resize(maxLevel + 1);
+    gameData[1] = 4;
     // 使用 remove 函数删除文件
     std::remove(path.c_str());
 }

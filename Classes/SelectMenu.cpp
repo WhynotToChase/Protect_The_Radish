@@ -48,8 +48,10 @@ bool SelectMenu::init()
     MenuItemSprite* The_middleSprite = MenuItemSprite::create(middleSprite, middleSprite,
         [this](Ref* pSender) {
             this_music->onEffect();
-            auto p = ThisLevel::create(Level);
-            Director::getInstance()->pushScene(p);
+            if (Resource::gameData[Level] > 0) {
+                auto p = ThisLevel::create(Level);
+                Director::getInstance()->pushScene(p);
+            }
         });
 
     The_middleSprite_menu = Menu::create(The_middleSprite, NULL);
@@ -129,6 +131,18 @@ bool SelectMenu::init()
     menu2->setPosition(1850, 540);
     menu2->setScale(2.0f);
 
+    auto back0 = Sprite::create("../Resources/close_normal.png");
+    auto back1 = Sprite::create("../Resources/close_pressed.png");
+    auto _back = MenuItemSprite::create(back0, back1, [this](Ref* pSender) {
+        this_music->onEffect();
+        Resource::saveGame();
+        Director::getInstance()->popScene(); });
+    auto back = Menu::create(_back, NULL);
+    back->setAnchorPoint(Vec2(0, 0));
+    back->setPosition(320, 1000);
+    back->setScale(1.4f);
+    this->addChild(back, 3);
+
     return true;
 }
 
@@ -168,7 +182,7 @@ void SelectMenu::moveSprites(Ref* pSender)
     }
     else if (IsChange == 1) {
         // 移动中间精灵到左边屏幕外
-        auto moveOutAction = MoveBy::create(1.0f, Vec2(-960*2, 0));
+        auto moveOutAction = MoveBy::create(1.0f, Vec2(-960 * 2, 0));
         The_middleSprite_menu->runAction(moveOutAction);
 
         // 创建新的按钮并设置初始位置在右边屏幕外
@@ -180,11 +194,12 @@ void SelectMenu::moveSprites(Ref* pSender)
         MenuItemSprite* The_middleSprite = MenuItemSprite::create(newSprite, newSprite,
             [this](Ref* pSender) {
                 this_music->onEffect();
-                auto p = ThisLevel::create(Level);
-                Director::getInstance()->pushScene(p);
-            });
+                if (Resource::gameData[Level] > 0) {
+                    auto p = ThisLevel::create(Level);
+                    Director::getInstance()->pushScene(p);
+                } });
 
-        Menu*The_new_middleSprite_menu = Menu::create(The_middleSprite, NULL);
+        Menu* The_new_middleSprite_menu = Menu::create(The_middleSprite, NULL);
         The_new_middleSprite_menu->alignItemsVertically();
         this->addChild(The_new_middleSprite_menu, -5, 2);
         The_new_middleSprite_menu->setPosition(Vec2(2880, 540));
@@ -202,8 +217,8 @@ void SelectMenu::moveSprites(Ref* pSender)
         auto sequence = Sequence::create(moveOutAction, moveInAction, dead, NULL);
 
         The_middleSprite_menu = The_new_middleSprite_menu;
-
     }
+    
     else if (IsChange == -1) {
         // 移动中间精灵到左边屏幕外
         auto moveOutAction = MoveBy::create(1.0f, Vec2(2880, 0));
@@ -219,8 +234,10 @@ void SelectMenu::moveSprites(Ref* pSender)
             [this](Ref* pSender) {
                 this_music->onEffect();
                 //第n关
-                auto p = ThisLevel::create(Level);
-                Director::getInstance()->pushScene(p);
+                if (Resource::gameData[Level] > 0) {
+                    auto p = ThisLevel::create(Level);
+                    Director::getInstance()->pushScene(p);
+                }
             });
 
         Menu* The_new_middleSprite_menu = Menu::create(The_middleSprite, NULL);
@@ -242,28 +259,6 @@ void SelectMenu::moveSprites(Ref* pSender)
 
         The_middleSprite_menu = The_new_middleSprite_menu;
         
-        /*// 移动中间精灵到右边屏幕外
-        auto moveOutAction = MoveBy::create(1.0f, Vec2(2880, 0));
-        The_middleSprite_menu->runAction(moveOutAction);
-
-        // 创建新的精灵并设置初始位置在左边屏幕外
-        auto newSprite = Sprite::create(SelectLevel(Level + IsChange));
-        newSprite->setPosition(Vec2(-960, 540));
-        newSprite->setScale(1); // 设置初始缩放
-        addChild(newSprite);
-
-        // 移动新的精灵到中间
-        auto moveInAction = MoveTo::create(1.0f, Vec2(960, 540));
-
-        // 同时执行移动和创建精灵的动作
-        auto spawnAction = Spawn::create(moveInAction, nullptr);
-        newSprite->runAction(spawnAction);
-
-        Level += IsChange;
-
-        auto sequence = Sequence::create(moveOutAction, moveInAction, dead, NULL);
-
-        middleSprite = newSprite;*/
     }
     
 }

@@ -21,7 +21,7 @@
                 <key>textureRotated</key>
                 <true/>
             </dict>
-            <key>Pause.PNG</key>
+            <key>pause0.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
@@ -327,7 +327,7 @@
                 <key>textureRotated</key>
                 <false/>
             </dict>
-            <key>puase1.png</key>
+            <key>pause1.png</key>
             <dict>
                 <key>aliases</key>
                 <array/>
