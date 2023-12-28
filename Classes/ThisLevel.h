@@ -7,52 +7,63 @@
 #include"SettingMenu.h"
 #include"SoundManager.h"
 #include "Resource.h"
+#include "Tower.h"
+#include <vector>
 
 class ThisLevel :public cocos2d::Scene {
 private:
+
     SoundManager* this_music;
 
-    int position_x;//上一个的格子x位置
+    Resource* res;
 
-    int position_y;//上一个的格子y位置
+    Coor lastPosition;
 
-    float mouseY;
-
-    float mouseX;
+    Coor mouseP;
 
     cocos2d::Sprite* pausemenu;
+    cocos2d::Menu* pauseMenuButtons;
 
-    static cocos2d::Sprite* moneyNumber;
-
-    void cleanUp();
+    cocos2d::Sprite* moneyNumber;
 
     void pauseMenu();
+    
+    int money=0;
+    
+    Tower* towers[12][8] = { 0 }; 
+    
+    int this_level;
+
+    bool changeMoney(const int num, const bool i = false);
 
 public:
 
-    static int money;
+    Coor transform(cocos2d::Vec2& point) { return { int(point.x) / 160, int(point.y) / 135 }; }
 
-    static bool changeMoney(const int num, const bool i = false);
-
-    int this_level;
+    cocos2d::Vec2 transform(Coor point) { return { point.x * 160.0f + 80.0f,point.y * 135.0f + 67.5f }; }
 
     void onMouseMove(cocos2d::Event* event);
 
     cocos2d::MenuItemSprite* buttonItem;
-    cocos2d::Menu* buttons;
+
+    cocos2d::Menu* selectMenu=nullptr;
 
     cocos2d::Menu* menu;
+    bool menuEnabled=true;
 
-    cocos2d::Menu* leftmenu;
-    cocos2d::Menu* rightmenu;
-    cocos2d::Menu* topmenu;
-    cocos2d::Menu* bottommenu;
+    //void onMouseUp(Event* event);
 
     virtual bool init(const int& level);
 
     void update(float delta);
 
     void createTower();
+
+    void createTowerMenu(Tower* it);
+    bool canUp = true;
+    int cost = 0;
+    int price = 0;
+    Tower* it;
 
     void ToNull();
 
@@ -66,7 +77,7 @@ public:
         else {
             delete pRet; pRet = nullptr; return nullptr;
         }
-    };
+    }
 };
 
 #endif/*__SELECTMENU_H__*/

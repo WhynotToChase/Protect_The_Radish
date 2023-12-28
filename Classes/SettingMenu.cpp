@@ -13,8 +13,7 @@ bool SettingMenu::init()
         return false;
     }
     music = SoundManager::getInstance();
-
-    mouse = MousePosition::create();
+    res = Resource::getInstance();
 
     auto size = Director::getInstance()->getWinSize();
     auto bg = Sprite::create("../Resources/SettingBG.png");
@@ -84,7 +83,7 @@ bool SettingMenu::init()
         auto save1 = Sprite::create("../Resources/setting0257.png");
         auto _save = MenuItemSprite::create(save0, save1, [this](Ref* pSender) {
             music->onEffect();
-            Resource::saveGame(); });
+            res->saveGame(); });
         auto save = Menu::create(_save, NULL);
         save->setAnchorPoint(Vec2(0, 0));
         save->setPosition(670, 170);
@@ -95,7 +94,7 @@ bool SettingMenu::init()
         auto reset1 = Sprite::create("../Resources/setting0254.png");
         auto _reset = MenuItemSprite::create(reset0, reset1, [this](Ref* pSender) {
             music->onEffect();
-            Resource::removeData(); });
+            res->removeData(); });
         auto reset = Menu::create(_reset, NULL);
         reset->setAnchorPoint(Vec2(0, 0));
         reset->setPosition(1250, 170);
@@ -115,7 +114,7 @@ void SettingMenu::returnHome()
 {
     music->onEffect();
     Director::getInstance()->popToRootScene();
-    Resource::readData(0);
+    res->readData(0);
 }
 
 

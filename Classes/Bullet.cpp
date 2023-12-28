@@ -7,6 +7,17 @@
 
 using namespace cocos2d;
 
+Bullet* Bullet::instance = nullptr;
+
+Bullet* Bullet::getInstance()
+{
+	if (instance == nullptr)
+		instance = new Bullet;
+	return instance;
+}
+
+Bullet::Bullet():res(Resource::getInstance()){}
+
 void Bullet::setupBullet(Vec2 start, const Vec2& target, const int ID,const int level,const float AR)
 {
 	Vec2 final;
@@ -57,33 +68,35 @@ Vec2 Bullet::accFinal( Vec2& start, const float angle, const float AR)
 
 bool TheBullet::init(const Vec2& start, const Vec2 & final, const int ID, const int level)
 {
-	auto& data = Resource::getTowerDataById(ID);
+	static Resource* res = Resource::getInstance();
+
+	auto data = res->getTowerDataById(ID);
 	SoundManager::getInstance()->onEffect(ID);
-	if (!Sprite::initWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(data.bullet[level][0]))) {
+	if (!Sprite::initWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(data->bullet[level][0]))) {
 		return false;
 	}
 	TheBullet::ID = ID;
 
-	ATK = data.ATK[level];
+	ATK = data->ATK[level];
 
 	Vector<SpriteFrame*> frames;
-	for (auto& x : data.bullet[level])
+	for (auto& x : data->bullet[level])
 		frames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName(x));
 	Animation* animation;
 	if (ID == 1)
-		animation = Animation::createWithSpriteFrames(frames, data.bulletDelay);
+		animation = Animation::createWithSpriteFrames(frames, data->bulletDelay);
 	else
-		animation = Animation::createWithSpriteFrames(frames, data.AR / SPEED / data.bulletDelay);
+		animation = Animation::createWithSpriteFrames(frames, data->AR / SPEED / data->bulletDelay);
 	Animate* animate = Animate::create(animation);
-	animate->setDuration(data.AR / SPEED);
-	auto move = MoveTo::create(data.AR / SPEED, final);
+	animate->setDuration(data->AR / SPEED);
+	auto move = MoveTo::create(data->AR / SPEED, final);
 	auto act = Spawn::createWithTwoActions(animate, move);
 
 	auto fadeOut = FadeOut::create(0.1f);
 	auto sequence = Sequence::create(act, fadeOut, RemoveSelf::create(), nullptr);
 	this->runAction(sequence);
 
-	auto& size = SpriteFrameCache::getInstance()->getSpriteFrameByName(data.bullet[level][0])->getOriginalSize();
+	auto& size = SpriteFrameCache::getInstance()->getSpriteFrameByName(data->bullet[level][0])->getOriginalSize();
 
 	auto bulletBody = PhysicsBody::createCircle(size.height * SIZE / 2);
 	bulletBody->setCategoryBitmask(0);
@@ -106,9 +119,11 @@ bool TheBullet::init(const Vec2& start, const Vec2 & final, const int ID, const 
 
 bool TheBullet::onContactBegin(PhysicsContact& contact)
 {
-	auto& data = Resource::getTowerDataById(ID);
+	static Resource* res = Resource::getInstance();
+
+	auto data = res->getTowerDataById(ID);
 	Vector<SpriteFrame*> bombframes;
-	for (auto& x : data.effect)
+	for (auto& x : data->effect)
 		bombframes.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName(x));
 	auto bombtion = Animation::createWithSpriteFrames(bombframes, 0.2f);
 	auto bombte = Animate::create(bombtion);
@@ -121,23 +136,24 @@ bool FanBullet::init(const Vec2& start, const Vec2 & final, const int ID, const 
 {
 	FanBullet::ID = ID;
 	SoundManager::getInstance()->onEffect(ID);
-	auto& data = Resource::getTowerDataById(ID);
+	static Resource* res = Resource::getInstance();
+	auto data = res->getTowerDataById(ID);
 
-	if (!Sprite::initWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(data.bullet[level][0])))
+	if (!Sprite::initWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(data->bullet[level][0])))
 		return false;
 
-	ATK = data.ATK[level];
+	ATK = data->ATK[level];
 
-	this->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(data.bullet[level][0]));
-	auto loop = RotateBy::create(data.AR / SPEED, 360.0f* data.AR / SPEED / data.bulletDelay);
-	auto move = MoveTo::create(data.AR / SPEED, final);
+	this->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(data->bullet[level][0]));
+	auto loop = RotateBy::create(data->AR / SPEED, 360.0f* data->AR / SPEED / data->bulletDelay);
+	auto move = MoveTo::create(data->AR / SPEED, final);
 	auto act = Spawn::create(loop, move, nullptr);
 
 	auto fadeOut = FadeOut::create(0.1f);
 	auto sequence = Sequence::create(act, fadeOut, RemoveSelf::create(), nullptr);
 	this->runAction(sequence);
 
-	auto& size = SpriteFrameCache::getInstance()->getSpriteFrameByName(data.bullet[level][0])->getOriginalSize();
+	auto& size = SpriteFrameCache::getInstance()->getSpriteFrameByName(data->bullet[level][0])->getOriginalSize();
 
 
 	auto bulletBody = PhysicsBody::createCircle(size.height);
@@ -173,22 +189,23 @@ bool MagicBullet::init(const Vec2& start, const Vec2 & final, const int ID, cons
 {
 	MagicBullet::ID = ID;
 	SoundManager::getInstance()->onEffect(ID);
-	auto& data = Resource::getTowerDataById(ID);
+	static Resource* res = Resource::getInstance();
+	auto data = res->getTowerDataById(ID);
 
 	if (!Sprite::create("../Resources/0.png"))
 		return false;
 
-	ATK = data.ATK[level];
+	ATK = data->ATK[level];
 
 	float angle = CC_RADIANS_TO_DEGREES(atan2(final.y - start.y, final.x - start.x));
 	Vector<SpriteFrame*> frames;
-	for (auto& x : data.bullet[1]) {
+	for (auto& x : data->bullet[1]) {
 		frames.pushBack( SpriteFrameCache::getInstance()->getSpriteFrameByName(x));
 	}
-	Animation* animation = Animation::createWithSpriteFrames(frames, data.bulletDelay);
+	Animation* animation = Animation::createWithSpriteFrames(frames, data->bulletDelay);
 	Animate* animate = Animate::create(animation);
 	auto act = Sequence::create(animate, RemoveSelf::create(), nullptr);
-	auto node = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(data.bullet[1][2]));
+	auto node = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(data->bullet[1][2]));
 	node->setPosition((start + final) / 2);
 	node->setRotation(-angle+90.0f);
 	node->setScale(final.distance(start)/node->getContentSize().height);
@@ -216,9 +233,9 @@ bool MagicBullet::init(const Vec2& start, const Vec2 & final, const int ID, cons
 
 bool MagicBullet::onContactBegin(PhysicsContact& contact)
 {
-	auto& data = Resource::getTowerDataById(ID);
+	static Resource* res = Resource::getInstance();
 	Vector<SpriteFrame*> bombframes;
-	for (auto& x : data.effect)
+	for (auto& x : res->getTowerDataById(ID)->effect)
 		bombframes.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName(x));
 	auto bombtion = Animation::createWithSpriteFrames(bombframes, 0.2f);
 	auto bombte = Animate::create(bombtion);

@@ -1,12 +1,9 @@
 #include "ThisLevel.h"
 
 using namespace cocos2d;
-int ThisLevel::money=0;
-Sprite* ThisLevel::moneyNumber = nullptr;
 
 bool ThisLevel::init(const int& level)
 {
-    cleanUp();
 
     moneyNumber = Sprite::create();
     moneyNumber->setPosition(350, 1030);
@@ -19,11 +16,10 @@ bool ThisLevel::init(const int& level)
     moneySquare->setPosition(350, 1030);
     moneySquare->setScale(2.0f);
 
-    position_x = 0;
-    position_y = 0;
     this_level = level;
 
     this_music = SoundManager::getInstance();
+    res = Resource::getInstance();
 
     if (!Scene::init())
     {
@@ -50,10 +46,12 @@ bool ThisLevel::init(const int& level)
     buttonItem = MenuItemSprite::create(buttonNormal, buttonNormal,
         [this](Ref* pSender) {
             this_music->onEffect();
-            if (leftmenu || rightmenu || topmenu || bottommenu) {//存在tower就删除
-                ToNull();
-            }
-            ThisLevel::createTower();
+            buttonItem->setEnabled(false);
+            menuEnabled = false;
+            if (towers[lastPosition.x][lastPosition.y])
+                createTowerMenu(towers[lastPosition.x][lastPosition.y]);
+            else
+                createTower();
         });
     buttonItem->setScale(160 / buttonItem->getContentSize().width, 135 / buttonItem->getContentSize().height);
     // 创建按钮
@@ -98,7 +96,7 @@ bool ThisLevel::init(const int& level)
     back->setAnchorPoint(Vec2(0, 0));
     back->setPosition(1800, 1020);
     back->setScale(1.6f);
-    this->addChild(back, 5);
+    this->addChild(back, 100);
 
 
     return true;
@@ -125,7 +123,7 @@ std::string ThisLevel::SelectLevel(const int&level) {
 
 //更新每时刻的变化
 void ThisLevel::update(float delta) {
-    Tower::upDate(delta);
+    
 }
 
 void ThisLevel::pauseMenu()
@@ -149,7 +147,7 @@ void ThisLevel::pauseMenu()
         pausemenu->pause();
         auto se = Sequence::create(FadeOut::create(0.5f), RemoveSelf::create(), nullptr);
         pausemenu->runAction(se->clone());
-        buttons->runAction(se);
+        pauseMenuButtons->runAction(se);
         Director::getInstance()->resume();
         for (auto& child : this->getChildren()) {
             // 判断节点是否为按钮
@@ -160,19 +158,17 @@ void ThisLevel::pauseMenu()
             }
         }});
     auto button2 = MenuItemSprite::create(button20, button21, [this](Ref* pSender) {
-        cleanUp();
         auto scene = ThisLevel::create(this_level);
         Director::getInstance()->resume();
         Director::getInstance()->replaceScene(scene);
         });
     auto button3 = MenuItemSprite::create(button30, button31, [this](Ref* pSender) {
         Director::getInstance()->resume();
-        Director::getInstance()->popScene();
-        cleanUp(); });
-    buttons = Menu::create(button1, button2, button3, nullptr);
-    buttons->alignItemsVerticallyWithPadding(25.0f);
-    buttons->setPosition(205.999893, 173.999954);
-    pausemenu->addChild(buttons);
+        Director::getInstance()->popScene(); });
+    pauseMenuButtons = Menu::create(button1, button2, button3, nullptr);
+    pauseMenuButtons->alignItemsVerticallyWithPadding(25.0f);
+    pauseMenuButtons->setPosition(205.999893, 173.999954);
+    pausemenu->addChild(pauseMenuButtons);
     pausemenu->setPosition(960,540);
     pausemenu->setScale(1.5f);
     this->addChild(pausemenu, 150);
@@ -182,37 +178,18 @@ void ThisLevel::onMouseMove(cocos2d::Event* event)
 {
     //判断选择框是否存在
 
-   // 。。。。。。
-    //auto range=menu->getBoundingBox();
     auto mouseEvent = static_cast<cocos2d::EventMouse*>(event);
     if (mouseEvent) {
-        mouseX = mouseEvent->getCursorX();
-        mouseY = mouseEvent->getCursorY();
+        mouseP = transform( Vec2(mouseEvent->getCursorX(), mouseEvent->getCursorY()));
     }
-    if ((int(mouseX / 160) == position_x && int(mouseY / 135) == position_y)|| 
-        (int(mouseX / 160)+1 == position_x&& int(mouseY / 135) == position_y)|| 
-        (int(mouseX / 160) - 1 == position_x && int(mouseY / 135) == position_y) ||
-        (int(mouseX / 160) == position_x && int(mouseY / 135)+1 == position_y) ||
-        (int(mouseX / 160) == position_x && int(mouseY / 135)-1 == position_y)||
-        !Resource::find(mouseX,mouseY,this_level)) {
-        if (!(leftmenu || rightmenu || topmenu || bottommenu)&& Resource::find(mouseX, mouseY, this_level)) {
-            menu->setPosition(Vec2(float(int(mouseX / 160) * 160) + 80, float(int(mouseY / 135) * 135) + 67));
-            position_x = int(mouseX / 160);
-            position_y = int(mouseY / 135);
+    if (menuEnabled) {
+        if (!(lastPosition == mouseP) ){//&& res->find(mouseP)) {
+            menu->setPosition(transform(mouseP));
+            lastPosition = mouseP;
         }
     }
-    else {
-        if (leftmenu|| rightmenu|| topmenu|| bottommenu) {//存在tower就删除
-            ToNull();
-        }
-        
-        menu->setPosition(Vec2(float(int(mouseX / 160) * 160)+80, float(int(mouseY / 135) * 135) + 67));
-        position_x = int(mouseX / 160);
-        position_y = int(mouseY / 135);
-        
-    }
-    
-}
+} 
+
 
 void ThisLevel::createTower()
 {
@@ -251,83 +228,127 @@ void ThisLevel::createTower()
     rightSprite->setScale(1.5f);
     topSprite->setScale(1.5f);
     bottomSprite->setScale(1.5f);
-    auto leftAction = MoveTo::create(0.2f, Vec2(float(position_x * 160) + 80 - buttonWidth, float((position_y) * 135) + 55));
-    auto rightAction = MoveTo::create(0.2f, Vec2(float(position_x * 160) + 40 + buttonWidth, float((position_y) * 135) + 55));
-    auto topAction = MoveTo::create(0.2f, Vec2(float(position_x * 160) + 60, float((position_y) * 135) + 55 + buttonHeight));
-    auto bottomAction = MoveTo::create(0.2f, Vec2(float(position_x * 160) + 60, float((position_y) * 135) + 55 - buttonHeight));
+    auto leftAction = MoveTo::create(0.2f, Vec2(float(lastPosition.x * 160) + 80 - buttonWidth, float((lastPosition.y) * 135) + 55));
+    auto rightAction = MoveTo::create(0.2f, Vec2(float(lastPosition.x * 160) + 40 + buttonWidth, float((lastPosition.y) * 135) + 55));
+    auto topAction = MoveTo::create(0.2f, Vec2(float(lastPosition.x * 160) + 60, float((lastPosition.y) * 135) + 55 + buttonHeight));
+    auto bottomAction = MoveTo::create(0.2f, Vec2(float(lastPosition.x * 160) + 60, float((lastPosition.y) * 135) + 55 - buttonHeight));
     // 左边按钮
+    auto here = transform(lastPosition);
     auto leftButton = MenuItemSprite::create(leftSprite, leftSprite,
-        [this](Ref* pSender) {        
+        [this](Ref* pSender) {
             if (money >= 100) {
-                auto firsttower = Tower::buildTower(1, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
+                towers[lastPosition.x][lastPosition.y] = Tower::buildTower(1, transform(lastPosition));
                 ToNull();
             }
         });
-    leftmenu = Menu::create(leftButton, nullptr);
-    leftmenu->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-    leftmenu->setPosition(float(position_x * 160) + 80, float((position_y) * 135) + 67);
-    leftmenu->runAction(leftAction);
     // 右边按钮
     auto rightButton = MenuItemSprite::create(rightSprite, rightSprite,
         [this](Ref* pSender) {
-           
-            
             if (money >= 160) {
-                auto firsttower = Tower::buildTower(3, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
+                towers[lastPosition.x][lastPosition.y] = Tower::buildTower(3, transform(lastPosition));
+                ToNull();
             }
-            ToNull();
         });
-    rightmenu = Menu::create(rightButton, nullptr);
-    rightmenu->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-    rightmenu->setPosition(float(position_x * 160) + 80, float((position_y) * 135) + 67);
-    rightmenu->runAction(rightAction);
     // 上边按钮
     auto topButton = MenuItemSprite::create(topSprite, topSprite,
-       
-        
-       [this](Ref* pSender) {
+        [this](Ref* pSender) {
             if (money >= 160) {
-                auto firsttower = Tower::buildTower(4, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
+                towers[lastPosition.x][lastPosition.y] = Tower::buildTower(4, transform(lastPosition));
+                ToNull();
             }
-            ToNull();
         });
-    topmenu = Menu::create(topButton, nullptr);
-    topmenu->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-    topmenu->setPosition(float(position_x * 160) + 80, float((position_y) * 135) + 67);
-    topmenu->runAction(topAction);
     // 下边按钮
     auto bottomButton = MenuItemSprite::create(bottomSprite, bottomSprite,
         [this](Ref* pSender) {
-         
             if (money >= 160) {
-                auto firsttower = Tower::buildTower(5, Vec2(float(position_x * 160) + 80, float((position_y) * 135) + 67));
+                towers[lastPosition.x][lastPosition.y] = Tower::buildTower(5, transform(lastPosition));
+                ToNull();
             }
-            ToNull();
         });
-    bottommenu = Menu::create(bottomButton, nullptr);
-    bottommenu->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-    bottommenu->setPosition(float(position_x * 160) + 80, float((position_y) * 135) + 67);
-    bottommenu->runAction(bottomAction);
+    leftButton->setPosition(here);
+    leftButton->runAction(leftAction);
+    rightButton->setPosition(here);
+    rightButton->runAction(rightAction);
+    topButton->setPosition(here);
+    topButton->runAction(topAction);
+    bottomButton->setPosition(here);
+    bottomButton->runAction(bottomAction);
+
+    selectMenu = Menu::create(leftButton, rightButton, topButton, bottomButton,nullptr);
+    selectMenu->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+    selectMenu->setPosition(0, 0);
     // ... 其他创建按钮的代码 ...
 
+    auto bg = MenuItem::create([this](Ref* pSender) {
+        buttonItem->setEnabled(true);
+        ToNull(); });
+    bg->setContentSize(Size(1920, 1080));
+    bg->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+    bg->setPosition(0, 0);
+    bg->setLocalZOrder(10);
+    selectMenu->addChild(bg);
+
     // 将新按钮添加到场景或层
-    this->addChild(leftmenu,100);
-    this->addChild(rightmenu,100);
-    this->addChild(topmenu,100);
-    this->addChild(bottommenu,100);
+    this->addChild(selectMenu, 100);
 }
 
 //将四个选项置零
 void ThisLevel::ToNull() {
-    leftmenu->removeFromParentAndCleanup(true);
+    selectMenu->removeFromParentAndCleanup(true);
+    selectMenu = nullptr;
+    menuEnabled = true;
+    buttonItem->setEnabled(true);
+    /*leftmenu->removeFromParentAndCleanup(true);
     leftmenu = nullptr;
     rightmenu->removeFromParentAndCleanup(true);
     rightmenu = nullptr;
     topmenu->removeFromParentAndCleanup(true);
     topmenu = nullptr;
     bottommenu->removeFromParentAndCleanup(true);
-    bottommenu = nullptr;
+    bottommenu = nullptr;*/
 }
+
+void ThisLevel::createTowerMenu(Tower* it)
+{
+    cost = it->data->UPGC[it->level];
+    price = it->data->PR[it->level];
+    canUp =cost < money;
+    ThisLevel::it = it;
+    Sprite* up = Sprite::createWithSpriteFrameName(res->getIcon(cost, canUp));
+    Sprite* destory = Sprite::createWithSpriteFrameName(res->getSellPrice(price));
+    auto levelUp = MenuItemSprite::create(up, up, [this](Ref* pSender) {
+        if (canUp && ThisLevel::changeMoney(-cost)) {
+            ToNull();
+            ThisLevel::it->levelUp();
+        }});
+    levelUp->setScale(1.5f);
+    auto remove = MenuItemSprite::create(destory, destory, [this](Ref* pSender) {
+        ThisLevel::changeMoney(price);
+        towers[int(ThisLevel::it->position.x )/ 160][int(ThisLevel::it->position.y)/ 135] = nullptr;
+        delete ThisLevel::it;
+        ToNull();
+        });
+    remove->setScale(1.5f);
+    levelUp->setPosition(Vec2(float(lastPosition.x * 160) + 80.0f, float(lastPosition.y * 135) + 202.0f));
+    remove->setPosition(Vec2(float(lastPosition.x * 160) + 80.0f, float(lastPosition.y * 135) - 67.5f));
+
+
+    selectMenu = Menu::create(levelUp, remove, NULL);
+    selectMenu->setPosition(0, 0);
+    selectMenu->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+    auto fadeIn = FadeIn::create(0.2f);
+    selectMenu->runAction(fadeIn);
+    auto bg = MenuItem::create([this](Ref* pSender) {
+        buttonItem->setEnabled(true);
+        ToNull(); });
+    bg->setContentSize(Size(1920, 1080));
+    bg->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+    bg->setPosition(0, 0);
+    bg->setLocalZOrder(10);
+    selectMenu->addChild(bg);
+    this->addChild(selectMenu,100);
+}
+
 
 bool ThisLevel::changeMoney(const int num, const bool i)
 {
@@ -357,9 +378,16 @@ bool ThisLevel::changeMoney(const int num, const bool i)
     return true;
 }
 
-void ThisLevel::cleanUp()
+
+/*void ThisLevel::onMouseUp(Event* event)
 {
-    Tower::clearup();
-    moneyNumber = nullptr;
-    money = 0;
-}
+    EventMouse* e = dynamic_cast<EventMouse*>(event); // 将事件对象转换为鼠标事件对象
+    if (e)
+    {
+        Vec2 mousePosition = Vec2(e->getCursorX(), e->getCursorY());
+        if (!range.containsPoint(mousePosition)) {
+            selectMenu->removeFromParentAndCleanup(true);
+            selectMenu = nullptr;
+        }
+    }
+}*/

@@ -25,8 +25,10 @@ bool SelectMenu::init()
     {
         return false;
     }
-    if(Resource::gameData[1]==0)
-    Resource::gameData[1] = 4;
+    res = Resource::getInstance();
+
+    if(res->gameData[1]==0)
+    res->gameData[1] = 4;
     ////////////////// 
     Size WinSize = Director::getInstance()->getWinSize();
     
@@ -42,13 +44,13 @@ bool SelectMenu::init()
     // 创建精灵并设置初始缩放
     auto middleSprite = Sprite::create("../Resources/level_01.png");
 
-    Sprite* carret = Sprite::create(Resource::carret[Resource::gameData[1]]);
+    Sprite* carret = Sprite::create(res->carret[res->gameData[1]]);
     carret->setPosition(middleSprite->getContentSize().width,0);
     middleSprite->addChild(carret);
     MenuItemSprite* The_middleSprite = MenuItemSprite::create(middleSprite, middleSprite,
         [this](Ref* pSender) {
             this_music->onEffect();
-            if (Resource::gameData[Level] > 0) {
+            if (res->gameData[Level] > 0) {
                 auto p = ThisLevel::create(Level);
                 Director::getInstance()->pushScene(p);
             }
@@ -135,7 +137,7 @@ bool SelectMenu::init()
     auto back1 = Sprite::create("../Resources/close_pressed.png");
     auto _back = MenuItemSprite::create(back0, back1, [this](Ref* pSender) {
         this_music->onEffect();
-        Resource::saveGame();
+        res->saveGame();
         Director::getInstance()->popScene(); });
     auto back = Menu::create(_back, NULL);
     back->setAnchorPoint(Vec2(0, 0));
@@ -187,14 +189,14 @@ void SelectMenu::moveSprites(Ref* pSender)
 
         // 创建新的按钮并设置初始位置在右边屏幕外
         auto newSprite = Sprite::create(SelectLevel(Level + IsChange));
-        Sprite* carret = Sprite::create(Resource::carret[Resource::gameData[Level + IsChange]]);
+        Sprite* carret = Sprite::create(res->carret[res->gameData[Level + IsChange]]);
         carret->setPosition(newSprite->getContentSize().width, 0);
         newSprite->addChild(carret);
 
         MenuItemSprite* The_middleSprite = MenuItemSprite::create(newSprite, newSprite,
             [this](Ref* pSender) {
                 this_music->onEffect();
-                if (Resource::gameData[Level] > 0) {
+                if (res->gameData[Level] > 0) {
                     auto p = ThisLevel::create(Level);
                     Director::getInstance()->pushScene(p);
                 } });
@@ -226,7 +228,7 @@ void SelectMenu::moveSprites(Ref* pSender)
 
         // 创建新的按钮并设置初始位置在右边屏幕外
         auto newSprite = Sprite::create(SelectLevel(Level + IsChange));
-        Sprite* carret = Sprite::create(Resource::carret[Resource::gameData[Level + IsChange]]);
+        Sprite* carret = Sprite::create(res->carret[res->gameData[Level + IsChange]]);
         carret->setPosition(newSprite->getContentSize().width, 0);
         newSprite->addChild(carret);
 
@@ -234,7 +236,7 @@ void SelectMenu::moveSprites(Ref* pSender)
             [this](Ref* pSender) {
                 this_music->onEffect();
                 //第n关
-                if (Resource::gameData[Level] > 0) {
+                if (res->gameData[Level] > 0) {
                     auto p = ThisLevel::create(Level);
                     Director::getInstance()->pushScene(p);
                 }

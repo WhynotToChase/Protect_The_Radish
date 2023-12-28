@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdio>
+#include "cocos2d.h"
 
 // 定义防御塔数据结构
 struct TowerData {
@@ -64,39 +65,70 @@ struct MonsterData
     std::vector<std::vector<std::string>> monsterdead;
 };
 
+struct Coor
+{
+    int x;
+    int y;
+};
+
+bool operator==(Coor& point1, Coor& point2);
+
 class Resource {
 public:
-    static const TowerData& getTowerDataById(const int id);
-    static const std::string& getIcon(const int price, bool i);
-    static const std::string& getSellPrice(const int price);
-    static const LevelData& getLevelData(const int level);
-    static bool find(const float mouseX, const float mouseY, const int this_level);
-    static std::vector<int>gameData;
-    static bool saveGame();
-    static void readData(const int which);
-    static void removeData();
-    static std::vector<std::string>carret;
+    static Resource* instance;
+    static Resource* getInstance();
+
+    Resource::Resource();
+
+    const TowerData* getTowerDataById(const int id);
+
+    const std::string& getIcon(const int price, bool i);
+   
+    const std::string& getSellPrice(const int price);
+    
+    const LevelData& getLevelData(const int level);
+   
+    bool find(const float mouseX, const float mouseY, const int this_level);
+    
+    std::vector<int>gameData;
+    
+    bool saveGame();
+    
+    void readData(const int which);
+    
+    void removeData();
+    
+    std::vector<std::string>Resource::carret;
+
 private:
-    static int myGame;
-    static std::map<int, TowerData> towerDataMap;
-    static bool isInitializeTowerData;
-    static void initializeTowerData();
-    static void initializeMonsterData();
+    
+    int myGame;
+    
+    std::map<int, TowerData> towerDataMap;
+    
+    void initializeTowerData();
+    
+    void initializeMonsterData();
 
-    static std::map<int, std::pair<std::string, std::string>> iconMap;
-    static bool isSetIconMap;
-    static void setIconMap();
+    std::map<int, std::pair<std::string, std::string>> iconMap;
+    
+    void setIconMap();
 
-    static std::map<int, std::string> sellPrice;
-    static bool isSetSellPrice;
-    static void setSellPrice();
+    std::map<int, std::string> sellPrice;
+    
+    void setSellPrice();
 
-    static std::map<int, LevelData>levelDataMap;
-    static bool isSetLevelDataMap;
-    static void setLevelDataMap();
+    std::map<int, LevelData>levelDataMap;
+    
+    void setLevelDataMap();
 
-    static std::string getPath(const int which);
-    static int maxLevel;
+    std::string getSavePath(const int which);
+    
+    void setLevelPath();
+
+    std::vector<Coor>LevelPath;
+
+    int maxLevel;
 };
 
 #endif // !__RESOURCE_H__

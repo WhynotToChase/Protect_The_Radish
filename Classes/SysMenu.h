@@ -12,6 +12,8 @@ class SysMenu : public cocos2d::Layer
 {
 private: 
 
+    Resource* res;
+
     SoundManager* music;
 
     bool onTouchBegan(cocos2d::Touch* touch, cocos2d::Event* event, cocos2d::Sprite* menu); 

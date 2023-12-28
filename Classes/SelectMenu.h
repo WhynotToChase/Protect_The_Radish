@@ -22,6 +22,8 @@ private:
     int IsChange;
 
     SoundManager* this_music;
+
+    Resource* res;
 public:
 
     virtual bool init();

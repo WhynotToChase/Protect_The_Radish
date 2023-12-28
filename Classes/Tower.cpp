@@ -1,363 +1,146 @@
 #include "Tower.h"
-#include <cmath>
-
 using namespace cocos2d;
 
 #define SIZE 1.8f
 
-std::vector<Tower*> Tower::towers = std::vector<Tower*>();
+Bullet* Tower::bul=nullptr;
+Resource* Tower::res = nullptr;
 
-void Tower::setAttackAction(const int ID, const int level, Sprite* tower, Sequence* action)
+void Tower::setUp()
 {
-    Vector<SpriteFrame*> frames;
-    auto data = Resource::getTowerDataById(ID);
-    auto& x = data.action[level];
-    if (ID == 1 || ID == 5) {
-        for (auto& z : x)
-            frames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName(z));
-        frames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName(x[0]));
-        Animation* p = Animation::createWithSpriteFrames(frames, 0.2f);
-        Animate* q = Animate::create(p);
-        if (action != nullptr) {
-            auto se = Sequence::create(action, q, nullptr);
-            tower->runAction(se);
-        }
-        tower->runAction(q);
-    }
-    else {
-        auto circle = RotateBy::create(data.actionDelay, 360.0f);
-        tower->runAction(circle);
-    }
+    bul = Bullet::getInstance();
+    res = Resource::getInstance();
 }
 
-void Tower::clearup()
+Tower* Tower::buildTower(const int ID, const cocos2d::Vec2& position)
 {
-    for (auto& p : towers) {
-        delete p;
+    Tower* it=nullptr;
+    switch (ID) {
+        case 1:
+            it = new BottleTower(ID, position);
+            break;
+        case 3:
+            it = new StarTower(ID, position);
+            break;
+        case 4:
+            it = new FanTower(ID, position);
+            break;
+        case 5:
+            it = new MagicTower(ID, position);
+            break;
     }
-    towers.clear();
+    return it;
 }
 
-void Tower::upDate(const float delat)
+Tower::Tower(const int ID, const cocos2d::Vec2& p)
 {
-    for (auto& tower : towers) {
-        tower->attack(delat);
-   }
-    TowerMenu::upDate();
-}
+    Tower::ID = ID;
+    level = 1;
+    lastTime = -1.0f;
+    position = p;
+    data = res->getTowerDataById(ID);
 
-bool Tower::hasBuilt(const Vec2& position)
-{
-    for (auto& p : towers) {
-        if (p->getPosition() == position)
-            return true;
-   }
-    return false;
-}
-
-bool Tower::buildTower(const int ID ,const Vec2& position)
-{
-    if (!hasBuilt(position)&&ThisLevel::changeMoney(-Resource::getTowerDataById(ID).BLDC)) {
-        SoundManager::getInstance()->onEffect(2);
-        Tower* p;
-        switch (ID) {
-            case 1:
-                p = new BottleTower(position);
-                break;
-            case 3:
-                p = new StarTower(position);
-                break;
-            case 4:
-                p = new FanTower(position);
-                break;
-            case 5:
-                p = new MagicTower(position);
-                break;
-            default:
-                return false;
-        }
-        towers.push_back(p);
-        return true;
+    body = Sprite::createWithSpriteFrameName(data->action[level][0]);
+    body->setScale(SIZE);
+    if (ID != 5) {
+        lamp = Sprite::createWithSpriteFrameName(data->lamp[level]);
+        lamp->setScale(SIZE);
     }
-    return false;
-}
+    else
+        lamp = nullptr;
+    whole = Sprite::create();
+    if (ID != 3)
+        whole->addChild(lamp);
+    whole->addChild(body);
+    whole->setPosition(position);
 
-void Tower::deleteTower()
-{
-    SoundManager::getInstance()->onEffect(6);
-    auto sequence = Sequence::create(RemoveSelf::create(),nullptr);
-    getWhole()->runAction(sequence);
-    Effect::create(CARTTON,getPosition());
-
-    auto iter = std::find(towers.begin(), towers.end(), this);
-    if (iter != towers.end()) {
-        towers.erase(iter);
-        delete this;
-    }
-}
-
-void Tower::attack(const float& delat)
-{
-    auto& p = Resource::getTowerDataById(getID());
-    if ((getLastTime() += delat) > p.AS[getLevel()]) {
-        setLastTime();
-        auto& place = getPosition();
-        auto tower = getTowerBady();
-        Vec2 enemy = Vec2(1000,500);//Monster::searchEnemy(place);
-        if (place.distance(enemy)<= p.AR) {
-            setAttackAction(getID(), getLevel(), tower);
-            if (getID() != 3)
-                Bullet::setupBullet(place, enemy, getID(), getLevel(), p.AR);
-            else
-                Bullet::setupBullet(place, enemy, 3, 1, p.AR);
-        }
-    }
+    Director::getInstance()->getRunningScene()->addChild(whole, 50);
+    Effect::create(CARTTON, position);
 }
 
 void Tower::levelUp()
 {
-    if (getLevel() < 3) {
+    if (level < 3) {
         SoundManager::getInstance()->onEffect(7);
-        Effect::create(CARTTON,getPosition());
-        getTowerBady()->setSpriteFrame(Resource::getTowerDataById(getID()).action[getLevel() + 1][0]);
-        if (getID() == 3||getID()==4)
-           getTowerLamp()->setSpriteFrame(Resource::getTowerDataById(getID()).lamp[getLevel() + 1]);
-        addLevel();
+        Effect::create(CARTTON, position);
+        body->setSpriteFrame(data->action[level + 1][0]);
+        level++;
     }
 }
 
-
-const int BottleTower::ID = 1;
-
-BottleTower::BottleTower(const cocos2d::Vec2& p)
+Tower::~Tower()
 {
-    level = 1;
-    lastTime = -1.0f;  
-    position = p;
-   
-    body= Sprite::createWithSpriteFrameName(Resource::getTowerDataById(ID).action[level][0]);
-    auto lamp = Sprite::createWithSpriteFrameName(Resource::getTowerDataById(ID).lamp[level]);
-    body->setScale(SIZE);
-    lamp->setScale(SIZE);
-
-    auto bg = Sprite::create("../Resources/1.png");
-    bg->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-    bg->setOpacity(0);
-    auto _bg = MenuItemSprite::create(bg,bg, [this](Ref* pSender) {
-        SoundManager::getInstance()->onEffect();
-            TowerMenu::create(this);  });
-    auto BG = Menu::create(_bg, NULL);
-    BG->setPosition(0, 0);
-
-    whole = Sprite::create();
-    whole->addChild(lamp);
-    whole->addChild(body);
-    whole->addChild(BG);
-    whole->setPosition(p);
-    Director::getInstance()->getRunningScene()->addChild(whole, 50);
-    Effect::create(CARTTON, getPosition());
-    
+    SoundManager::getInstance()->onEffect(6);
+    auto sequence = Sequence::create(RemoveSelf::create(), nullptr);
+    whole->runAction(sequence);
+    Effect::create(CARTTON, position);
 }
 
-void BottleTower::attack(const float& delat)
+void BottleTower::attack(const float delat, const Vec2& enemy)
 {
-    auto& p = Resource::getTowerDataById(ID);
-    if ((lastTime+=delat) > p.AS[level]) {
+    if ((lastTime += delat) > data->AS[level]) {
+        lastTime = 0.0f;  
+        Vec2 normalizedDirection = (enemy - position).getNormalized();
+        // 计算旋转角度（弧度）
+        float angle = CC_RADIANS_TO_DEGREES(atan2(normalizedDirection.y, normalizedDirection.x));
+        // 创建旋转动画
+        auto rotateTo = RotateTo::create(fabs(angle / 360.0f), -angle);
+        Vector<SpriteFrame*> frames;
+        for (auto& z : data->action[level])
+            frames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName(z));
+        frames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName(data->action[level][0]));
+        Animation* p = Animation::createWithSpriteFrames(frames, 0.2f);
+        Animate* q = Animate::create(p);
+
+        auto action = Sequence::create(rotateTo, q, nullptr);
+        body->runAction(action);
+        bul->setupBullet(position, enemy, ID, level, data->AR);
+    }
+}
+
+void StarTower::levelUp()
+{
+    lamp->setSpriteFrame(data->lamp[level + 1]);
+    Tower::levelUp();
+}
+
+void StarTower::attack(const float delat, const Vec2& enemy)
+{
+    if ((lastTime += delat) > data->AS[level]) {
         lastTime = 0.0f;
-        Vec2 enemy = Vec2(1000, 500);// Monster::searchEnemy(bottle->getPosition());
-        if (enemy.distance(position) <= p.AR) {
-            Vec2 normalizedDirection = (enemy-position).getNormalized();
-            // 计算旋转角度（弧度）
-            float angle = CC_RADIANS_TO_DEGREES(atan2(normalizedDirection.y, normalizedDirection.x));
-            // 创建旋转动画
-            auto rotateTo = RotateTo::create(fabs(angle / 360.0f), -angle);
-            auto action = Sequence::create(rotateTo, nullptr);
-            setAttackAction(ID, level, body,action);
-            Bullet::setupBullet(position, enemy, ID,level,p.AR);
-        }
+        auto circle = RotateBy::create(data->actionDelay, 360.0f);
+        body->runAction(circle);
+        bul->setupBullet(position, enemy, ID, level, data->AR);
     }
 }
 
-const int StarTower::ID = 3;
-
-StarTower::StarTower(const cocos2d::Vec2& p)
+void FanTower::attack(const float delat, const Vec2& enemy)
 {
-    level = 1;
-    lastTime = -1.0f;
-    position = p;
-
-    body = Sprite::createWithSpriteFrameName(Resource::getTowerDataById(ID).action[level][0]);
-    lamp = Sprite::createWithSpriteFrameName(Resource::getTowerDataById(ID).lamp[level]);
-    body->setScale(SIZE);
-    lamp->setScale(SIZE);
-
-    auto bg = Sprite::create("../Resources/1.png");
-    bg->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-    bg->setOpacity(0);
-    auto _bg = MenuItemSprite::create(bg, bg, [this](Ref* pSender) {
-        SoundManager::getInstance()->onEffect();
-        TowerMenu::create(this);  });
-    auto BG = Menu::create(_bg, NULL);
-    BG->setPosition(0, 0);
-
-    whole = Sprite::create();
-    whole->addChild(lamp);
-    whole->addChild(body);
-    whole->addChild(BG);
-    whole->setPosition(p);
-    Director::getInstance()->getRunningScene()->addChild(whole, 50);
-    Effect::create(CARTTON, getPosition());
-}
-
-const int FanTower::ID = 4;
-
-FanTower::FanTower(const cocos2d::Vec2& p)
-{
-    level = 1;
-    lastTime = -1.0f;
-    position = p;
-
-    body = Sprite::createWithSpriteFrameName(Resource::getTowerDataById(ID).action[level][0]);
-    lamp = Sprite::createWithSpriteFrameName(Resource::getTowerDataById(ID).lamp[level]);
-    body->setScale(SIZE);
-    lamp->setScale(SIZE);
-
-    auto bg = Sprite::create("../Resources/1.png");
-    bg->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-    bg->setOpacity(0);
-    auto _bg = MenuItemSprite::create(bg, bg, [this](Ref* pSender) {
-        SoundManager::getInstance()->onEffect();
-        TowerMenu::create(this);  });
-    auto BG = Menu::create(_bg, NULL);
-    BG->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-    BG->setPosition(0, 0);
-
-    whole = Sprite::create();
-    whole->addChild(lamp);
-    whole->addChild(body);
-    whole->addChild(BG);
-    whole->setPosition(p);
-    Director::getInstance()->getRunningScene()->addChild(whole, 50);
-    Effect::create(CARTTON, getPosition());
-}
-
-const int MagicTower::ID = 5;
-
-MagicTower::MagicTower(const cocos2d::Vec2& p)
-{
-    level = 1;
-    lastTime = -1.0f;
-    position = p;
-
-    body = Sprite::createWithSpriteFrameName(Resource::getTowerDataById(ID).action[level][0]);
-    body->setScale(SIZE);
-
-
-    auto bg = Sprite::create("../Resources/1.png");
-    bg->setAnchorPoint(Vec2::ANCHOR_MIDDLE);
-    bg->setOpacity(0);
-    auto _bg = MenuItemSprite::create(bg, bg, [this](Ref* pSender) {
-        SoundManager::getInstance()->onEffect();
-        TowerMenu::create(this);  });
-    auto BG = Menu::create(_bg, NULL);
-    BG->setPosition(0, 0);
-
-    whole = Sprite::create();
-    whole->addChild(body);
-    whole->addChild(BG);
-    whole->setPosition(p);
-    Director::getInstance()->getRunningScene()->addChild(whole, 50);
-    Effect::create(CARTTON, getPosition());
-}
-
-
-bool TowerMenu::canUp=false;
-Tower* TowerMenu::_tower=nullptr;
-int TowerMenu::level=1;
-Menu* TowerMenu::menu = nullptr;
-Sprite* TowerMenu::up = nullptr;
-MenuItem* TowerMenu::levelup = nullptr;
-Rect TowerMenu::range=Rect(0,0,0,0);
-
-bool TowerMenu::init(Tower* tower) 
-{
-    if (!Menu::init()) {
-        return false;
-    }
-
-    if (menu != nullptr)
-        return false;
-    _tower = tower;
-    auto& data = Resource::getTowerDataById(_tower->getID());
-    level=_tower->getLevel();
-
-    auto& pos = tower->getPosition();
-    range = Rect(pos.x - 80.0f, pos.y - 67.5f, 160.0f, 135.0f);
-
-    canUp = data.UPGC[level] < ThisLevel::money;
-    Sprite* up = Sprite::createWithSpriteFrameName(Resource::getIcon(data.UPGC[level], canUp));
-    TowerMenu::up = up;
-    Sprite* destory = Sprite::createWithSpriteFrameName(Resource::getSellPrice(data.PR[level]));
-    auto levelUp = MenuItemSprite::create(up, up, [this](Ref* pSender) {
-        if (canUp&&ThisLevel::changeMoney(-Resource::getTowerDataById(_tower->getID()).UPGC[level])) {
-            menu->removeFromParentAndCleanup(true);
-            menu = nullptr;
-            _tower->levelUp();
-        }});
-    levelUp->setScale(1.5f);
-    levelup = levelUp;
-    auto remove = MenuItemSprite::create(destory, destory, [this](Ref* pSender) {   
-        ThisLevel::changeMoney(Resource::getTowerDataById(_tower->getID()).PR[level]);
-        _tower->deleteTower();
-        menu->removeFromParentAndCleanup(true);
-        menu = nullptr;
-        });
-    remove->setScale(1.5f);
-    
-    menu = Menu::create( levelUp,remove, NULL);
-    menu->alignItemsVerticallyWithPadding(150);
-    menu->setPosition(pos);
-    auto fadeIn = FadeIn::create(0.2f);
-    menu->setOpacity(0);
-    menu->runAction(fadeIn);
-
-    // 注册鼠标移动事件监听器
-    auto mouseListener = EventListenerMouse::create();
-    mouseListener->onMouseUp = CC_CALLBACK_1(TowerMenu::onMouseUp, this);
-    _eventDispatcher->addEventListenerWithSceneGraphPriority(mouseListener, menu);
-
-    auto theRange = Sprite::create("../Resources/AttackRange.PNG");
-    theRange->setScaleX(2*data.AR / theRange->getContentSize().width);
-    theRange->setScaleY(2*data.AR / theRange->getContentSize().height);
-    theRange->setOpacity(100); 
-    auto _theRange = MenuItem::create();
-    _theRange->addChild(theRange);
-    menu->addChild(_theRange, -10);
-
-    Director::getInstance()->getRunningScene()->addChild(menu,100);
-    return true;
-}
-
-void TowerMenu::upDate()
-{
-    if (!menu)
-        return;
-    if (canUp = Resource::getTowerDataById(_tower->getID()).UPGC[level]<ThisLevel::money){
-        up->setSpriteFrame(Resource::getIcon(Resource::getTowerDataById(_tower->getID()).UPGC[level], canUp));
-        up->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+    if ((lastTime += delat) > data->AS[level]) {
+        lastTime = 0.0f;
+        auto circle = RotateBy::create(data->actionDelay, 360.0f);
+        body->runAction(circle);
+        bul->setupBullet(position, enemy, ID, level, data->AR);
     }
 }
 
-void TowerMenu::onMouseUp(Event* event)
+void FanTower::levelUp()
 {
-    EventMouse* e = dynamic_cast<EventMouse*>(event); // 将事件对象转换为鼠标事件对象
-    if (e)
-    {
-        Vec2 mousePosition = Vec2(e->getCursorX(), e->getCursorY());
-        if (!range.containsPoint(mousePosition)) {
-            menu->removeFromParentAndCleanup(true);
-            menu = nullptr;
-        }
-    }
+    lamp->setSpriteFrame(data->lamp[level + 1]);
+    Tower::levelUp();
 }
 
+void MagicTower::attack(const float delat, const Vec2& enemy)
+{
+    if ((lastTime += delat) > data->AS[level]) {
+        lastTime = 0.0f;
+        Vector<SpriteFrame*> frames;
+        for (auto& z : data->action[level])
+            frames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName(z));
+        frames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName(data->action[level][0]));
+        Animation* p = Animation::createWithSpriteFrames(frames, 0.2f);
+        Animate* q = Animate::create(p);
+        body->runAction(q);
+        bul->setupBullet(position, enemy, ID, level, data->AR);
+    }
+}

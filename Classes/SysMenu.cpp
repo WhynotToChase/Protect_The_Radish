@@ -30,6 +30,8 @@ bool SysMenu::init()
     ////////////////// 
     Size WinSize = Director::getInstance()->getWinSize();
 
+    res = Resource::getInstance();
+    music = SoundManager::getInstance();
     
     this->removeChildByName("temb");
     this->removeChildByName("Product");
@@ -145,9 +147,6 @@ bool SysMenu::init()
     label->setAnchorPoint(Vec2::ANCHOR_MIDDLE_BOTTOM);
     label->setPosition(WinSize.width / 2 + 70, 0);
 
-
-
-    music=SoundManager::getInstance();
     return true;
 }
 
@@ -327,7 +326,7 @@ void SysMenu::StartGame( Ref* pSender,int num)
     this->removeChildByName("Product");
     music->onEffect();
     auto p = SelectMenu::scene();
-    Resource::readData(num);
+    res->readData(num);
     Director::getInstance()->pushScene(p);
 }
 

@@ -5,12 +5,13 @@
 #include "SoundManager.h"
 #include "MousePosition.h"
 #include "SysMenu.h"
+#include "Resource.h"
 
 
 class SettingMenu :public cocos2d::Scene {
 private:
 
-	MousePosition* mouse;
+	Resource* res;
 
 	SoundManager* music;
 

@@ -1,26 +1,34 @@
 #include "Resource.h"
 
-// 初始化静态成员变量
-std::map<int, TowerData> Resource::towerDataMap;
-bool Resource::isInitializeTowerData = false;
+bool operator==(Coor& point1, Coor& point2)
+{
+    return point1.x == point2.x && point1.y == point2.y;
+}
 
-std::map<int, std::pair<std::string, std::string>> Resource::iconMap;
-bool Resource::isSetIconMap = false;
+Resource* Resource::instance=nullptr;
 
-std::map<int, std::string> Resource::sellPrice;
-bool Resource::isSetSellPrice = false;
+Resource* Resource::getInstance()
+{
+    if (instance == nullptr)
+        instance = new Resource();
+    return instance;
+}
 
-std::map<int, LevelData>Resource::levelDataMap;
-bool Resource::isSetLevelDataMap=false;
-
-int Resource::myGame = 0;
-int Resource::maxLevel=10;
-std::vector<int>Resource::gameData(maxLevel+1,0 );
-std::vector<std::string>Resource::carret = { "../Resources/lock.PNG",
-                                          "../Resources/onestar.PNG",
-                                          "../Resources/twostar.PNG",
-                                          "../Resources/threestar.PNG",
-                                           "../Resources/fourstar.PNG" };
+Resource::Resource()
+{
+    maxLevel = 10;
+    gameData = std::vector<int>(maxLevel + 1, 0);
+    carret = { "../Resources/lock.PNG",
+               "../Resources/onestar.PNG",
+               "../Resources/twostar.PNG",
+               "../Resources/threestar.PNG",
+               "../Resources/fourstar.PNG" };
+    myGame = 0;
+    initializeTowerData();
+    setIconMap();
+    setSellPrice();
+    setLevelDataMap();
+}
 
 // 初始化防御塔数据映射
 void Resource::initializeTowerData() {
@@ -148,20 +156,16 @@ void Resource::initializeTowerData() {
 }
 
 // 根据ID获取防御塔数据
- const TowerData& Resource::getTowerDataById(const int id)
+ const TowerData* Resource::getTowerDataById(const int id)
 {
-    if (!isInitializeTowerData) {
-        initializeTowerData();
-        isInitializeTowerData = true;
-    }
     auto it = towerDataMap.find(id);
     if (it != towerDataMap.end()) {
-        return it->second;
+        return&it->second;
     }
     else {
         // 处理ID不存在的情况，这里返回一个默认值
         static TowerData defaultData = { {0, 0, 0, 0}, {0, 0, 0, 0}, false, 0, 0, {0, 0,0,0}, {0, 0, 0, 0} };
-        return defaultData;
+        return &defaultData;
     }
 }
 
@@ -176,10 +180,6 @@ void Resource::setIconMap()
 
 const std::string& Resource::getIcon(const int price, bool i)
 {
-    if (!isSetIconMap) {
-        setIconMap();
-        isSetIconMap = true;
-    }
     auto it = iconMap.find(price);
     if (it != iconMap.end()) {
         if (i)
@@ -205,10 +205,6 @@ void Resource::setSellPrice()
 
 const std::string& Resource::getSellPrice(const int price)
 {
-    if (!isSetSellPrice) {
-        setSellPrice();
-        isSetSellPrice = true;
-    }
     auto it = sellPrice.find(price);
     if (it != sellPrice.end()) {
         return it->second;
@@ -317,6 +313,11 @@ bool Resource::find(const float mouseX,const float mouseY,const int this_level) 
     return false;
 }
 
+void Resource::setLevelPath()
+{
+    LevelPath.push_back({});
+}
+
 void Resource::setLevelDataMap()
 {
     std::vector<MonsterPair> temp;
@@ -327,10 +328,6 @@ void Resource::setLevelDataMap()
 
 const LevelData& Resource::getLevelData(const int level)
 {
-    if (!isSetLevelDataMap) {
-        setLevelDataMap();
-        isSetLevelDataMap = true;
-    }
     auto it = levelDataMap.find(level);
     if (it != levelDataMap.end()) {
         return it->second;
@@ -343,7 +340,7 @@ const LevelData& Resource::getLevelData(const int level)
 
 bool Resource::saveGame()
 {
-    std::string path = getPath(myGame);
+    std::string path = getSavePath(myGame);
     if (path == "")
         return false;
     std::ofstream outFile(path, std::ios::out | std::ios::trunc);
@@ -357,7 +354,7 @@ bool Resource::saveGame()
     return true;
 }
 
-std::string Resource::getPath(const int which)
+std::string Resource::getSavePath(const int which)
 {
     std::string path = "../saveData/game";
     switch (which) {
@@ -387,7 +384,7 @@ void Resource::readData(const int which)
         return;
     }
     else {
-        std::string path = getPath(which);
+        std::string path = getSavePath(which);
         if (path == "")
             return;
         myGame = which;
@@ -404,7 +401,7 @@ void Resource::readData(const int which)
 
 void Resource::removeData()
 {
-    std::string path = getPath(myGame);
+    std::string path = getSavePath(myGame);
     gameData.clear();
     gameData.resize(maxLevel + 1);
     gameData[1] = 4;

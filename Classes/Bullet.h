@@ -7,19 +7,27 @@
 
 class Bullet
 {
+private:
+
+    static Bullet* instance;
+
+    Resource* res;
 
 public:
 
-    static void setupBullet(cocos2d::Vec2 startPosition, const cocos2d::Vec2& targetPosition,const int ID,const int level, const float AR);
+    Bullet();
+    
+    static Bullet* getInstance();
 
-    static cocos2d::Vec2 accFinal(cocos2d::Vec2& startPosition, const cocos2d::Vec2& targetPosition,const float AR, const bool i=false);
+    void setupBullet(cocos2d::Vec2 startPosition, const cocos2d::Vec2& targetPosition,const int ID,const int level, const float AR);
 
-    static cocos2d::Vec2 accFinal(cocos2d::Vec2& startPosition,const float angle,const float AR);
+    cocos2d::Vec2 accFinal(cocos2d::Vec2& startPosition, const cocos2d::Vec2& targetPosition,const float AR, const bool i=false);
+
+    cocos2d::Vec2 accFinal(cocos2d::Vec2& startPosition,const float angle,const float AR);
 };
 
 class TheBullet :public cocos2d::Sprite
 {
-
 public:
 
     int ID;
