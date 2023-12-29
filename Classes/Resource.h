@@ -126,7 +126,7 @@ private:
     
     void setLevelPath();
 
-    std::vector<Coor>LevelPath;
+    std::vector<std::vector<Coor>>LevelPath;
 
     int maxLevel;
 };

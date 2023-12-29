@@ -215,7 +215,7 @@ const std::string& Resource::getSellPrice(const int price)
     }
 }
 
-bool Resource::find(const Coor& mouseP,const int this_level) {//
+bool Resource::find(const Coor& mouseP,const int this_level) {
     int level_1[12][8] = {//µÚÒ»¹Ø
         //0                 1                2                  3
         {0,0,1,1,1,1,1,0},{0,0,0,0,0,0,0,0},{0,1,0,1,1,1,1,0},{0,1,0,1,1,1,1,0},
@@ -315,13 +315,13 @@ bool Resource::find(const Coor& mouseP,const int this_level) {//
 
 void Resource::setLevelPath()
 {
-    LevelPath.push_back({});
+    LevelPath.push_back({                 });
 }
 
 void Resource::setLevelDataMap()
 {
     std::vector<MonsterPair> temp;
-    temp.resize(3);
+    temp.resize(3); 
 
     levelDataMap.emplace();
 }
