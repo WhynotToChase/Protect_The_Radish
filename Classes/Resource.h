@@ -108,6 +108,8 @@ private:
     
     void initializeTowerData();
     
+    void initializePathData();
+
     void initializeMonsterData();
 
     std::map<int, std::pair<std::string, std::string>> iconMap;
