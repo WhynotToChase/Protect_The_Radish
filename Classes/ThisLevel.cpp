@@ -122,8 +122,9 @@ std::string ThisLevel::SelectLevel(const int&level) {
 
 
 //更新每时刻的变化
-void ThisLevel::update(float delta) {
-    
+void ThisLevel::update(float delta)
+{
+
 
 
 }
@@ -161,10 +162,12 @@ void ThisLevel::pauseMenu()
         }});
     auto button2 = MenuItemSprite::create(button20, button21, [this](Ref* pSender) {
         auto scene = ThisLevel::create(this_level);
+        cleanUp();
         Director::getInstance()->resume();
         Director::getInstance()->replaceScene(scene);
         });
     auto button3 = MenuItemSprite::create(button30, button31, [this](Ref* pSender) {
+        cleanUp();
         Director::getInstance()->resume();
         Director::getInstance()->popScene(); });
     pauseMenuButtons = Menu::create(button1, button2, button3, nullptr);
@@ -377,4 +380,12 @@ bool ThisLevel::changeMoney(const int num, const bool i)
         moneyNumber->addChild(thisNum);
     } while (count > 0);
     return true;
+}
+
+
+void ThisLevel::cleanUp()
+{
+    for (auto& p : towers) {
+        delete p.second.these;
+    }
 }
