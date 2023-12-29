@@ -99,6 +99,8 @@ bool ThisLevel::init(const int& level)
     this->addChild(back, 100);
 
 
+
+
     return true;
 }
 
@@ -124,7 +126,8 @@ std::string ThisLevel::SelectLevel(const int&level) {
 //更新每时刻的变化
 void ThisLevel::update(float delta)
 {
-
+    if (true)
+        monsters.push_back(Monster);
 
 
 }
