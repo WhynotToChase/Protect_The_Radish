@@ -29,6 +29,8 @@ struct towerNature
 class ThisLevel :public cocos2d::Scene {
 private:
 
+    void cleanUp();
+
     std::vector<cell>route;
 
     std::map<Coor, towerNature> towers;

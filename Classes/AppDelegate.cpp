@@ -115,7 +115,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     SoundManager::getInstance();
     Resource::getInstance();
     Tower::setUp();
-    Bullet::getInstance();
+
 
     // create a scene. it's an autorelease object
     auto scene = SysMenu::scene();
