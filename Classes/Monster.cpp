@@ -3,6 +3,8 @@
 
 using namespace cocos2d;
 
+Resource* Monster::res = nullptr;
+
 int Monster::distributeMask()
 {
     static int orginMask = 1;
@@ -18,7 +20,8 @@ bool Monster::init(int id, float speed, const int& level)
 {
     if (!Sprite::initWithFile(getMonsterImage(id)))
         return false;
-
+    if (!res)
+        res = Resource::getInstance();
     monsterID = id;
     moveSpeed = speed * 1.5;
     blood = 1000;
@@ -52,7 +55,7 @@ bool Monster::init(int id, float speed, const int& level)
     auto animate = Animate::create(animation);
     float distance = 0.0f;
     Vector<FiniteTimeAction*>action;
-    for (int i = 1; i < 9; i++) {
+    for (int i = 1; i < 15; i++) {
         if (!ThisPath[level][i].x&&!ThisPath[level][i].y) {
             break;
         }

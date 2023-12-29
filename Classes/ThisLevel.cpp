@@ -98,7 +98,7 @@ bool ThisLevel::init(const int& level)
     back->setScale(1.6f);
     this->addChild(back, 100);
 
-
+    route.push_back({m})
 
 
     return true;

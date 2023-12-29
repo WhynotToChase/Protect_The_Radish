@@ -9,6 +9,8 @@ class Monster : public cocos2d::Sprite
 {
 public:
 
+    static Resource* res;
+
     int monsterID;
 
     float moveSpeed;
@@ -34,7 +36,6 @@ public:
         {{1,1},{0,4},{2,0},{0,-1},{1,0},{0,-1},{1,0},{0,-1},{2,0},{0,1},{1,0},{0,1},{1,0},{0,1},{2,0},{11,5}},
         //第十关位移
         {{1,1},{0,2},{2,0},{0,2},{6,0},{0,-3},{-4,0},{0,-1},{4,0},{0,0},{0,0},{0,0} ,{0,0},{0,0},{0,0} ,{9,1}}
-        //第一关位移
     };
 
     virtual bool init(int id, float speed,const int& level);

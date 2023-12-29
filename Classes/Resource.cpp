@@ -28,6 +28,7 @@ Resource::Resource()
     setIconMap();
     setSellPrice();
     setLevelDataMap();
+    setLevelPath();
 }
 
 
@@ -334,7 +335,17 @@ bool Resource::find(const Coor& mouseP,const int this_level) {
 
 void Resource::setLevelPath()
 {
-    LevelPath.push_back({                 });
+    LevelPath.push_back({});
+    LevelPath.push_back({ {1,5},{0,-3},{3,0},{0,1},{3,0},{0,-1},{3,0},{0,3} });
+    LevelPath.push_back({ {4,5},{5,0},{0,-2},{-7,0},{0,-2},{5,0} });
+    LevelPath.push_back({ {1, 4}, { 0,-3 }, { 4,0 }, { 0,2 }, { 2,0 }, { 0,2 }, { 1,0 }, { 0,-1 }, { 2,0 } });
+    LevelPath.push_back({ {0,4},{2,0},{0,-3},{2,0},{0,2},{3,0},{0,-2},{3,0},{0,4} });
+    LevelPath.push_back({ {10,1},{0,4},{-3,0},{0,-1},{-3,0},{0,-1},{-3,0},{0,-1},{1,0},{0,-2}, {5,0},{1,0} });
+    LevelPath.push_back({ {0,5},{5,0},{0,-4},{6,0} });
+    LevelPath.push_back({ {1,5},{0,-4},{3,0},{0,2},{4,0},{0,-2},{2,0},{0,4},{-6,0} });
+    LevelPath.push_back({ {10,4},{0,-1},{-5,0},{0,2},{-5,0},{0,-2},{2,0},{0,-2},{2,0},{0,1},{4,0} });
+    LevelPath.push_back({ {1,1},{0,4},{2,0},{0,-1},{1,0},{0,-1},{1,0},{0,-1},{2,0},{0,1},{1,0},{0,1},{1,0},{0,1},{2,0}});
+    LevelPath.push_back({ {1,1},{0,2},{2,0},{0,2},{6,0},{0,-3},{-4,0},{0,-1},{4,0} });
 }
 
 void Resource::setLevelDataMap()

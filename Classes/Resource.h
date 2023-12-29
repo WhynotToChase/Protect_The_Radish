@@ -100,6 +100,8 @@ public:
     
     std::vector<std::string>Resource::carret;
 
+    std::vector<std::vector<Coor>>LevelPath;
+
 private:
     
     int myGame;
@@ -127,8 +129,6 @@ private:
     std::string getSavePath(const int which);
     
     void setLevelPath();
-
-    std::vector<std::vector<Coor>>LevelPath;
 
     int maxLevel;
 };
