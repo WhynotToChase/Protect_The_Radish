@@ -30,6 +30,25 @@ Resource::Resource()
     setLevelDataMap();
 }
 
+
+//初始化路径
+void Resource::initializePathData() {
+    using namespace std;
+    //十条路径
+    vector<vector<Coor>> LevelPath;
+    LevelPath.clear();
+    LevelPath.resize(10);
+    LevelPath[0] = { {1,5},{1,4} ,{1,3}, {1,2},{2,2},{3,2}, {4,2},{4,3},{5,3},{6,3}, {7, 3}, { 7,2 },{8,2},{9,2}, { 10,2 },{10,3},{10,4}, { 10,5 } };
+    LevelPath[1] = { {4,5},{5,5},{6,5},{7,5},{8,5}, {9,5},{9,4}, {9,3},{8,3},{7,3},{6,3},{5,3},{4,3},{3,3}, {2,3},{2,2}, {2,1},{3,1},{4,1},{5,1},{6,1}, {7,1} };
+    LevelPath[2] = { {1,4},{1,3},{1,2}, {1,1},{2,1},{3,1},{4,1}, {5,1},{5,2}, {5,3},{6,3}, {7,3},{7,4}, {7,5},{8,5},{8,4},{9,4}, {10,4} };
+    LevelPath[3] = {};
+    LevelPath[4] = {};
+    LevelPath[5] = {};
+    LevelPath[6] = {};
+    LevelPath[7] = {};
+    LevelPath[8] = {};
+    LevelPath[9] = {};
+}
 // 初始化防御塔数据映射
 void Resource::initializeTowerData() {
     using namespace std;
