@@ -215,7 +215,7 @@ const std::string& Resource::getSellPrice(const int price)
     }
 }
 
-bool Resource::find(const float mouseX,const float mouseY,const int this_level) {//
+bool Resource::find(const Coor& mouseP,const int this_level) {//
     int level_1[12][8] = {//µÚÒ»¹Ø
         //0                 1                2                  3
         {0,0,1,1,1,1,1,0},{0,0,0,0,0,0,0,0},{0,1,0,1,1,1,1,0},{0,1,0,1,1,1,1,0},
@@ -297,16 +297,16 @@ bool Resource::find(const float mouseX,const float mouseY,const int this_level) 
        {0,0,0,1,1,0,1,0},{0,0,0,0,0,0,1,0} ,{0,0,1,1,1,1,1,0},{0,0,1,1,1,1,1,0}
     };
     switch (this_level) {
-        case 1:return level_1[int(mouseX / 160)][int(mouseY / 135)];
-        case 2:return level_2[int(mouseX / 160)][int(mouseY / 135)];
-        case 3:return level_3[int(mouseX / 160)][int(mouseY / 135)];
-        case 4:return level_4[int(mouseX / 160)][int(mouseY / 135)];
-        case 5:return level_5[int(mouseX / 160)][int(mouseY / 135)];
-        case 6:return level_6[int(mouseX / 160)][int(mouseY / 135)];
-        case 7:return level_7[int(mouseX / 160)][int(mouseY / 135)];
-        case 8:return level_8[int(mouseX / 160)][int(mouseY / 135)];
-        case 9:return level_9[int(mouseX / 160)][int(mouseY / 135)];
-        case 10:return level_10[int(mouseX / 160)][int(mouseY / 135)];
+        case 1:return level_1[mouseP.x][mouseP.y];
+        case 2:return level_2[mouseP.x][mouseP.y];
+        case 3:return level_3[mouseP.x][mouseP.y];
+        case 4:return level_4[mouseP.x][mouseP.y];
+        case 5:return level_5[mouseP.x][mouseP.y];
+        case 6:return level_6[mouseP.x][mouseP.y];
+        case 7:return level_7[mouseP.x][mouseP.y];
+        case 8:return level_8[mouseP.x][mouseP.y];
+        case 9:return level_9[mouseP.x][mouseP.y];
+        case 10:return level_10[mouseP.x][mouseP.y];
         default:
             break;
     }

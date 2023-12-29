@@ -77,8 +77,6 @@ bool TheBullet::init(const Vec2& start, const Vec2 & final, const int ID, const 
 	}
 	TheBullet::ID = ID;
 
-	ATK = data->ATK[level];
-
 	Vector<SpriteFrame*> frames;
 	for (auto& x : data->bullet[level])
 		frames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName(x));
@@ -103,6 +101,7 @@ bool TheBullet::init(const Vec2& start, const Vec2 & final, const int ID, const 
 	bulletBody->setDynamic(false);
 	bulletBody->setCollisionBitmask(0xFFFFFFFF);
 	this->setPhysicsBody(bulletBody);
+	this->setTag(data->ATK[level]);
 
 	this->setScale(SIZE);
 	this->setRotation(-CC_RADIANS_TO_DEGREES(atan2(final.y - start.y, final.x - start.x)));
@@ -129,7 +128,7 @@ bool TheBullet::onContactBegin(PhysicsContact& contact)
 	auto bombte = Animate::create(bombtion);
 	auto se = Sequence::create(bombte, RemoveSelf::create());
 	this->runAction(se);
-	return true;
+	return false;
 }
 
 bool FanBullet::init(const Vec2& start, const Vec2 & final, const int ID, const int level)
@@ -141,8 +140,6 @@ bool FanBullet::init(const Vec2& start, const Vec2 & final, const int ID, const 
 
 	if (!Sprite::initWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(data->bullet[level][0])))
 		return false;
-
-	ATK = data->ATK[level];
 
 	this->setSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(data->bullet[level][0]));
 	auto loop = RotateBy::create(data->AR / SPEED, 360.0f* data->AR / SPEED / data->bulletDelay);
@@ -161,6 +158,7 @@ bool FanBullet::init(const Vec2& start, const Vec2 & final, const int ID, const 
 	bulletBody->setCollisionBitmask(0xFFFFFFFF);
 	this->setPhysicsBody(bulletBody);
 	bulletBody->setDynamic(false);
+	this->setTag(data->ATK[level]);
 
 	auto contactListener = EventListenerPhysicsContact::create();
 	contactListener->onContactBegin = CC_CALLBACK_1(FanBullet::onContactBegin, this);
@@ -182,7 +180,7 @@ bool FanBullet::onContactBegin(PhysicsContact& contact)
 	else
 		spriteB->setCollisionBitmask(spriteB->getCollisionBitmask() - spriteA->getCategoryBitmask());
 
-	return true;
+	return false;
 }
 
 bool MagicBullet::init(const Vec2& start, const Vec2 & final, const int ID, const int level)
@@ -194,8 +192,6 @@ bool MagicBullet::init(const Vec2& start, const Vec2 & final, const int ID, cons
 
 	if (!Sprite::create("../Resources/0.png"))
 		return false;
-
-	ATK = data->ATK[level];
 
 	float angle = CC_RADIANS_TO_DEGREES(atan2(final.y - start.y, final.x - start.x));
 	Vector<SpriteFrame*> frames;
@@ -217,6 +213,7 @@ bool MagicBullet::init(const Vec2& start, const Vec2 & final, const int ID, cons
 	bulletBody->setCollisionBitmask(0xFFFFFFFF);
 	bulletBody->setDynamic(false);
 	this->setPhysicsBody(bulletBody);
+	this->setTag(data->ATK[level]);
 	
 	auto delay = DelayTime::create(0.1f);
 	auto se = Sequence::create(delay, RemoveSelf::create(), nullptr);
@@ -241,5 +238,5 @@ bool MagicBullet::onContactBegin(PhysicsContact& contact)
 	auto bombte = Animate::create(bombtion);
 	auto se = Sequence::create(bombte, RemoveSelf::create());
 	this->runAction(se);
-	return true;
+	return false;
 }

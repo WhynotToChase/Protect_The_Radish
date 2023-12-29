@@ -48,8 +48,8 @@ bool ThisLevel::init(const int& level)
             this_music->onEffect();
             buttonItem->setEnabled(false);
             menuEnabled = false;
-            if (towers[lastPosition.x][lastPosition.y])
-                createTowerMenu(towers[lastPosition.x][lastPosition.y]);
+            if (towers.find(lastPosition)==towers.end())
+                createTowerMenu(towers[lastPosition].these);
             else
                 createTower();
         });
@@ -124,6 +124,8 @@ std::string ThisLevel::SelectLevel(const int&level) {
 //更新每时刻的变化
 void ThisLevel::update(float delta) {
     
+
+
 }
 
 void ThisLevel::pauseMenu()
@@ -183,7 +185,7 @@ void ThisLevel::onMouseMove(cocos2d::Event* event)
         mouseP = transform( Vec2(mouseEvent->getCursorX(), mouseEvent->getCursorY()));
     }
     if (menuEnabled) {
-        if (!(lastPosition == mouseP) ){//&& res->find(mouseP)) {
+        if (!(lastPosition == mouseP)&& res->find(mouseP,this_level)) {
             menu->setPosition(transform(mouseP));
             lastPosition = mouseP;
         }
@@ -237,7 +239,7 @@ void ThisLevel::createTower()
     auto leftButton = MenuItemSprite::create(leftSprite, leftSprite,
         [this](Ref* pSender) {
             if (money >= 100) {
-                towers[lastPosition.x][lastPosition.y] = Tower::buildTower(1, transform(lastPosition));
+                towers.emplace(lastPosition, towerNature{ lastPosition,false,Tower::buildTower(1, transform(lastPosition)) });
                 ToNull();
             }
         });
@@ -245,7 +247,7 @@ void ThisLevel::createTower()
     auto rightButton = MenuItemSprite::create(rightSprite, rightSprite,
         [this](Ref* pSender) {
             if (money >= 160) {
-                towers[lastPosition.x][lastPosition.y] = Tower::buildTower(3, transform(lastPosition));
+                towers.emplace(lastPosition, towerNature{ lastPosition,false,Tower::buildTower(3, transform(lastPosition)) });
                 ToNull();
             }
         });
@@ -253,7 +255,7 @@ void ThisLevel::createTower()
     auto topButton = MenuItemSprite::create(topSprite, topSprite,
         [this](Ref* pSender) {
             if (money >= 160) {
-                towers[lastPosition.x][lastPosition.y] = Tower::buildTower(4, transform(lastPosition));
+                towers.emplace(lastPosition,towerNature{lastPosition,false,Tower::buildTower(4, transform(lastPosition)) });
                 ToNull();
             }
         });
@@ -261,7 +263,7 @@ void ThisLevel::createTower()
     auto bottomButton = MenuItemSprite::create(bottomSprite, bottomSprite,
         [this](Ref* pSender) {
             if (money >= 160) {
-                towers[lastPosition.x][lastPosition.y] = Tower::buildTower(5, transform(lastPosition));
+                towers.emplace(lastPosition, towerNature{ lastPosition,false,Tower::buildTower(5, transform(lastPosition)) });
                 ToNull();
             }
         });
@@ -292,39 +294,31 @@ void ThisLevel::createTower()
     this->addChild(selectMenu, 100);
 }
 
-//将四个选项置零
+//将选择菜单删除
 void ThisLevel::ToNull() {
     selectMenu->removeFromParentAndCleanup(true);
     selectMenu = nullptr;
     menuEnabled = true;
     buttonItem->setEnabled(true);
-    /*leftmenu->removeFromParentAndCleanup(true);
-    leftmenu = nullptr;
-    rightmenu->removeFromParentAndCleanup(true);
-    rightmenu = nullptr;
-    topmenu->removeFromParentAndCleanup(true);
-    topmenu = nullptr;
-    bottommenu->removeFromParentAndCleanup(true);
-    bottommenu = nullptr;*/
 }
 
 void ThisLevel::createTowerMenu(Tower* it)
 {
     cost = it->data->UPGC[it->level];
     price = it->data->PR[it->level];
-    canUp =cost < money;
+    float range = it->data->AR;
     ThisLevel::it = it;
-    Sprite* up = Sprite::createWithSpriteFrameName(res->getIcon(cost, canUp));
+    Sprite* up = Sprite::createWithSpriteFrameName(res->getIcon(cost,cost < money));
     Sprite* destory = Sprite::createWithSpriteFrameName(res->getSellPrice(price));
     auto levelUp = MenuItemSprite::create(up, up, [this](Ref* pSender) {
-        if (canUp && ThisLevel::changeMoney(-cost)) {
+        if (ThisLevel::changeMoney(-cost)) {
             ToNull();
             ThisLevel::it->levelUp();
         }});
     levelUp->setScale(1.5f);
     auto remove = MenuItemSprite::create(destory, destory, [this](Ref* pSender) {
         ThisLevel::changeMoney(price);
-        towers[int(ThisLevel::it->position.x )/ 160][int(ThisLevel::it->position.y)/ 135] = nullptr;
+        towers.erase(transform(ThisLevel::it->position));
         delete ThisLevel::it;
         ToNull();
         });
@@ -346,9 +340,16 @@ void ThisLevel::createTowerMenu(Tower* it)
     bg->setPosition(0, 0);
     bg->setLocalZOrder(10);
     selectMenu->addChild(bg);
+    auto theRange = Sprite::create("../Resources/AttackRange.PNG");
+    theRange->setScaleX(2 * range / theRange->getContentSize().width);
+    theRange->setScaleY(2 * range/ theRange->getContentSize().height);
+    theRange->setOpacity(100);
+    auto _theRange = MenuItem::create();
+    _theRange->addChild(theRange);
+    _theRange->setPosition(transform(lastPosition));
+    selectMenu->addChild(_theRange, -10);
     this->addChild(selectMenu,100);
 }
-
 
 bool ThisLevel::changeMoney(const int num, const bool i)
 {
@@ -377,17 +378,3 @@ bool ThisLevel::changeMoney(const int num, const bool i)
     } while (count > 0);
     return true;
 }
-
-
-/*void ThisLevel::onMouseUp(Event* event)
-{
-    EventMouse* e = dynamic_cast<EventMouse*>(event); // 将事件对象转换为鼠标事件对象
-    if (e)
-    {
-        Vec2 mousePosition = Vec2(e->getCursorX(), e->getCursorY());
-        if (!range.containsPoint(mousePosition)) {
-            selectMenu->removeFromParentAndCleanup(true);
-            selectMenu = nullptr;
-        }
-    }
-}*/

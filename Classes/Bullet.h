@@ -32,10 +32,6 @@ public:
 
     int ID;
 
-    int ATK;
-
-    int getATK() { return ATK; }
-
     virtual bool init(const cocos2d::Vec2& start, const cocos2d::Vec2& target, const int ID, const int level);
 
    static TheBullet* create(const cocos2d::Vec2& startPosition, const cocos2d::Vec2& targetPosition, const int ID, const int level) {
@@ -57,10 +53,6 @@ public:
 
     int ID;
 
-    int ATK;
-
-    int getATK() { return ATK; }
-
     virtual bool init(const cocos2d::Vec2& start, const cocos2d::Vec2& target, const int ID, const int level);
 
     static FanBullet* create(const cocos2d::Vec2& startPosition, const cocos2d::Vec2& targetPosition, const int ID, const int level) {
@@ -80,10 +72,6 @@ class MagicBullet : public cocos2d::Sprite
 
 public:
     int ID;
-
-    int ATK;
-
-    int getATK() { return ATK; }
 
     virtual bool init(const cocos2d::Vec2& start, const cocos2d::Vec2& target, const int ID, const int level);
 

@@ -3,66 +3,45 @@
 
 using namespace cocos2d;
 
-int Search::range[20] = { 1,-11,-12,-13,-1,11,12,13,2,-24,-2,24,-10,-23,-25,-14,10,23,25,-14 };
-
-std::vector<Sprite*> Search::monsters;
-
-cocos2d::Vec2 Search::searchEnemy(cocos2d::Vec2&p,const int ID)
+int Monster::distributeMask()
 {
-    int point = p.x / 160 * 12 + p.y / 135;
-    int max = ID == 4 ? 20 : 12;
-    for (int i = 0; i < max;i++) {
-        if (currentEnemy[point + range[i]].size() != 0)
-            return currentEnemy[point + range[i]][0];
-    }
-    return Vec2(0, 0);
+    static int orginMask = 1;
+    static int currentMask = 0;
+    currentMask = orginMask;
+    orginMask << 1;
+    if (orginMask == 0)
+        orginMask = 1;
+    return currentMask;
 }
 
-void Search::upDate()
-{
-    currentEnemy.clear();
-    currentEnemy.resize(96);
-    Vec2 p;
-    for (auto it : monsters) {
-        p = it->getPosition();
-        currentEnemy[p.x / 160 * 12 + p.y / 135].push_back(p);
-    }
-}
-
-std::vector < std::vector<Vec2>> Search::currentEnemy = std::vector < std::vector<Vec2>>(12 * 8, { NULL });
-
-void Search::cleanUp()
-{
-    monsters.clear();
-    currentEnemy.clear();
-    currentEnemy.resize(96);
-}
-
-bool Monster::init(int id, float speed, const int& level, b2World* world)
+bool Monster::init(int id, float speed, const int& level)
 {
     if (!Sprite::initWithFile(getMonsterImage(id)))
         return false;
 
     monsterID = id;
     moveSpeed = speed * 1.5;
+    blood = 1000;
 
     this->setPosition(ThisPath[level][0].x * 160.0f + 80.0f, ThisPath[level][0].y * 135.0f + 67.5f);
     this->setScale(160 / this->getContentSize().width, 135 / this->getContentSize().height);
 
-    b2BodyDef bodyDef;
-    bodyDef.type = b2_dynamicBody;
-    bodyDef.position.Set(this->getPositionX() , this->getPositionY() );
+    auto body = cocos2d::PhysicsBody::createBox(this->getContentSize());
 
-    monsterBody = world->CreateBody(&bodyDef);
+    // 设置碰撞体的类别和掩码
+    body->setCategoryBitmask(distributeMask());  // 类别掩码
+    body->setCollisionBitmask(0);  // 碰撞掩码
 
-    b2PolygonShape dynamicBox;
-    dynamicBox.SetAsBox(this->getContentSize().width / 2 , this->getContentSize().height / 2 );
+    // 设置碰撞体为静态
+    body->setDynamic(false);
 
-    b2FixtureDef fixtureDef;
-    fixtureDef.shape = &dynamicBox;
-    fixtureDef.density = 1.0f;
-    fixtureDef.friction = 0.3f;
-    monsterBody->CreateFixture(&fixtureDef);
+    // 将碰撞体添加到怪物精灵中
+    this->setPhysicsBody(body);
+
+    // 设置碰撞回调函数
+    auto contactListener = cocos2d::EventListenerPhysicsContact::create();
+    contactListener->onContactBegin = CC_CALLBACK_1(Monster::onContactBegin, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
 
     // 创建每个移动的目标位置
     float time=0;
@@ -91,16 +70,14 @@ bool Monster::init(int id, float speed, const int& level, b2World* world)
 
     // 在动作完成时调用回调函数删除自己
     auto remove = CallFuncN::create([this](Node* sender) {
-        auto it = std::find(Search::monsters.begin(), Search::monsters.end(),this);
-        Search::monsters.erase(it);
         this->removeFromParent();
         });
 
     // 顺序执行整个动作序列和删除自己的动作
     auto finalAction = Sequence::create(se, remove, nullptr);
 
+    this->setTag(0);
     this->runAction(finalAction);
-    Search::monsters.push_back(this);
     return true;
 }
 
@@ -149,4 +126,28 @@ const std::string Monster::getMonsterMoveImage(const int& id, const int& frameIn
 {
     // 根据ID和帧索引获取怪物动画帧的图片路径
     return cocos2d::StringUtils::format("../Resources/%d_%d.png", id, frameIndex);
+}
+
+bool Monster::onContactBegin(cocos2d::PhysicsContact& contact)
+{
+    auto spriteA = contact.getShapeA()->getBody()->getNode();
+    auto spriteB = contact.getShapeB()->getBody()->getNode();
+
+    // 判断碰撞的两个物体是否是你关心的物体类型
+    if (spriteA && spriteB) {
+        if (spriteA->getTag() == 0)
+            blood -= spriteB->getTag();
+        else
+            blood -= spriteA->getTag();
+
+        if (blood == 0) {
+            this->stopAllActions();
+            auto se = Sequence::create(FadeOut::create(0.2f), RemoveSelf::create(), nullptr);
+            this->runAction(se);
+        }
+        return true;
+    }
+
+    // 返回 false 表示中断后续逻辑
+    return false;
 }

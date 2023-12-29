@@ -8,10 +8,32 @@
 #include"SoundManager.h"
 #include "Resource.h"
 #include "Tower.h"
+#include "Monster.h"
 #include <vector>
+#include <map>
+
+struct cell
+{
+    Coor here;
+    std::vector<cocos2d::Vec2>enemy;
+    std::vector<Tower*>mine;
+};
+
+struct towerNature
+{
+    Coor here;
+    bool hasSearched;
+    Tower* these;
+};
 
 class ThisLevel :public cocos2d::Scene {
 private:
+
+    std::vector<cell>route;
+
+    std::map<Coor, towerNature> towers;
+
+    std::vector<Monster*> monsters;
 
     SoundManager* this_music;
 
@@ -29,8 +51,6 @@ private:
     void pauseMenu();
     
     int money=0;
-    
-    Tower* towers[12][8] = { 0 }; 
     
     int this_level;
 
@@ -51,8 +71,6 @@ public:
     cocos2d::Menu* menu;
     bool menuEnabled=true;
 
-    //void onMouseUp(Event* event);
-
     virtual bool init(const int& level);
 
     void update(float delta);
@@ -60,7 +78,6 @@ public:
     void createTower();
 
     void createTowerMenu(Tower* it);
-    bool canUp = true;
     int cost = 0;
     int price = 0;
     Tower* it;

@@ -88,7 +88,7 @@ public:
     
     const LevelData& getLevelData(const int level);
    
-    bool find(const float mouseX, const float mouseY, const int this_level);
+    bool find(const Coor& mouseP, const int this_level);
     
     std::vector<int>gameData;
     
