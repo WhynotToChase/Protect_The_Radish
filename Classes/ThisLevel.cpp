@@ -56,9 +56,6 @@ bool ThisLevel::init(const int& level)
     sp->setScale(WinSize.width / spritesize.width, WinSize.height / spritesize.height); // 设置初始缩放
     this->addChild(sp, -10, 1);
 
-
-  
-
     // 初始化按钮精灵
     auto buttonNormal = Sprite::create("../Resources/Grid.png");
     auto buttonPressed = Sprite::create("../Resources/left0.png");
