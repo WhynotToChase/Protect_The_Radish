@@ -7,13 +7,20 @@ class VictoryScene : public cocos2d::Scene
 {
 public:
 
-    virtual bool init() override;
+    virtual bool init(const int& level, const int& result);
 
     void onReturnButtonClick(cocos2d::Ref* sender);
 
     void menuCloseCallback(cocos2d::Ref* pSender);
 
-    CREATE_FUNC(VictoryScene);
+    static VictoryScene* create(const int& level, const int& result) {
+        VictoryScene* pRet = new(std::nothrow) VictoryScene(); if (pRet && pRet->init( level, result)) {
+            pRet->autorelease(); return pRet;
+        }
+        else {
+            delete pRet; pRet = nullptr; return nullptr;
+        }
+    };
 
 private:
     void returnToMainScene();
