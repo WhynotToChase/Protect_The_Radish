@@ -27,6 +27,7 @@ bool Radish::init() {
 			if (blood == 10) {
 				this_music->onEffect(11);
 				playAnimation();
+				takeDamage(1);
 			}
 		});
 	menu = Menu::create(MyRadishMenu, nullptr);
@@ -64,6 +65,8 @@ bool Radish::takeDamage(int damage) {
 	blood -= 1;
 	if (blood <= 0) {
 		blood = 0;
+		auto p = VictoryScene::create(ThisLevel::getInstance()->this_level,4);
+		Director::getInstance()->pushScene(p);
 		return true;
 	}
 	this_music->onEffect(14);

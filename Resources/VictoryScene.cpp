@@ -21,7 +21,7 @@ bool VictoryScene::init(const int&level,const int&result )
     Sprite* sprite;
     ScaleTo* scaleTo;
     if (result != 4) {
-        background = Sprite::create("../Resources/victory.png");
+        background = Sprite::create("../Resources/gameover0-hd_8.PNG");
         if (result == 1) {
             sprite = Sprite::create("../Resources/onestar.PNG");
         }
@@ -33,21 +33,19 @@ bool VictoryScene::init(const int&level,const int&result )
         }
     }
     else {
-        background = Sprite::create("../Resources/defeat.png");
-        sprite = Sprite::create("../Resources/RR.png");
+        background = Sprite::create("../Resources/gameover0-hd_1.PNG");
+        sprite = Sprite::create("../Resources/carrot3.PNG");
     }
     background->setAnchorPoint(Vec2(0.5, 0.5));
-    background->setScale(5.0f);
-    background->setPosition(Vec2(960, 740));
+    background->setPosition(Vec2(960, 540));
+    background->setScale(2.0f);
     this->addChild(background, 20);
-    scaleTo = cocos2d::ScaleTo::create(0.5f, 1.5f);
-    background->runAction(scaleTo);
 
-    sprite->setPosition(cocos2d::Vec2(960, 240));
+    sprite->setPosition(cocos2d::Vec2(960, 640));
     this->addChild(sprite);
     sprite->setScale(10.0f);
     sprite->setLocalZOrder(150);
-    scaleTo = cocos2d::ScaleTo::create(0.5f, 3.0f);
+    scaleTo = cocos2d::ScaleTo::create(0.5f, 3.0f); // 在0.5秒内从0缩放到原始大小
     sprite->runAction(scaleTo);
 
     auto returnButton = MenuItemImage::create(
@@ -56,7 +54,7 @@ bool VictoryScene::init(const int&level,const int&result )
         CC_CALLBACK_1(VictoryScene::onReturnButtonClick, this));
 
     auto menu = Menu::create(returnButton, nullptr);
-    menu->setPosition(760, 400);
+    menu->setPosition(960, 400);
     menu->setScale(1.5f);
     this->addChild(menu, 10);
 

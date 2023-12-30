@@ -4,7 +4,7 @@
 #include "cocos2d.h"
 #include"SoundManager.h"
 #include<vector>
-
+#include "VictoryScene.h"
 #include<string>
 
 
