@@ -6,6 +6,7 @@
 #include "Resource.h"
 #include "Effect.h"
 #include "SoundManager.h"
+#include "ui/CocosGUI.h"
 
 class Monster : public cocos2d::Sprite
 {
@@ -35,9 +36,15 @@ public:
 
 private: 
 
+    cocos2d::ui::LoadingBar* bloodBar;
+
     static int distributeMask();
 
-    int blood;
+    bool getHurt(const int demage);
+
+    int hp;
+
+    int maxHp;
     
     static const char* getMonsterImage(int id);
 

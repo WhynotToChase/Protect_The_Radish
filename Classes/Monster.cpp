@@ -29,7 +29,7 @@ bool Monster::init(int id ,const int& level)
 
     monsterID = id;
     moveSpeed = res->monsterData[id].speed;
-    blood = res->monsterData[id].blood;
+    maxHp=hp = res->monsterData[id].blood;
 
     this->setPosition(res->levelPath[level][0].x * 160.0f + 80.0f, res->levelPath[level][0].y * 135.0f + 105.0f);
     this->setScale(1.5f);
@@ -91,9 +91,25 @@ bool Monster::init(int id ,const int& level)
     this->runAction(finalAction);
     Director::getInstance()->getRunningScene()->addChild(this,40);
     music->onEffect(8);
+
+    bloodBar = ui::LoadingBar::create("../Resources/blood.png", 100);
+    auto square = Sprite::create("../Resources/bloodbar.png");
+    bloodBar->setDirection(ui::LoadingBar::Direction::LEFT);
+    bloodBar->setPosition(Vec2(62.5, 80));
+    square->setPosition(Vec2(62.5, 80));
+    this->addChild(square);
+    this->addChild(bloodBar);
     return true;
 }
 
+bool Monster::getHurt(const int demage)
+{
+    hp -= demage;
+    if (hp <= 0)
+        return true;
+    bloodBar->setPercent(100 * hp / maxHp);
+    return false;
+}
 
 const char* Monster::getMonsterImage(int id)
 {
@@ -130,9 +146,7 @@ bool Monster::onContactBegin(cocos2d::PhysicsContact& contact)
                 bodyA->setCollisionBitmask(bodyA->getCollisionBitmask() - bodyB->getCollisionBitmask());
             else
                 bodyA->setCollisionBitmask(0);
-            if (spriteB)
-                spriteB->blood -= spriteA->theATK;
-            if (spriteB->blood <= 0) {
+            if (spriteB&&spriteB->getHurt(spriteA->theATK)) {
                 spriteB->unscheduleAllCallbacks();
                 spriteB->stopAllActions();
                 Effect::create(spriteB->getPosition());
