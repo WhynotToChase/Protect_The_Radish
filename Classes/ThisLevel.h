@@ -12,6 +12,7 @@
 #include"Radish.h"
 #include <vector>
 #include <map>
+#include "VictoryScene.h"
 
 struct towerNature
 {
@@ -32,7 +33,11 @@ private:
     int monsterCount;
     std::vector<MonsterPair> p;
 
-    void cleanUp();
+    Radish* radish;
+
+    bool isEnd = true;
+
+    void settle(const int hp);
 
     Coor transform(const cocos2d::Vec2& point){return { int(point.x) / 160, int(point.y) / 135 };}
 

@@ -22,7 +22,7 @@ bool ThisLevel::init(const int& level)
     lastTime = 0.0f;
     currentTime = 0.0f;
     currentWave = -1;
-   maxWave = res->levelData[this_level].monsters.size();
+    maxWave = res->levelData[this_level].monsters.size();
     p = res->levelData[this_level].monsters;
     monsterCount = 0;
 
@@ -45,7 +45,6 @@ bool ThisLevel::init(const int& level)
     auto physicsWorld = this->getPhysicsWorld();
     // 设置全局重力向量为零
     physicsWorld->setGravity(Vec2(0.0f, 0.0f));
-    physicsWorld->setDebugDrawMask(1);
     physicsWorld->setAutoStep(false);
 
     Size WinSize = Director::getInstance()->getWinSize();
@@ -57,12 +56,9 @@ bool ThisLevel::init(const int& level)
     sp->setScale(WinSize.width / spritesize.width, WinSize.height / spritesize.height); // 设置初始缩放
     this->addChild(sp, -10, 1);
 
-<<<<<<< Updated upstream
 
   
 
-=======
->>>>>>> Stashed changes
     // 初始化按钮精灵
     auto buttonNormal = Sprite::create("../Resources/Grid.png");
     auto buttonPressed = Sprite::create("../Resources/left0.png");
@@ -124,12 +120,8 @@ bool ThisLevel::init(const int& level)
     back->setScale(1.6f);
     this->addChild(back, 100);
     instance = this;
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
     //建立萝卜菜单
-    auto radish = Radish::create();
+    radish = Radish::create();
     this->addChild(radish, 100);
     return true;
 }
@@ -180,7 +172,15 @@ void ThisLevel::update(float delta)
     for (int i = 0;i<monsters.size();) {
         p = transform(monsters[i]->getPosition());
         if (p == finalPoint) {
+            monsters[i]->removeFromParentAndCleanup(true);
             monsters.erase(monsters.begin() + i);
+            if (radish->takeDamage(1)&&isEnd) {
+                this->stopAllActions();
+                this->unscheduleAllCallbacks();
+                this->scheduleOnce([this](float t) {
+                    settle(0); }, 1.0f, "1");
+                isEnd = false;
+            }
             continue;
         }
         for (auto& item : towers) {
@@ -190,6 +190,13 @@ void ThisLevel::update(float delta)
             }
         }
         i++;
+    }
+    if (currentWave == maxWave-1 && monsterCount==0&& monsters.size()==0 && isEnd) {
+        this->stopAllActions();
+        this->unscheduleAllCallbacks();
+        this->scheduleOnce([this](float t) {
+            settle(radish->blood); }, 1.0f, "1");
+        isEnd = false;
     }
 }
 
@@ -239,8 +246,8 @@ void ThisLevel::pauseMenu()
         Director::getInstance()->resume();
         Director::getInstance()->popScene(); });
     pauseMenuButtons = Menu::create(button1, button2, button3, nullptr);
-    pauseMenuButtons->alignItemsVerticallyWithPadding(23.0f);
-    pauseMenuButtons->setPosition(205.999f, 177.99f);
+    pauseMenuButtons->alignItemsVerticallyWithPadding(25.0f);
+    pauseMenuButtons->setPosition(205.999f, 173.99f);
     pausemenu->addChild(pauseMenuButtons);
     pausemenu->setPosition(960,540);
     pausemenu->setScale(1.5f);
@@ -449,4 +456,32 @@ bool ThisLevel::changeMoney(const int num, const bool i)
         moneyNumber->addChild(thisNum);
     } while (count > 0);
     return true;
+}
+
+void ThisLevel::settle(const int hp)
+{
+   
+    VictoryScene* p;
+    if (hp == 0)
+        p = VictoryScene::create(this_level, 4);
+    else if (hp == 10) {
+        p = VictoryScene::create(this_level, 3);
+        res->gameData[this_level] = 3;
+        if (this_level < 10)
+            res->gameData[this_level + 1] = 4;
+    }
+    else if (hp >= 5) {
+        p = VictoryScene::create(this_level, 2);
+        res->gameData[this_level] = 2;
+        if (this_level < 10)
+            res->gameData[this_level + 1] = 4;
+    }
+    else {
+        p = VictoryScene::create(this_level, 1);
+        res->gameData[this_level] = 1;
+        if (this_level < 10)
+            res->gameData[this_level + 1] = 4;
+    }
+    instance = nullptr;
+    Director::getInstance()->replaceScene(p);
 }

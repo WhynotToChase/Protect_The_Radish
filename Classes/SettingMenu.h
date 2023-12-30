@@ -3,7 +3,6 @@
 
 #include "cocos2d.h"
 #include "SoundManager.h"
-#include "MousePosition.h"
 #include "SysMenu.h"
 #include "Resource.h"
 

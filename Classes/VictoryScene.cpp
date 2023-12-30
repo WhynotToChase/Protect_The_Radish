@@ -49,7 +49,6 @@ bool VictoryScene::init(const int&level,const int&result )
     sprite->setLocalZOrder(150);
     scaleTo = cocos2d::ScaleTo::create(0.5f, 3.0f);
     sprite->runAction(scaleTo);
-
     auto returnButton = MenuItemImage::create(
         "../Resources/select1.png",
         "../Resources/select0.png",
@@ -70,6 +69,5 @@ void VictoryScene::onReturnButtonClick(Ref* sender)
 
 void VictoryScene::returnToMainScene()
 {
-    Director::getInstance()->popScene();
     Director::getInstance()->popScene();
 }

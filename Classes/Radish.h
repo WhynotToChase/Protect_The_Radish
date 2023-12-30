@@ -14,8 +14,9 @@ private:
 
 	void updateButtonImage();
 
-	int blood;
 public:
+	
+	int blood;
 
 	virtual bool init();
 	

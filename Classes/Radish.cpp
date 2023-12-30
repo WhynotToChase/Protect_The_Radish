@@ -22,18 +22,19 @@ bool Radish::init() {
 		RadishPosition[ThisLevel::getInstance()->this_level - 1].y * 135 + 200);
 	addChild(HP, 100);
 	Sprite* MyRadish = Sprite::create("../Resources/move10.PNG");
+	MyRadish->setScale(1.5f);
 	MenuItemSprite* MyRadishMenu = MenuItemSprite::create(MyRadish, MyRadish,
 		[this](Ref* pSender) {
 			if (blood == 10) {
 				this_music->onEffect(11);
 				playAnimation();
-				takeDamage(1);
 			}
 		});
 	menu = Menu::create(MyRadishMenu, nullptr);
 	menu->setPosition(RadishPosition[ThisLevel::getInstance()->this_level-1].x*160+100,
 		RadishPosition[ThisLevel::getInstance()->this_level-1].y*135+100);
 	addChild(menu,100);
+	return true;
 }
 
 void Radish::playAnimation()

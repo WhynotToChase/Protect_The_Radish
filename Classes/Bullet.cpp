@@ -144,7 +144,7 @@ bool TheBullet::onContactBegin(PhysicsContact& contact)
 			Effect::create(spriteA->getPosition(), spriteA->theID);
 		}
 	}
-	return false;
+	return true;
 }
 
 bool FanBullet::init(const Vec2& start, const Vec2 & final, const int ID, const int level)
