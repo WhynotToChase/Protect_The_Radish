@@ -60,17 +60,19 @@ void Radish::playAnimation()
 	menu->runAction(sequence1);
 }
 
-void Radish::takeDamage(int damage) {
-	blood -= damage;
-	if (blood < 0) {
+bool Radish::takeDamage(int damage) {
+	blood -= 1;
+	if (blood <= 0) {
 		blood = 0;
+		return true;
 	}
 	this_music->onEffect(14);
 	updateButtonImage();
+	return false;
 }
 
 void Radish::updateButtonImage() {
-	// 根据血量更新按钮图像
+	
 	std::string imagePath;
 
 	if (blood == 0) {
@@ -93,18 +95,32 @@ void Radish::updateButtonImage() {
 	}
 
 	// 更改按钮图像
-	auto menu = dynamic_cast<Menu*>(getChildByTag(66));
-	auto button = dynamic_cast<MenuItemSprite*>(menu->getChildren().at(0));
-	button->setNormalImage(Sprite::create(imagePath));
-	button->setSelectedImage(Sprite::create(imagePath));
-
+	auto sprite = Sprite::create(imagePath);
+	auto menuItemSprite = MenuItemSprite::create(sprite, sprite,[this](Ref* pSender) {});
+	auto newmenu = Menu::create(menuItemSprite,nullptr);
+	newmenu->setScale(1.5f);
+	newmenu->setGlobalZOrder(150);
+	newmenu->setPosition((RadishPosition[ThisLevel::getInstance()->this_level - 1].x+3) * 160 + 100,
+		(RadishPosition[ThisLevel::getInstance()->this_level - 1].y+2) * 135 + 100);
+	this->addChild(newmenu);
+	menu->removeFromParentAndCleanup(true);
+	menu = newmenu;
+	auto Hp = Sprite::create(cocos2d::StringUtils::format("../Resources/num%d.png", blood));
+	Hp->setScale(1.5f);
+	Hp->setGlobalZOrder(150);
+	Hp->setPosition(RadishPosition[ThisLevel::getInstance()->this_level - 1].x * 160 +110,
+		RadishPosition[ThisLevel::getInstance()->this_level - 1].y * 135 + 200);
+	Hp->setScale(1.5f);
+	this->addChild(Hp);
+	HP->removeFromParentAndCleanup(true);
+	HP = Hp;
 }
 
 void Radish::initializeRadishData() {
 	RadishHurt = {
-		"../Resources/carrot0.PNG","../Resources/carrot1.PNG","../Resources/carrot2.PNG",
-		"../Resources/carrot3.PNG","../Resources/carrot4.PNG"
-		,"../Resources/carrot5.PNG","../Resources/carrot6.PNG",
+		"../Resources/carrot00.PNG","../Resources/carrot11.PNG","../Resources/carrot22.PNG",
+		"../Resources/carrot33.PNG","../Resources/carrot44.PNG"
+		,"../Resources/carrot55.PNG","../Resources/carrot66.PNG",
 		"../Resources/Items01-hd_30.PNG"
 	};
 	RadishMove = {

@@ -58,9 +58,7 @@ bool ThisLevel::init(const int& level)
     this->addChild(sp, -10, 1);
 
 
-    //建立萝卜菜单
-    auto radish = Radish::create();
-    this->addChild(radish, 100);
+  
 
     // 初始化按钮精灵
     auto buttonNormal = Sprite::create("../Resources/Grid.png");
@@ -123,6 +121,9 @@ bool ThisLevel::init(const int& level)
     back->setScale(1.6f);
     this->addChild(back, 100);
     instance = this;
+    //建立萝卜菜单
+    auto radish = Radish::create();
+    this->addChild(radish, 100);
     return true;
 }
 

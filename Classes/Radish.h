@@ -23,7 +23,7 @@ public:
 
 	cocos2d::Menu* menu = nullptr;
 	
-	void takeDamage(int damage);
+	bool takeDamage(int damage);
 
 	void initializeRadishData();
 
