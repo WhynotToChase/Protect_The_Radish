@@ -21,6 +21,8 @@ public:
 
     int ID;
 
+    virtual void attack(const float delat, const cocos2d::Vec2& enemy){}
+
     const TowerData* data;
 
     float lastTime;
@@ -50,7 +52,7 @@ class BottleTower : public Tower
 public:
     BottleTower(const int ID, const cocos2d::Vec2& p):Tower(ID,p){}
 
-    void attack(const float delat, const cocos2d::Vec2& enemy);
+    virtual void attack(const float delat, const cocos2d::Vec2& enemy);
 };
 
 
@@ -59,7 +61,7 @@ class StarTower : public Tower
 public:
     StarTower(const int ID, const cocos2d::Vec2& p) :Tower(ID, p) {}
 
-    void attack(const float delat, const cocos2d::Vec2& enemy);
+    virtual void attack(const float delat, const cocos2d::Vec2& enemy);
 
     virtual void levelUp()override;
 };
@@ -69,7 +71,7 @@ class FanTower : public Tower
 public:
     FanTower(const int ID, const cocos2d::Vec2& p) :Tower(ID, p) {}
 
-    void attack(const float delat, const cocos2d::Vec2& enemy);
+    virtual void attack(const float delat, const cocos2d::Vec2& enemy);
 
     virtual void levelUp()override;
 };
@@ -79,7 +81,7 @@ class MagicTower : public Tower
 public:
     MagicTower(const int ID, const cocos2d::Vec2& p) :Tower(ID, p) {}
 
-    void attack(const float delat, const cocos2d::Vec2& enemy);
+    virtual void attack(const float delat, const cocos2d::Vec2& enemy);
 };
 
 #endif // !__TOWER_H__

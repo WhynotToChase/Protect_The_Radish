@@ -2,8 +2,30 @@
 
 using namespace cocos2d;
 
-bool ThisLevel::init(const int& level)
+ThisLevel* ThisLevel::instance = nullptr;
+
+
+ThisLevel* ThisLevel::getInstance()
 {
+    return instance;
+}
+
+bool ThisLevel::init(const int& level)
+{  
+    instance = this;
+    if (!Scene::init())
+    {
+        return false;
+    }
+    this_music = SoundManager::getInstance();
+    res = Resource::getInstance();
+
+    lastTime = 0.0f;
+    currentTime = 0.0f;
+    currentWave = -1;
+   maxWave = res->levelData[this_level].monsters.size();
+    p = res->levelData[this_level].monsters;
+    monsterCount = 0;
 
     moneyNumber = Sprite::create();
     moneyNumber->setPosition(350, 1030);
@@ -18,15 +40,13 @@ bool ThisLevel::init(const int& level)
 
     this_level = level;
 
-    this_music = SoundManager::getInstance();
-    res = Resource::getInstance();
-
-    if (!Scene::init())
-    {
-        return false;
-    }
     //物理世界
     this->initWithPhysics();
+    // 获取物理世界
+    auto physicsWorld = this->getPhysicsWorld();
+    // 设置全局重力向量为零
+    physicsWorld->setGravity(Vec2(0.0f, 0.0f));
+    physicsWorld->setDebugDrawMask(1);
 
     Size WinSize = Director::getInstance()->getWinSize();
 
@@ -49,9 +69,9 @@ bool ThisLevel::init(const int& level)
             buttonItem->setEnabled(false);
             menuEnabled = false;
             if (towers.find(lastPosition)==towers.end())
-                createTowerMenu(towers[lastPosition].these);
-            else
                 createTower();
+            else
+               createTowerMenu(towers[lastPosition].these);
         });
     buttonItem->setScale(160 / buttonItem->getContentSize().width, 135 / buttonItem->getContentSize().height);
     // 创建按钮
@@ -98,9 +118,6 @@ bool ThisLevel::init(const int& level)
     back->setScale(1.6f);
     this->addChild(back, 100);
 
-    route.push_back({m})
-
-
     return true;
 }
 
@@ -126,10 +143,41 @@ std::string ThisLevel::SelectLevel(const int&level) {
 //更新每时刻的变化
 void ThisLevel::update(float delta)
 {
-    if (true)
-        monsters.push_back(Monster);
+    currentTime += delta;
+    //出兵
+    if (currentWave < maxWave) {
+        if (monsterCount == 0 && currentWave < maxWave - 1 && currentTime - lastTime >= p[currentWave + 1].time) {
+            currentWave++;
+            monsterCount = p[currentWave].num;
+            lastTime = currentTime;
+        }
+        else if (monsterCount != 0 && currentTime - lastTime >= p[currentWave].delay) {
+            lastTime = currentTime;
+            monsters.push_back(Monster::create(p[currentWave].ID, this_level));
+            monsterCount--;
+        }
+    }
 
+    for (auto& item : towers) {
+        item.second.hasSearched = false;
+    }
+    Coor finalPoint = res->levelPath[0][this_level];
+    Coor p;
 
+    for (int i = 0;i<monsters.size();) {
+        p = transform(monsters[i]->getPosition());
+        if (p == finalPoint) {
+            monsters.erase(monsters.begin() + i);
+            continue;
+        }
+        for (auto& item : towers) {
+            if (!item.second.hasSearched && p * item.first <= item.second.RG) {
+                item.second.these->attack(delta, monsters[i]->getPosition());
+                item.second.hasSearched = true;
+            }
+        }
+        i++;
+    }
 }
 
 void ThisLevel::pauseMenu()
@@ -175,7 +223,7 @@ void ThisLevel::pauseMenu()
         Director::getInstance()->popScene(); });
     pauseMenuButtons = Menu::create(button1, button2, button3, nullptr);
     pauseMenuButtons->alignItemsVerticallyWithPadding(25.0f);
-    pauseMenuButtons->setPosition(205.999893, 173.999954);
+    pauseMenuButtons->setPosition(205.999f, 173.99f);
     pausemenu->addChild(pauseMenuButtons);
     pausemenu->setPosition(960,540);
     pausemenu->setScale(1.5f);
@@ -185,7 +233,6 @@ void ThisLevel::pauseMenu()
 void ThisLevel::onMouseMove(cocos2d::Event* event)
 {
     //判断选择框是否存在
-
     auto mouseEvent = static_cast<cocos2d::EventMouse*>(event);
     if (mouseEvent) {
         mouseP = transform( Vec2(mouseEvent->getCursorX(), mouseEvent->getCursorY()));
@@ -244,32 +291,32 @@ void ThisLevel::createTower()
     auto here = transform(lastPosition);
     auto leftButton = MenuItemSprite::create(leftSprite, leftSprite,
         [this](Ref* pSender) {
-            if (money >= 100) {
-                towers.emplace(lastPosition, towerNature{ lastPosition,false,Tower::buildTower(1, transform(lastPosition)) });
+            if (changeMoney(-100)) {
+                towers.emplace(lastPosition, towerNature{ false,Tower::buildTower(1, transform(lastPosition)),2 });
                 ToNull();
             }
         });
     // 右边按钮
     auto rightButton = MenuItemSprite::create(rightSprite, rightSprite,
         [this](Ref* pSender) {
-            if (money >= 160) {
-                towers.emplace(lastPosition, towerNature{ lastPosition,false,Tower::buildTower(3, transform(lastPosition)) });
+            if (changeMoney(-160)) {
+                towers.emplace(lastPosition, towerNature{false,Tower::buildTower(3, transform(lastPosition)),3 });
                 ToNull();
             }
         });
     // 上边按钮
     auto topButton = MenuItemSprite::create(topSprite, topSprite,
         [this](Ref* pSender) {
-            if (money >= 160) {
-                towers.emplace(lastPosition,towerNature{lastPosition,false,Tower::buildTower(4, transform(lastPosition)) });
+            if (changeMoney(-160)) {
+                towers.emplace(lastPosition,towerNature{false,Tower::buildTower(4, transform(lastPosition)),3 });
                 ToNull();
             }
         });
     // 下边按钮
     auto bottomButton = MenuItemSprite::create(bottomSprite, bottomSprite,
         [this](Ref* pSender) {
-            if (money >= 160) {
-                towers.emplace(lastPosition, towerNature{ lastPosition,false,Tower::buildTower(5, transform(lastPosition)) });
+            if (changeMoney(-160)) {
+                towers.emplace(lastPosition, towerNature{ false,Tower::buildTower(5, transform(lastPosition)),2 });
                 ToNull();
             }
         });
@@ -371,6 +418,8 @@ bool ThisLevel::changeMoney(const int num, const bool i)
             return false;
         money = count;
     }
+    if (num > 0)
+        this_music->onEffect(15);
     moneyNumber->removeAllChildren();
     int position = 0;
     do {
@@ -391,4 +440,5 @@ void ThisLevel::cleanUp()
     for (auto& p : towers) {
         delete p.second.these;
     }
+    instance = nullptr;
 }

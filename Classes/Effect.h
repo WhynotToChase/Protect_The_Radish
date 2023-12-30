@@ -3,8 +3,6 @@
 
 #include"cocos2d.h"
 
-#define CARTTON 0
-
 class Effect : public cocos2d::Node
 {
 private:
@@ -14,11 +12,11 @@ private:
     void createCartton();
 
 public:
-    virtual bool init(int num, const cocos2d::Vec2& position);
+    virtual bool init(const cocos2d::Vec2& position);
 
-    static Effect* create(int num, const cocos2d::Vec2& position) {
+    static Effect* create(const cocos2d::Vec2& position) {
         Effect* pRet = new(std::nothrow) Effect();
-        if (pRet && pRet->init(num, position)) {
+        if (pRet && pRet->init(position)) {
             pRet->autorelease();
             return pRet;
         }

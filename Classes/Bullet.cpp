@@ -98,7 +98,7 @@ bool TheBullet::init(const Vec2& start, const Vec2 & final, const int ID, const 
 
 	auto bulletBody = PhysicsBody::createCircle(size.height * SIZE / 2);
 	bulletBody->setCategoryBitmask(0);
-	bulletBody->setDynamic(false);
+	bulletBody->setDynamic(true);
 	bulletBody->setCollisionBitmask(0xFFFFFFFF);
 	this->setPhysicsBody(bulletBody);
 	this->setTag(data->ATK[level]);
@@ -155,9 +155,10 @@ bool FanBullet::init(const Vec2& start, const Vec2 & final, const int ID, const 
 
 	auto bulletBody = PhysicsBody::createCircle(size.height);
 	bulletBody->setCategoryBitmask(0);
-	bulletBody->setCollisionBitmask(0xFFFFFFFF);
+	bulletBody->setCollisionBitmask(0);
+	bulletBody->setContactTestBitmask(0xFFFFFfff);
 	this->setPhysicsBody(bulletBody);
-	bulletBody->setDynamic(false);
+	bulletBody->setDynamic(true);
 	this->setTag(data->ATK[level]);
 
 	auto contactListener = EventListenerPhysicsContact::create();
@@ -211,7 +212,7 @@ bool MagicBullet::init(const Vec2& start, const Vec2 & final, const int ID, cons
 	auto bulletBody = PhysicsBody::createCircle(10);
 	bulletBody->setCategoryBitmask(0);
 	bulletBody->setCollisionBitmask(0xFFFFFFFF);
-	bulletBody->setDynamic(false);
+	bulletBody->setDynamic(true);
 	this->setPhysicsBody(bulletBody);
 	this->setTag(data->ATK[level]);
 	

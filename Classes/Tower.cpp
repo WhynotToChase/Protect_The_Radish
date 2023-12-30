@@ -49,20 +49,20 @@ Tower::Tower(const int ID, const cocos2d::Vec2& p)
     else
         lamp = nullptr;
     whole = Sprite::create();
-    if (ID != 3)
+    if (ID != 5)
         whole->addChild(lamp);
     whole->addChild(body);
     whole->setPosition(position);
 
     Director::getInstance()->getRunningScene()->addChild(whole, 50);
-    Effect::create(CARTTON, position);
+    Effect::create(position);
 }
 
 void Tower::levelUp()
 {
     if (level < 3) {
         SoundManager::getInstance()->onEffect(7);
-        Effect::create(CARTTON, position);
+        Effect::create(position);
         body->setSpriteFrame(data->action[level + 1][0]);
         level++;
     }
@@ -73,7 +73,7 @@ Tower::~Tower()
     SoundManager::getInstance()->onEffect(6);
     auto sequence = Sequence::create(RemoveSelf::create(), nullptr);
     whole->runAction(sequence);
-    Effect::create(CARTTON, position);
+    Effect::create(position);
 }
 
 void BottleTower::attack(const float delat, const Vec2& enemy)
@@ -84,7 +84,7 @@ void BottleTower::attack(const float delat, const Vec2& enemy)
         // 计算旋转角度（弧度）
         float angle = CC_RADIANS_TO_DEGREES(atan2(normalizedDirection.y, normalizedDirection.x));
         // 创建旋转动画
-        auto rotateTo = RotateTo::create(fabs(angle / 360.0f), -angle);
+        auto rotateTo = RotateTo::create(fabs(angle / 540.0f), -angle);
         Vector<SpriteFrame*> frames;
         for (auto& z : data->action[level])
             frames.pushBack(SpriteFrameCache::getInstance()->getSpriteFrameByName(z));

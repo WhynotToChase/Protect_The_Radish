@@ -12,30 +12,33 @@
 #include <vector>
 #include <map>
 
-struct cell
-{
-    Coor here;
-    std::vector<cocos2d::Vec2>enemy;
-    std::vector<Tower*>mine;
-};
-
 struct towerNature
 {
-    Coor here;
     bool hasSearched;
     Tower* these;
+    int RG;
 };
 
-class ThisLevel :public cocos2d::Scene {
+class ThisLevel :public cocos2d::Scene 
+{
 private:
+
+    static  ThisLevel* instance;
+
+    float lastTime;
+    float currentTime;
+    int currentWave;
+    int maxWave;
+    int monsterCount;
+    std::vector<MonsterPair> p;
 
     void cleanUp();
 
-    std::vector<cell>route;
+    Coor transform(const cocos2d::Vec2& point){return { int(point.x) / 160, int(point.y) / 135 };}
+
+    cocos2d::Vec2 transform(const Coor point){return { point.x * 160.0f + 80.0f,point.y * 135.0f + 67.5f };}
 
     std::map<Coor, towerNature> towers;
-
-    std::vector<Monster*> monsters;
 
     SoundManager* this_music;
 
@@ -45,32 +48,32 @@ private:
 
     Coor mouseP;
 
-    cocos2d::Sprite* pausemenu;
-    cocos2d::Menu* pauseMenuButtons;
+    cocos2d::Sprite* pausemenu=nullptr;
+    cocos2d::Menu* pauseMenuButtons=nullptr;
 
-    cocos2d::Sprite* moneyNumber;
+    cocos2d::Sprite* moneyNumber=nullptr;
 
     void pauseMenu();
     
     int money=0;
     
-    int this_level;
+public:
+
+    int this_level = 0;
+
+    std::vector<Monster*> monsters;
 
     bool changeMoney(const int num, const bool i = false);
 
-public:
-
-    Coor transform(cocos2d::Vec2& point) { return { int(point.x) / 160, int(point.y) / 135 }; }
-
-    cocos2d::Vec2 transform(Coor point) { return { point.x * 160.0f + 80.0f,point.y * 135.0f + 67.5f }; }
+    static ThisLevel* getInstance();
 
     void onMouseMove(cocos2d::Event* event);
 
-    cocos2d::MenuItemSprite* buttonItem;
+    cocos2d::MenuItemSprite* buttonItem=nullptr;
 
     cocos2d::Menu* selectMenu=nullptr;
 
-    cocos2d::Menu* menu;
+    cocos2d::Menu* menu=nullptr;
     bool menuEnabled=true;
 
     virtual bool init(const int& level);

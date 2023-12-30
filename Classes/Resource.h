@@ -49,6 +49,10 @@ struct LevelData
 {
     //关卡序号
     int level;
+    //怪的波数
+    int count;
+    //金钱
+    int moneyNum;
     //出怪时间，出怪种类，出怪数量，出怪间隔
     std::vector<MonsterPair>monsters;
 };
@@ -56,13 +60,9 @@ struct LevelData
 struct MonsterData 
 {
     //怪物的血量
-    int BLOOD[4];
+    int blood;
     //移动速度
-    int SPEED[4];
-    //移动图片
-    std::vector<std::vector<std::string>> monsteraction;
-    //死亡图片
-    std::vector<std::vector<std::string>> monsterdead;
+    float speed;
 };
 
 struct Coor
@@ -71,7 +71,11 @@ struct Coor
     int y;
 };
 
-bool operator==(Coor& point1, Coor& point2);
+bool operator==(const Coor& point1,const Coor& point2);
+
+int operator*(const Coor& point1, const Coor& point2);
+
+bool operator<(const Coor& point1, const Coor& point2);
 
 class Resource {
 public:
@@ -85,8 +89,6 @@ public:
     const std::string& getIcon(const int price, bool i);
    
     const std::string& getSellPrice(const int price);
-    
-    const LevelData& getLevelData(const int level);
    
     bool find(const Coor& mouseP, const int this_level);
     
@@ -100,7 +102,13 @@ public:
     
     std::vector<std::string>Resource::carret;
 
-    std::vector<std::vector<Coor>>LevelPath;
+    std::vector<std::vector<Coor>>levelPath;
+
+    std::vector<std::vector<Coor>> detailLevelPath;
+
+    std::vector<LevelData>levelData;
+
+    std::vector<MonsterData>monsterData;
 
 private:
     
@@ -122,9 +130,9 @@ private:
     
     void setSellPrice();
 
-    std::map<int, LevelData>levelDataMap;
+
     
-    void setLevelDataMap();
+    void setLevelData();
 
     std::string getSavePath(const int which);
     
