@@ -47,6 +47,7 @@ bool ThisLevel::init(const int& level)
     // 设置全局重力向量为零
     physicsWorld->setGravity(Vec2(0.0f, 0.0f));
     physicsWorld->setDebugDrawMask(1);
+    physicsWorld->setAutoStep(false);
 
     Size WinSize = Director::getInstance()->getWinSize();
 
@@ -143,6 +144,7 @@ std::string ThisLevel::SelectLevel(const int&level) {
 //更新每时刻的变化
 void ThisLevel::update(float delta)
 {
+    this->getPhysicsWorld()->step(delta);
     currentTime += delta;
     //出兵
     if (currentWave < maxWave) {
