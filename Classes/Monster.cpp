@@ -37,11 +37,12 @@ bool Monster::init(int id ,const int& level)
     auto body = cocos2d::PhysicsBody::createBox(this->getContentSize());
 
     // 设置碰撞体的类别和掩码
-    body->setCategoryBitmask(distributeMask());  // 类别掩码
-    body->setCollisionBitmask(0);  // 碰撞掩码
+    body->setCategoryBitmask(0xffffffff);  // 类别掩码
+    body->setCollisionBitmask(0);
+    body->setContactTestBitmask(0);
 
     // 设置碰撞体为静态
-    body->setDynamic(false);
+    body->setDynamic(true);
 
     // 将碰撞体添加到怪物精灵中
     this->setPhysicsBody(body);
@@ -131,10 +132,11 @@ bool Monster::onContactBegin(cocos2d::PhysicsContact& contact)
 
         if (blood == 0) {
             this->stopAllActions();
-            auto p = dynamic_cast<ThisLevel*>(Director::getInstance()->getRunningScene());
             Effect::create(this->getPosition());
-            if (!p)
-                p->changeMoney(50);
+            auto p = ThisLevel::getInstance();
+            p->changeMoney(50);
+            auto it = find(p->monsters.begin(), p->monsters.end(), this);
+            p->monsters.erase(it);
             auto se = Sequence::create(FadeOut::create(0.2f), RemoveSelf::create(), nullptr);
             this->runAction(se);
         }

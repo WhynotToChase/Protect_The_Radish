@@ -40,8 +40,6 @@ private:
 
     std::map<Coor, towerNature> towers;
 
-    std::vector<Monster*> monsters;
-
     SoundManager* this_music;
 
     Resource* res;
@@ -59,9 +57,11 @@ private:
     
     int money=0;
     
-    int this_level=0;
-
 public:
+
+    int this_level = 0;
+
+    std::vector<Monster*> monsters;
 
     bool changeMoney(const int num, const bool i = false);
 

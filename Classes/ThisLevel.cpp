@@ -42,6 +42,11 @@ bool ThisLevel::init(const int& level)
 
     //物理世界
     this->initWithPhysics();
+    // 获取物理世界
+    auto physicsWorld = this->getPhysicsWorld();
+    // 设置全局重力向量为零
+    physicsWorld->setGravity(Vec2(0.0f, 0.0f));
+    physicsWorld->setDebugDrawMask(1);
 
     Size WinSize = Director::getInstance()->getWinSize();
 
@@ -141,30 +146,38 @@ void ThisLevel::update(float delta)
     currentTime += delta;
     //出兵
     if (currentWave < maxWave) {
-        if (monsterCount == 0 && currentWave < maxWave-1&& currentTime - lastTime >= p[currentWave+1].time) {
+        if (monsterCount == 0 && currentWave < maxWave - 1 && currentTime - lastTime >= p[currentWave + 1].time) {
             currentWave++;
             monsterCount = p[currentWave].num;
-            lastTime = currentTime;       
+            lastTime = currentTime;
         }
-        else if (monsterCount != 0&&currentTime - lastTime >= p[currentWave].delay) {
+        else if (monsterCount != 0 && currentTime - lastTime >= p[currentWave].delay) {
             lastTime = currentTime;
             monsters.push_back(Monster::create(p[currentWave].ID, this_level));
             monsterCount--;
         }
     }
 
-    /*for (auto& item : towers) {
+    for (auto& item : towers) {
         item.second.hasSearched = false;
     }
+    Coor finalPoint = res->levelPath[0][this_level];
+    Coor p;
 
-   for (auto it : monsters) {
+    for (int i = 0;i<monsters.size();) {
+        p = transform(monsters[i]->getPosition());
+        if (p == finalPoint) {
+            monsters.erase(monsters.begin() + i);
+            continue;
+        }
         for (auto& item : towers) {
-            if (!item.second.hasSearched&&transform(it->getPosition()) * item.first <= item.second.RG) {
-                item.second.these->attack(delta, it->getPosition());
+            if (!item.second.hasSearched && p * item.first <= item.second.RG) {
+                item.second.these->attack(delta, monsters[i]->getPosition());
                 item.second.hasSearched = true;
             }
         }
-    }*/ 
+        i++;
+    }
 }
 
 void ThisLevel::pauseMenu()
@@ -278,7 +291,7 @@ void ThisLevel::createTower()
     auto here = transform(lastPosition);
     auto leftButton = MenuItemSprite::create(leftSprite, leftSprite,
         [this](Ref* pSender) {
-            if (money >= 100) {
+            if (changeMoney(-100)) {
                 towers.emplace(lastPosition, towerNature{ false,Tower::buildTower(1, transform(lastPosition)),2 });
                 ToNull();
             }
@@ -286,7 +299,7 @@ void ThisLevel::createTower()
     // 右边按钮
     auto rightButton = MenuItemSprite::create(rightSprite, rightSprite,
         [this](Ref* pSender) {
-            if (money >= 160) {
+            if (changeMoney(-160)) {
                 towers.emplace(lastPosition, towerNature{false,Tower::buildTower(3, transform(lastPosition)),3 });
                 ToNull();
             }
@@ -294,16 +307,16 @@ void ThisLevel::createTower()
     // 上边按钮
     auto topButton = MenuItemSprite::create(topSprite, topSprite,
         [this](Ref* pSender) {
-            if (money >= 160) {
-                towers.emplace(lastPosition,towerNature{false,Tower::buildTower(4, transform(lastPosition)),4 });
+            if (changeMoney(-160)) {
+                towers.emplace(lastPosition,towerNature{false,Tower::buildTower(4, transform(lastPosition)),3 });
                 ToNull();
             }
         });
     // 下边按钮
     auto bottomButton = MenuItemSprite::create(bottomSprite, bottomSprite,
         [this](Ref* pSender) {
-            if (money >= 160) {
-                towers.emplace(lastPosition, towerNature{ false,Tower::buildTower(5, transform(lastPosition)),3 });
+            if (changeMoney(-160)) {
+                towers.emplace(lastPosition, towerNature{ false,Tower::buildTower(5, transform(lastPosition)),2 });
                 ToNull();
             }
         });

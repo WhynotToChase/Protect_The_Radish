@@ -7,7 +7,7 @@ bool operator==(const Coor& point1, const Coor& point2)
 
 int operator*(const Coor& point1, const Coor& point2)
 {
-    return (point1.x - point2.x) * (point1.x - point2.x) + (point1.y - point2.y) * (point1.y - point2.y) ;
+    return sqrt((point1.x - point2.x) * (point1.x - point2.x) + (point1.y - point2.y) * (point1.y - point2.y) );
 }
 
 bool operator<(const Coor& point1, const Coor& point2)
@@ -355,7 +355,7 @@ bool Resource::find(const Coor& mouseP,const int this_level) {
 
 void Resource::setLevelPath()
 {
-    levelPath.push_back({});
+    levelPath.push_back({ {0,0} ,{ 10,5 }, {7,1}, {10,4},{10,5} ,{7,1} ,{11,1}, {4,5},{8,2},{11,5},{9,1} });
     levelPath.push_back({ {1,5},{0,-3},{3,0},{0,1},{3,0},{0,-1},{3,0},{0,3} });
     levelPath.push_back({ {4,5},{5,0},{0,-2},{-7,0},{0,-2},{5,0} });
     levelPath.push_back({ {1, 4}, { 0,-3 }, { 4,0 }, { 0,2 }, { 2,0 }, { 0,2 }, { 1,0 }, { 0,-1 }, { 2,0 } });
@@ -388,10 +388,10 @@ void Resource::initializeMonsterData()
 {
     monsterData.resize(5);
     monsterData[0] = {};
-    monsterData[1] = { 1000,80 };
-    monsterData[2] = { 2000,60 };
-    monsterData[3] = { 1500,80 };
-    monsterData[4] = { 2500,60 };
+    monsterData[1] = { 1000,50 };
+    monsterData[2] = { 2000,40 };
+    monsterData[3] = { 1500,50 };
+    monsterData[4] = { 2500,40 };
 }
 
 bool Resource::saveGame()
