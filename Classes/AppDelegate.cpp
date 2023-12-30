@@ -108,10 +108,10 @@ bool AppDelegate::applicationDidFinishLaunching() {
     register_all_packages();
 
     SpriteFrameCache* spriteFrameCache = SpriteFrameCache::getInstance();
-    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("sys_menu.plist");
-    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("settings.plist");
-    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("tower.plist");
-    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("pause.plist");
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("../Resources/sys_menu.plist");
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("../Resources/settings.plist");
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("../Resources/tower.plist");
+    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("../Resources/pause.plist");
     SoundManager::getInstance();
     Resource::getInstance();
     Tower::setUp();
