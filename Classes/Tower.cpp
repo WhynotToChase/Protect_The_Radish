@@ -44,19 +44,23 @@ void Tower::levelUp()
 {
     if (level < 3) {
         this->stopAllActions();
+        this->scheduleOnce([this](float dt) {
+            body->setSpriteFrame(data->action[level][0]);
+            }, 0.2f, "unique_key");
         SoundManager::getInstance()->onEffect(7);
         Effect::create(position);
-        body->setSpriteFrame(data->action[level + 1][0]);
         level++;
     }
 }
 
 void Tower::destoryTower()
-{
-    this->stopAllActions();
-    SoundManager::getInstance()->onEffect(6);
-    this->removeFromParentAndCleanup(true);
+{  
     Effect::create(position);
+    this->stopAllActions();
+    this->scheduleOnce([this](float dt) {
+        this->removeFromParentAndCleanup(true);
+        }, 0.2f, "unique_key");
+    SoundManager::getInstance()->onEffect(6);
 }
 
 void BottleTower::attack(const float delat, const Vec2& enemy)

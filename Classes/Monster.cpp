@@ -89,14 +89,14 @@ bool Monster::init(int id ,const int& level)
 
     this->setTag(0);
     this->runAction(finalAction);
-    Director::getInstance()->getRunningScene()->addChild(this,40);
+    Director::getInstance()->getRunningScene()->addChild(this,70);
     music->onEffect(8);
 
     bloodBar = ui::LoadingBar::create("../Resources/blood.png", 100);
     auto square = Sprite::create("../Resources/bloodbar.png");
     bloodBar->setDirection(ui::LoadingBar::Direction::LEFT);
-    bloodBar->setPosition(Vec2(62.5, 80));
-    square->setPosition(Vec2(62.5, 80));
+    bloodBar->setPosition(Vec2(62.5, 60));
+    square->setPosition(Vec2(62.5, 60));
     this->addChild(square);
     this->addChild(bloodBar);
     return true;
@@ -158,5 +158,5 @@ bool Monster::onContactBegin(cocos2d::PhysicsContact& contact)
             }
         }
     }
-    return false;
+    return true;
 }
