@@ -35,11 +35,11 @@ bool Monster::init(int id ,const int& level)
     this->setScale(1.5f);
 
     auto body = cocos2d::PhysicsBody::createBox(Size(60,50));
-
+    body->setPositionOffset(Vec2(0, -20));
     // 设置碰撞体的类别和掩码
-    body->setCategoryBitmask(2);  // 类别掩码
+    body->setCategoryBitmask(0x10000000);  // 类别掩码
     body->setCollisionBitmask(distributeMask());
-    body->setContactTestBitmask(1);
+    body->setContactTestBitmask(0x11111111);
 
 
     body->setDynamic(true);
@@ -123,19 +123,25 @@ bool Monster::onContactBegin(cocos2d::PhysicsContact& contact)
     auto bodyA = contact.getShapeA()->getBody();
     auto bodyB = contact.getShapeB()->getBody();
     if (bodyA->getCollisionBitmask() & bodyB->getCollisionBitmask()) {
-        auto spriteB = dynamic_cast<Monster*>(contact.getShapeB()->getBody()->getNode());
-        if (bodyA->getName() == "4")
-            bodyA->setCollisionBitmask(bodyA->getCollisionBitmask() - bodyB->getCollisionBitmask());
-        else
-            bodyA->setCollisionBitmask(0);
-        spriteB->blood -= bodyA->getTag();
-        if (spriteB->blood <= 0) {
-            Effect::create(spriteB->getPosition());
-            auto p = ThisLevel::getInstance();
-            p->changeMoney(50);
-            auto it = find(p->monsters.begin(), p->monsters.end(), spriteB);
-            p->monsters.erase(it);
-            spriteB->removeFromParentAndCleanup(true);
+        auto spriteB = dynamic_cast<Monster*>(bodyB->getNode());
+        auto spriteA = dynamic_cast<TheBullet*>(bodyA->getNode());
+        if (spriteA && spriteB) {
+            if (spriteA->theID == 4)
+                bodyA->setCollisionBitmask(bodyA->getCollisionBitmask() - bodyB->getCollisionBitmask());
+            else
+                bodyA->setCollisionBitmask(0);
+            if (spriteB)
+                spriteB->blood -= spriteA->theATK;
+            if (spriteB->blood <= 0) {
+                spriteB->unscheduleAllCallbacks();
+                spriteB->stopAllActions();
+                Effect::create(spriteB->getPosition());
+                auto p = ThisLevel::getInstance();
+                p->changeMoney(50);
+                auto it = find(p->monsters.begin(), p->monsters.end(), spriteB);
+                p->monsters.erase(it);
+                spriteB->removeFromParentAndCleanup(true);
+            }
         }
     }
     return false;

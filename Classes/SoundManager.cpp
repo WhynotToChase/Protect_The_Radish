@@ -47,7 +47,7 @@ const std::vector<std::string> SoundManager::allEffects = {
 
 const std::vector<float> SoundManager::allEffectsLoud = { 1.5f,  1.5f,  3.0f, 1.5f ,2.5f, 9.0f,
                                                                  1.5f,  1.5f, 1.5f ,1.5f, 1.5f,
-                                                                 1.5f,  1.5f, 1.5f ,1.5f, 1.5f };
+                                                                 1.5f,  1.5f, 1.5f ,1.5f, 0.5f };
 SoundManager::SoundManager() {
     // 在构造函数中初始化音频引擎
     std::fstream in("../saveData/settings.txt", std::ios::in);

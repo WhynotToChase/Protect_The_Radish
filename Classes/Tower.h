@@ -9,7 +9,7 @@
 #include "Bullet.h"
 #include "Effect.h"
 
-class Tower
+class Tower: public cocos2d::Sprite
 {
 public:
 
@@ -21,7 +21,7 @@ public:
 
     int ID;
 
-    virtual void attack(const float delat, const cocos2d::Vec2& enemy){}
+    virtual void attack(const float delat, const cocos2d::Vec2& enemy) = 0;
 
     const TowerData* data;
 
@@ -31,58 +31,87 @@ public:
 
     cocos2d::Vec2 position;
 
-    cocos2d::Sprite* whole;
-
     cocos2d::Sprite* lamp;
 
     cocos2d::Sprite* body;
-
-    ~Tower();
+ 
+    void destoryTower();
 
     virtual void levelUp();
 
-    Tower(const int ID, const cocos2d::Vec2& p);
-    
-    static Tower* buildTower(const int ID, const cocos2d::Vec2& position);
+    virtual bool init(const int ID, const cocos2d::Vec2& p);
 
 };
 
 class BottleTower : public Tower
 {
 public:
-    BottleTower(const int ID, const cocos2d::Vec2& p):Tower(ID,p){}
 
     virtual void attack(const float delat, const cocos2d::Vec2& enemy);
+
+    static BottleTower* create(const int ID, const cocos2d::Vec2& p) {
+        BottleTower* pRet = new(std::nothrow) BottleTower(); if (pRet && pRet->init(ID, p)) {
+            pRet->autorelease(); return pRet;
+        }
+        else {
+            delete pRet; pRet = nullptr; return nullptr;
+        }
+    };
 };
 
 
 class StarTower : public Tower
 {
 public:
-    StarTower(const int ID, const cocos2d::Vec2& p) :Tower(ID, p) {}
+
+    virtual void levelUp()override;
 
     virtual void attack(const float delat, const cocos2d::Vec2& enemy);
 
-    virtual void levelUp()override;
+    static StarTower* create(const int ID, const cocos2d::Vec2& p) {
+        StarTower* pRet = new(std::nothrow) StarTower(); if (pRet && pRet->init(ID, p)) {
+            pRet->autorelease(); return pRet;
+        }
+        else {
+            delete pRet; pRet = nullptr; return nullptr;
+        }
+    };
 };
 
 class FanTower : public Tower
 {
 public:
-    FanTower(const int ID, const cocos2d::Vec2& p) :Tower(ID, p) {}
 
     virtual void attack(const float delat, const cocos2d::Vec2& enemy);
 
     virtual void levelUp()override;
+
+    static FanTower* create(const int ID, const cocos2d::Vec2& p) {
+        FanTower* pRet = new(std::nothrow) FanTower(); if (pRet && pRet->init(ID, p)) {
+            pRet->autorelease(); return pRet;
+        }
+        else {
+            delete pRet; pRet = nullptr; return nullptr;
+        }
+    };
 };
 
 class MagicTower : public Tower
 {
 public:
-    MagicTower(const int ID, const cocos2d::Vec2& p) :Tower(ID, p) {}
 
     virtual void attack(const float delat, const cocos2d::Vec2& enemy);
+
+    static MagicTower* create(const int ID, const cocos2d::Vec2& p) {
+        MagicTower* pRet = new(std::nothrow) MagicTower(); if (pRet && pRet->init(ID, p)) {
+            pRet->autorelease(); return pRet;
+        }
+        else {
+            delete pRet; pRet = nullptr; return nullptr;
+        }
+    };
 };
+
 
 #endif // !__TOWER_H__
 

@@ -12,7 +12,6 @@ ThisLevel* ThisLevel::getInstance()
 
 bool ThisLevel::init(const int& level)
 {  
-    instance = this;
     if (!Scene::init())
     {
         return false;
@@ -123,7 +122,7 @@ bool ThisLevel::init(const int& level)
     back->setPosition(1800, 1020);
     back->setScale(1.6f);
     this->addChild(back, 100);
-
+    instance = this;
     return true;
 }
 
@@ -144,7 +143,6 @@ std::string ThisLevel::SelectLevel(const int&level) {
     }
     return "";
 }
-
 
 //更新每时刻的变化
 void ThisLevel::update(float delta)
@@ -218,14 +216,18 @@ void ThisLevel::pauseMenu()
                 button->setEnabled(true);
             }
         }});
-    auto button2 = MenuItemSprite::create(button20, button21, [this](Ref* pSender) {
+    auto button2 = MenuItemSprite::create(button20, button21, [this](Ref* pSender) { 
+        this->unscheduleAllCallbacks();
+        this->stopAllActions();
+        instance = nullptr;
         auto scene = ThisLevel::create(this_level);
-        cleanUp();
         Director::getInstance()->resume();
         Director::getInstance()->replaceScene(scene);
         });
     auto button3 = MenuItemSprite::create(button30, button31, [this](Ref* pSender) {
-        cleanUp();
+        this->unscheduleAllCallbacks();
+        this->stopAllActions();
+        instance = nullptr;
         Director::getInstance()->resume();
         Director::getInstance()->popScene(); });
     pauseMenuButtons = Menu::create(button1, button2, button3, nullptr);
@@ -299,7 +301,7 @@ void ThisLevel::createTower()
     auto leftButton = MenuItemSprite::create(leftSprite, leftSprite,
         [this](Ref* pSender) {
             if (changeMoney(-100)) {
-                towers.emplace(lastPosition, towerNature{ false,Tower::buildTower(1, transform(lastPosition)),2 });
+                towers.emplace(lastPosition, towerNature{ false,BottleTower::create(1,transform(lastPosition)),2 });
                 ToNull();
             }
         });
@@ -307,7 +309,7 @@ void ThisLevel::createTower()
     auto rightButton = MenuItemSprite::create(rightSprite, rightSprite,
         [this](Ref* pSender) {
             if (changeMoney(-160)) {
-                towers.emplace(lastPosition, towerNature{false,Tower::buildTower(3, transform(lastPosition)),3 });
+                towers.emplace(lastPosition, towerNature{ false,StarTower::create(3,transform(lastPosition)),3 });
                 ToNull();
             }
         });
@@ -315,7 +317,7 @@ void ThisLevel::createTower()
     auto topButton = MenuItemSprite::create(topSprite, topSprite,
         [this](Ref* pSender) {
             if (changeMoney(-160)) {
-                towers.emplace(lastPosition,towerNature{false,Tower::buildTower(4, transform(lastPosition)),3 });
+                towers.emplace(lastPosition, towerNature{ false,FanTower::create(4,transform(lastPosition)),3 });
                 ToNull();
             }
         });
@@ -323,7 +325,7 @@ void ThisLevel::createTower()
     auto bottomButton = MenuItemSprite::create(bottomSprite, bottomSprite,
         [this](Ref* pSender) {
             if (changeMoney(-160)) {
-                towers.emplace(lastPosition, towerNature{ false,Tower::buildTower(5, transform(lastPosition)),2 });
+                towers.emplace(lastPosition, towerNature{ false,MagicTower::create(5,transform(lastPosition)),2 });
                 ToNull();
             }
         });
@@ -377,11 +379,11 @@ void ThisLevel::createTowerMenu(Tower* it)
         }});
     levelUp->setScale(1.5f);
     auto remove = MenuItemSprite::create(destory, destory, [this](Ref* pSender) {
-        ThisLevel::changeMoney(price);
-        towers.erase(transform(ThisLevel::it->position));
-        delete ThisLevel::it;
-        ToNull();
-        });
+            ThisLevel::changeMoney(price);
+            towers.erase(transform(ThisLevel::it->position));
+            ThisLevel::it->destoryTower();
+            ToNull();
+          });
     remove->setScale(1.5f);
     levelUp->setPosition(Vec2(float(lastPosition.x * 160) + 80.0f, float(lastPosition.y * 135) + 202.0f));
     remove->setPosition(Vec2(float(lastPosition.x * 160) + 80.0f, float(lastPosition.y * 135) - 67.5f));
@@ -439,13 +441,4 @@ bool ThisLevel::changeMoney(const int num, const bool i)
         moneyNumber->addChild(thisNum);
     } while (count > 0);
     return true;
-}
-
-
-void ThisLevel::cleanUp()
-{
-    for (auto& p : towers) {
-        delete p.second.these;
-    }
-    instance = nullptr;
 }

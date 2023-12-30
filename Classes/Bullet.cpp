@@ -8,16 +8,8 @@
 using namespace cocos2d;
 
 Bullet* Bullet::instance = nullptr;
-
 Resource* Bullet::res = nullptr;
 Resource* TheBullet::res = nullptr;
-Resource* FanBullet::res = nullptr;
-Resource* MagicBullet::res = nullptr;
-int TheBullet::ID = 1;
-int FanBullet::ID = 4;
-int MagicBullet::ID = 5;
-
-
 
 Bullet* Bullet::getInstance()
 {
@@ -52,9 +44,9 @@ void Bullet::setupBullet(Vec2 start, const Vec2& target, const int ID,const int 
 			FanBullet::create(start, final, ID, level);
 			break;
 		case 3:
-			for (float i = 0.0f; i <= 2 * M_PI; i += M_PI_4) {
+			for (float i = 0.0f; i < 2 * M_PI-0.1f; i += M_PI_4) {
 				final = accFinal(start, i, AR);
-				TheBullet::create(start, final, ID, 1);
+				TheBullet::create(start, final, ID, level);
 			}
 			break;
 		case 5:
@@ -91,7 +83,8 @@ bool TheBullet::init(const Vec2& start, const Vec2 & final, const int ID, const 
 { 
 	if (!res)
 		res = Resource::getInstance();
-
+	theID = ID;
+	thelevel = level;
 	auto data = res->getTowerDataById(ID);
 	SoundManager::getInstance()->onEffect(ID);
 	if (!Sprite::initWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName(data->bullet[level][0]))) {
@@ -119,12 +112,11 @@ bool TheBullet::init(const Vec2& start, const Vec2 & final, const int ID, const 
 
 	auto bulletBody = PhysicsBody::createCircle(size.height * SIZE / 2);
 	bulletBody->setDynamic(true);
-	bulletBody->setCategoryBitmask(1);
+	bulletBody->setCategoryBitmask(0x00000001);
 	bulletBody->setCollisionBitmask(0xffffffff);
-	bulletBody->setContactTestBitmask(2);
+	bulletBody->setContactTestBitmask(0x10000000);
 	this->setPhysicsBody(bulletBody);
-	bulletBody->setTag(data->ATK[level]);
-	bulletBody->setName("1");
+	theATK = data->ATK[level];
 
 	this->setScale(SIZE);
 	this->setRotation(-CC_RADIANS_TO_DEGREES(atan2(final.y - start.y, final.x - start.x)));
@@ -133,7 +125,8 @@ bool TheBullet::init(const Vec2& start, const Vec2 & final, const int ID, const 
 
 
 	auto contactListener = EventListenerPhysicsContact::create();
-	contactListener->onContactBegin = CC_CALLBACK_1(TheBullet::onContactBegin, this);
+	contactListener->onContactBegin = [this](PhysicsContact& contact) -> bool {
+		                                         return onContactBegin(contact); };
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
 
 	return true;
@@ -144,17 +137,22 @@ bool TheBullet::onContactBegin(PhysicsContact& contact)
 	auto bodyA=contact.getShapeA()->getBody();
 	auto bodyB = contact.getShapeB()->getBody();
 	if (bodyA->getCollisionBitmask() & bodyB->getCollisionBitmask()) {
-		bodyA->getNode()->runAction(RemoveSelf::create());
-		Effect::create(bodyA->getNode()->getPosition(), ID);
+		auto spriteA = dynamic_cast<TheBullet*>(bodyA->getNode());
+		if (spriteA) {
+			if (spriteA->theID != 4)
+				bodyA->getNode()->runAction(RemoveSelf::create());
+			Effect::create(spriteA->getPosition(), spriteA->theID);
+		}
 	}
-	return false;
+	return true;
 }
 
 bool FanBullet::init(const Vec2& start, const Vec2 & final, const int ID, const int level)
 {
 	if (!res)
 		res = Resource::getInstance();
-
+	theID = ID;
+	thelevel = level;
 	SoundManager::getInstance()->onEffect(ID);
 	auto data = res->getTowerDataById(ID);
 
@@ -174,16 +172,16 @@ bool FanBullet::init(const Vec2& start, const Vec2 & final, const int ID, const 
 
 
 	auto bulletBody = PhysicsBody::createCircle(size.height/2);
-	bulletBody->setCategoryBitmask(1);
+	bulletBody->setCategoryBitmask(0x00000010);
 	bulletBody->setCollisionBitmask(0xffffffff);
-	bulletBody->setContactTestBitmask(2);
+	bulletBody->setContactTestBitmask(0x10000000);
 	this->setPhysicsBody(bulletBody);
 	bulletBody->setDynamic(true);
-	bulletBody->setTag(data->ATK[level]);
-	bulletBody->setName("4");
+	theATK = data->ATK[level];
 
 	auto contactListener = EventListenerPhysicsContact::create();
-	contactListener->onContactBegin = CC_CALLBACK_1(FanBullet::onContactBegin, this);
+	contactListener->onContactBegin = [this](PhysicsContact& contact) -> bool {
+		                               return onContactBegin(contact); };
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
 
 	this->setScale(SIZE);
@@ -192,22 +190,12 @@ bool FanBullet::init(const Vec2& start, const Vec2 & final, const int ID, const 
 	return true;
 }
 
-bool FanBullet::onContactBegin(PhysicsContact& contact)
-{
-	auto bodyA = contact.getShapeA()->getBody();
-	auto bodyB = contact.getShapeB()->getBody();
-
-	if (bodyA->getCollisionBitmask() & bodyB->getCollisionBitmask()) {
-		Effect::create(bodyA->getNode()->getPosition(), ID);
-	}
-	return false;
-}
-
 bool MagicBullet::init(const Vec2& start, const Vec2 & final, const int ID, const int level)
 {
 	if (!res)
 		res = Resource::getInstance();
-
+	theID = ID;
+	thelevel = level;
 	SoundManager::getInstance()->onEffect(ID);
 	auto data = res->getTowerDataById(ID);
 
@@ -230,34 +218,23 @@ bool MagicBullet::init(const Vec2& start, const Vec2 & final, const int ID, cons
 	Director::getInstance()->getRunningScene()->addChild(node,55);
 
 	auto bulletBody = PhysicsBody::createCircle(10);
-	bulletBody->setCategoryBitmask(1);
+	bulletBody->setCategoryBitmask(0x00000100);
 	bulletBody->setCollisionBitmask(0xffffffff);
-	bulletBody->setContactTestBitmask(2);
+	bulletBody->setContactTestBitmask(0x10000000);
 	bulletBody->setDynamic(true);
 	this->setPhysicsBody(bulletBody);
-	bulletBody->setTag(data->ATK[level]);
-	bulletBody->setName("1");
+	theATK=data->ATK[level];
 
 	auto delay = DelayTime::create(0.1f);
 	auto se = Sequence::create(delay, RemoveSelf::create(), nullptr);
 	this->runAction(se);
 
 	auto contactListener = EventListenerPhysicsContact::create();
-	contactListener->onContactBegin = CC_CALLBACK_1(MagicBullet::onContactBegin, this);
+	contactListener->onContactBegin = [this](PhysicsContact& contact) -> bool {
+		                                       return onContactBegin(contact); };
 	Director::getInstance()->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
 
 	this->setPosition(final);
 	Director::getInstance()->getRunningScene()->addChild(this, 45);
 	return true;
-}
-
-bool MagicBullet::onContactBegin(PhysicsContact& contact)
-{
-	auto bodyA = contact.getShapeA()->getBody();
-	auto bodyB = contact.getShapeB()->getBody();
-	if (bodyA->getCollisionBitmask() & bodyB->getCollisionBitmask()) {
-		bodyA->getNode()->runAction(RemoveSelf::create());
-		Effect::create(bodyA->getNode()->getPosition(), ID);
-	}
-	return false;
 }
