@@ -57,12 +57,6 @@ bool ThisLevel::init(const int& level)
     sp->setScale(WinSize.width / spritesize.width, WinSize.height / spritesize.height); // 设置初始缩放
     this->addChild(sp, -10, 1);
 
-<<<<<<< Updated upstream
-
-  
-
-=======
->>>>>>> Stashed changes
     // 初始化按钮精灵
     auto buttonNormal = Sprite::create("../Resources/Grid.png");
     auto buttonPressed = Sprite::create("../Resources/left0.png");
@@ -124,10 +118,6 @@ bool ThisLevel::init(const int& level)
     back->setScale(1.6f);
     this->addChild(back, 100);
     instance = this;
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
     //建立萝卜菜单
     auto radish = Radish::create();
     this->addChild(radish, 100);

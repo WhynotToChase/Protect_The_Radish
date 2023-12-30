@@ -27,7 +27,6 @@ bool Radish::init() {
 			if (blood == 10) {
 				this_music->onEffect(11);
 				playAnimation();
-				takeDamage(1);
 			}
 		});
 	menu = Menu::create(MyRadishMenu, nullptr);
