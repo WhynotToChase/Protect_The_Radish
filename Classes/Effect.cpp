@@ -2,20 +2,15 @@
 
 using namespace cocos2d;
 
-bool Effect::init(int num, const Vec2& position)
+bool Effect::init(const Vec2& position)
 {
     if (!Node::init()) {
         // 处理初始化失败的情况
         return false;
     }
 
-    switch (num) {
-        case CARTTON:
-            createCartton();
-            break;
-        default:
-            return false;
-    }
+    createCartton();
+
     auto animation = Animation::createWithSpriteFrames(frames, 0.1f);
     auto animate = Animate::create(animation);
     auto sequence = Sequence::create(animate, RemoveSelf::create(), nullptr);
