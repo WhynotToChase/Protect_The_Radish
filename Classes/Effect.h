@@ -2,6 +2,7 @@
 #define __EFFECT_H__
 
 #include"cocos2d.h"
+#include "Resource.h"
 
 class Effect : public cocos2d::Node
 {
@@ -11,12 +12,18 @@ private:
 
     void createCartton();
 
-public:
-    virtual bool init(const cocos2d::Vec2& position);
 
-    static Effect* create(const cocos2d::Vec2& position) {
+    void bulletEffect(int ID);
+
+    static Resource* res;
+
+public:
+
+    virtual bool init(const cocos2d::Vec2& position,const int ID=0);
+
+    static Effect* create(const cocos2d::Vec2& position,const int ID=0) {
         Effect* pRet = new(std::nothrow) Effect();
-        if (pRet && pRet->init(position)) {
+        if (pRet && pRet->init(position,ID)) {
             pRet->autorelease();
             return pRet;
         }

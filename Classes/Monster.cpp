@@ -34,14 +34,14 @@ bool Monster::init(int id ,const int& level)
     this->setPosition(res->levelPath[level][0].x * 160.0f + 80.0f, res->levelPath[level][0].y * 135.0f + 105.0f);
     this->setScale(1.5f);
 
-    auto body = cocos2d::PhysicsBody::createBox(this->getContentSize());
+    auto body = cocos2d::PhysicsBody::createBox(Size(60,50));
 
     // 设置碰撞体的类别和掩码
-    body->setCategoryBitmask(0xffffffff);  // 类别掩码
-    body->setCollisionBitmask(0);
-    body->setContactTestBitmask(0);
+    body->setCategoryBitmask(2);  // 类别掩码
+    body->setCollisionBitmask(distributeMask());
+    body->setContactTestBitmask(1);
 
-    // 设置碰撞体为静态
+
     body->setDynamic(true);
 
     // 将碰撞体添加到怪物精灵中
@@ -89,7 +89,7 @@ bool Monster::init(int id ,const int& level)
 
     this->setTag(0);
     this->runAction(finalAction);
-    Director::getInstance()->getRunningScene()->addChild(this);
+    Director::getInstance()->getRunningScene()->addChild(this,40);
     music->onEffect(8);
     return true;
 }
@@ -120,29 +120,23 @@ const std::string Monster::getMonsterMoveImage(const int& id, const int& frameIn
 
 bool Monster::onContactBegin(cocos2d::PhysicsContact& contact)
 {
-    auto spriteA = contact.getShapeA()->getBody()->getNode();
-    auto spriteB = contact.getShapeB()->getBody()->getNode();
-
-    // 判断碰撞的两个物体是否是你关心的物体类型
-    if (spriteA && spriteB) {
-        if (spriteA->getTag() == 0)
-            blood -= spriteB->getTag();
+    auto bodyA = contact.getShapeA()->getBody();
+    auto bodyB = contact.getShapeB()->getBody();
+    if (bodyA->getCollisionBitmask() & bodyB->getCollisionBitmask()) {
+        auto spriteB = dynamic_cast<Monster*>(contact.getShapeB()->getBody()->getNode());
+        if (bodyA->getName() == "4")
+            bodyA->setCollisionBitmask(bodyA->getCollisionBitmask() - bodyB->getCollisionBitmask());
         else
-            blood -= spriteA->getTag();
-
-        if (blood == 0) {
-            this->stopAllActions();
-            Effect::create(this->getPosition());
+            bodyA->setCollisionBitmask(0);
+        spriteB->blood -= bodyA->getTag();
+        if (spriteB->blood <= 0) {
+            Effect::create(spriteB->getPosition());
             auto p = ThisLevel::getInstance();
             p->changeMoney(50);
-            auto it = find(p->monsters.begin(), p->monsters.end(), this);
+            auto it = find(p->monsters.begin(), p->monsters.end(), spriteB);
             p->monsters.erase(it);
-            auto se = Sequence::create(FadeOut::create(0.2f), RemoveSelf::create(), nullptr);
-            this->runAction(se);
+            spriteB->removeFromParentAndCleanup(true);
         }
-        return true;
     }
-
-    // 返回 false 表示中断后续逻辑
     return false;
 }

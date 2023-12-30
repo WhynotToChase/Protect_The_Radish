@@ -4,6 +4,7 @@
 #include "cocos2d.h"
 #include "Resource.h"
 #include "SoundManager.h"
+#include "Effect.h"
 
 class Bullet
 {
@@ -11,12 +12,12 @@ private:
 
     static Bullet* instance;
 
-    Resource* res;
+    static Resource* res;
 
 public:
-
-    Bullet();
     
+    static int distributeMask();
+
     static Bullet* getInstance();
 
     void setupBullet(cocos2d::Vec2 startPosition, const cocos2d::Vec2& targetPosition,const int ID,const int level, const float AR);
@@ -30,7 +31,9 @@ class TheBullet :public cocos2d::Sprite
 {
 public:
 
-    int ID;
+    static int ID;
+
+    static Resource* res;
 
     virtual bool init(const cocos2d::Vec2& start, const cocos2d::Vec2& target, const int ID, const int level);
 
@@ -43,7 +46,7 @@ public:
         }
     };
 
-    virtual bool onContactBegin(cocos2d::PhysicsContact& contact);
+    bool onContactBegin(cocos2d::PhysicsContact& contact);
 };
 
 class FanBullet : public cocos2d::Sprite 
@@ -51,7 +54,9 @@ class FanBullet : public cocos2d::Sprite
 
 public:
 
-    int ID;
+    static int ID;
+
+    static Resource* res;
 
     virtual bool init(const cocos2d::Vec2& start, const cocos2d::Vec2& target, const int ID, const int level);
 
@@ -64,14 +69,16 @@ public:
         }
     };
 
-    virtual bool onContactBegin(cocos2d::PhysicsContact& contact);
+    bool onContactBegin(cocos2d::PhysicsContact& contact);
 };
 
 class MagicBullet : public cocos2d::Sprite 
 {
 
 public:
-    int ID;
+    static int ID;
+
+    static Resource* res;
 
     virtual bool init(const cocos2d::Vec2& start, const cocos2d::Vec2& target, const int ID, const int level);
 
@@ -84,7 +91,7 @@ public:
         }
     };
 
-    virtual bool onContactBegin(cocos2d::PhysicsContact& contact);
+    bool onContactBegin(cocos2d::PhysicsContact& contact);
 
 };
 
