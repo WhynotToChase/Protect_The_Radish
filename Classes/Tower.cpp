@@ -12,28 +12,10 @@ void Tower::setUp()
     res = Resource::getInstance();
 }
 
-Tower* Tower::buildTower(const int ID, const cocos2d::Vec2& position)
+bool Tower::init(const int ID, const cocos2d::Vec2& p)
 {
-    Tower* it=nullptr;
-    switch (ID) {
-        case 1:
-            it = new BottleTower(ID, position);
-            break;
-        case 3:
-            it = new StarTower(ID, position);
-            break;
-        case 4:
-            it = new FanTower(ID, position);
-            break;
-        case 5:
-            it = new MagicTower(ID, position);
-            break;
-    }
-    return it;
-}
-
-Tower::Tower(const int ID, const cocos2d::Vec2& p)
-{
+    if (!Sprite::init())
+        return false;
     Tower::ID = ID;
     level = 1;
     lastTime = -1.0f;
@@ -48,19 +30,20 @@ Tower::Tower(const int ID, const cocos2d::Vec2& p)
     }
     else
         lamp = nullptr;
-    whole = Sprite::create();
     if (ID != 5)
-        whole->addChild(lamp);
-    whole->addChild(body);
-    whole->setPosition(position);
+        this->addChild(lamp);
+    this->addChild(body);
+    this->setPosition(position);
 
-    Director::getInstance()->getRunningScene()->addChild(whole, 50);
+    Director::getInstance()->getRunningScene()->addChild(this, 50);
     Effect::create(position);
+    return true;
 }
 
 void Tower::levelUp()
 {
     if (level < 3) {
+        this->stopAllActions();
         SoundManager::getInstance()->onEffect(7);
         Effect::create(position);
         body->setSpriteFrame(data->action[level + 1][0]);
@@ -68,11 +51,11 @@ void Tower::levelUp()
     }
 }
 
-Tower::~Tower()
+void Tower::destoryTower()
 {
+    this->stopAllActions();
     SoundManager::getInstance()->onEffect(6);
-    auto sequence = Sequence::create(RemoveSelf::create(), nullptr);
-    whole->runAction(sequence);
+    this->removeFromParentAndCleanup(true);
     Effect::create(position);
 }
 
@@ -99,9 +82,9 @@ void BottleTower::attack(const float delat, const Vec2& enemy)
 }
 
 void StarTower::levelUp()
-{
-    lamp->setSpriteFrame(data->lamp[level + 1]);
+{ 
     Tower::levelUp();
+    lamp->setSpriteFrame(data->lamp[level]);
 }
 
 void StarTower::attack(const float delat, const Vec2& enemy)
@@ -125,9 +108,9 @@ void FanTower::attack(const float delat, const Vec2& enemy)
 }
 
 void FanTower::levelUp()
-{
-    lamp->setSpriteFrame(data->lamp[level + 1]);
+{  
     Tower::levelUp();
+    lamp->setSpriteFrame(data->lamp[level]);
 }
 
 void MagicTower::attack(const float delat, const Vec2& enemy)

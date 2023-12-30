@@ -27,18 +27,23 @@ public:
     cocos2d::Vec2 accFinal(cocos2d::Vec2& startPosition,const float angle,const float AR);
 };
 
+
 class TheBullet :public cocos2d::Sprite
 {
 public:
 
-    static int ID;
+    int theID;
+
+    int theATK;
+
+    int thelevel;
 
     static Resource* res;
 
     virtual bool init(const cocos2d::Vec2& start, const cocos2d::Vec2& target, const int ID, const int level);
 
-   static TheBullet* create(const cocos2d::Vec2& startPosition, const cocos2d::Vec2& targetPosition, const int ID, const int level) {
-       TheBullet* pRet = new(std::nothrow) TheBullet(); if (pRet && pRet->init(startPosition, targetPosition, ID, level)) {
+    static TheBullet* create(const cocos2d::Vec2& startPosition, const cocos2d::Vec2& targetPosition, const int ID, const int level) {
+        TheBullet* pRet = new(std::nothrow) TheBullet(); if (pRet && pRet->init(startPosition, targetPosition, ID, level)) {
             pRet->autorelease(); return pRet;
         }
         else {
@@ -49,14 +54,10 @@ public:
     bool onContactBegin(cocos2d::PhysicsContact& contact);
 };
 
-class FanBullet : public cocos2d::Sprite 
+
+class FanBullet : public TheBullet
 {
-
 public:
-
-    static int ID;
-
-    static Resource* res;
 
     virtual bool init(const cocos2d::Vec2& start, const cocos2d::Vec2& target, const int ID, const int level);
 
@@ -68,17 +69,12 @@ public:
             delete pRet; pRet = nullptr; return nullptr;
         }
     };
-
-    bool onContactBegin(cocos2d::PhysicsContact& contact);
 };
 
-class MagicBullet : public cocos2d::Sprite 
+class MagicBullet : public TheBullet
 {
 
 public:
-    static int ID;
-
-    static Resource* res;
 
     virtual bool init(const cocos2d::Vec2& start, const cocos2d::Vec2& target, const int ID, const int level);
 
@@ -90,9 +86,6 @@ public:
             delete pRet; pRet = nullptr; return nullptr;
         }
     };
-
-    bool onContactBegin(cocos2d::PhysicsContact& contact);
-
 };
 
 #endif // !__BULLET_H__

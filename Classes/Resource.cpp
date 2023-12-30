@@ -125,9 +125,11 @@ void Resource::initializeTowerData() {
     lampName[3] = "ID3_84.PNG";
 
     bulletName.clear();
-    bulletName.resize(2);
+    bulletName.resize(4);
     bulletName[0] = {"","","",""};
     bulletName[1] = { "ID3_80.png","ID3_81.png","ID3_82.png","ID3_83.png","ID3_79.PNG" };
+    bulletName[2] = { "ID3_80.png","ID3_81.png","ID3_82.png","ID3_83.png","ID3_79.PNG" };
+    bulletName[3] = { "ID3_80.png","ID3_81.png","ID3_82.png","ID3_83.png","ID3_79.PNG" };
 
     effectName.clear();
     effectName.resize(2);
@@ -165,7 +167,7 @@ void Resource::initializeTowerData() {
     effectName.resize(2);
     effectName[0] = { "ID4_14.PNG" };
     effectName[1] = { "ID4_15.PNG" };
-    towerDataMap.emplace(4,TowerData{ {0, 200, 300, 400}, {0, 1.8f, 1.8f,1.8f}, true, 560.0f, 160, {0, 240, 320,INT_MAX}, {0, 96, 240, 432},
+    towerDataMap.emplace(4,TowerData{ {0, 150, 225, 300}, {0, 1.8f, 1.8f,1.8f}, true, 400.0f, 160, {0, 240, 320,INT_MAX}, {0, 96, 240, 432},
                           attackName,0.5f,lampName,bulletName,0.5f,effectName });
 
     //·ÀÓùËþÊý¾Ý
@@ -388,7 +390,7 @@ void Resource::initializeMonsterData()
 {
     monsterData.resize(5);
     monsterData[0] = {};
-    monsterData[1] = { 1000,50 };
+    monsterData[1] = { 1800,50 };
     monsterData[2] = { 2000,40 };
     monsterData[3] = { 1500,50 };
     monsterData[4] = { 2500,40 };

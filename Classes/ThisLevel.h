@@ -22,7 +22,6 @@ struct towerNature
 class ThisLevel :public cocos2d::Scene 
 {
 private:
-
     static  ThisLevel* instance;
 
     float lastTime;
