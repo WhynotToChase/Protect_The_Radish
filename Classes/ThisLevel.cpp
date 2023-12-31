@@ -19,6 +19,7 @@ bool ThisLevel::init(const int& level)
     this_music = SoundManager::getInstance();
     res = Resource::getInstance();
     this_level = level;
+    time = 0;
     lastTime = 0.0f;
     currentTime = 0.0f;
     currentWave = -1;
@@ -175,11 +176,8 @@ void ThisLevel::update(float delta)
             if (p == finalPoint) {
                 monsters[i]->removeFromParentAndCleanup(true);
                 monsters.erase(monsters.begin() + i);
-                if (radish->takeDamage(1) && isEnd) {
+                if (radish->takeDamage(1)) {
                     this->stopAllActions();
-                    this->unscheduleAllCallbacks();
-                    this->scheduleOnce([this](float t) {
-                        settle(0); }, 3.0f, "1");
                     isEnd = false;
                 }
                 continue;
@@ -192,13 +190,15 @@ void ThisLevel::update(float delta)
             }
             i++;
         }
-        if (currentWave == maxWave - 1 && monsterCount == 0 && monsters.size() == 0 && isEnd) {
+        if (currentWave == maxWave - 1 && monsterCount == 0 && monsters.size() == 0 ) {
             this->stopAllActions();
-            this->unscheduleAllCallbacks();
-            this->scheduleOnce([this](float t) {
-                settle(radish->blood); }, 3.0f, "1");
             isEnd = false;
         }
+    }
+    else {
+        time += delta;
+        if(time>2.0f)
+            settle(radish->blood);
     }
 }
 
@@ -440,7 +440,7 @@ bool ThisLevel::changeMoney(const int num, const bool i)
         return false;
     int count=0;
     if (i) {
-        count=money= 600;
+        count = money = res->levelData[this_level].moneyNum;
     }
     else {
         count = money + num;
@@ -466,30 +466,34 @@ bool ThisLevel::changeMoney(const int num, const bool i)
 
 void ThisLevel::settle(const int hp)
 {
+    instance = nullptr;
+    int a = 0;
 
-    VictoryScene* p;
-    if (hp == 0)
-        p = VictoryScene::create(this_level, 4);
+    if (hp == 0) {
+        a = 4;
+    }
     else if (hp == 10) {
-        p = VictoryScene::create(this_level, 3);
-        res->gameData[this_level] = 3;
-        if (this_level < 10)
+        a = 3;
+        if (this_level < 10 && res->gameData[this_level + 1] < 1)
             res->gameData[this_level + 1] = 4;
+        res->gameData[this_level] = 3;
     }
     else if (hp >= 5) {
-        p = VictoryScene::create(this_level, 2);
+        a = 2;
+        if (this_level < 10 && res->gameData[this_level + 1] < 1)
+            res->gameData[this_level + 1] = 4;
         if (res->gameData[this_level] < 2)
             res->gameData[this_level] = 2;
-        if (this_level < 10)
-            res->gameData[this_level + 1] = 4;
+
     }
     else {
-        p = VictoryScene::create(this_level, 1);
+        a = 1;
+        if (this_level < 10 && res->gameData[this_level + 1] < 1)
+            res->gameData[this_level + 1] = 4;
         if (res->gameData[this_level] == 4)
             res->gameData[this_level] = 1;
-        if (this_level < 10)
-            res->gameData[this_level + 1] = 4;
+
     }
-    instance = nullptr;
+    VictoryScene* p = VictoryScene::create(this_level, a);
     Director::getInstance()->replaceScene(p);
 }

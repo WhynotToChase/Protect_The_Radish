@@ -33,7 +33,7 @@ bool SelectMenu::init()
     Size WinSize = Director::getInstance()->getWinSize();
     
     //先建立一个大背景
-    auto sp = Sprite::create("../Resources/background.png");
+    auto sp = Sprite::create("../Resources/background101.png");
     Size spritesize = sp->getContentSize();
     sp->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
     sp->setScale(WinSize.width/spritesize.width,WinSize.height / spritesize.height); // 设置初始缩放

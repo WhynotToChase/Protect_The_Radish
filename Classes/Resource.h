@@ -9,6 +9,8 @@
 #include <cstdio>
 #include "cocos2d.h"
 
+
+
 // 定义防御塔数据结构
 struct TowerData {
     //攻击力
@@ -110,6 +112,9 @@ public:
 
     std::vector<MonsterData>monsterData;
 
+
+    std::string getSavePath(const int which);
+
 private:
     
     int myGame;
@@ -130,11 +135,7 @@ private:
     
     void setSellPrice();
 
-
-    
     void setLevelData();
-
-    std::string getSavePath(const int which);
     
     void setLevelPath();
 

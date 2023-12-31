@@ -373,7 +373,7 @@ void Resource::setLevelPath()
 void Resource::setLevelData()
 {
     levelData.resize(maxLevel + 1);
-    levelData[1] = { 1,5,600,{{6.0f,1,10,2.5f},{6.0f,2,20,2.5f},{6.0f,3,20,2.5f},{6.0f,4,20,2.5f},{6.0f,4,20,1.5f} } };
+    levelData[1] = { 1,1,5000,{{6.0f,1,10,2.5f}} };
     levelData[2] = { 1,5,600,{{6.0f,1,10,2.5f},{6.0f,2,20,2.5f},{6.0f,3,20,2.5f},{6.0f,4,20,2.5f},{6.0f,4,20,1.5f} } };
     levelData[3] = { 1,5,600,{{6.0f,1,10,2.5f},{6.0f,2,20,2.5f},{6.0f,3,20,2.5f},{6.0f,4,20,2.5f},{6.0f,4,20,1.5f} } };
     levelData[4] = { 1,5,600,{{6.0f,1,10,2.5f},{6.0f,2,20,2.5f},{6.0f,3,20,2.5f},{6.0f,4,20,2.5f},{6.0f,4,20,1.5f} } };
@@ -414,7 +414,13 @@ bool Resource::saveGame()
 
 std::string Resource::getSavePath(const int which)
 {
-    std::string path = "../saveData/game";
+#ifdef RELEASE
+    std::string path = "Resources/game";
+#endif // !RELEASE
+#ifndef RELEASE
+    std::string path = "../Resources/game";
+#endif // !RELEASE
+
     switch (which) {
         case 1:
             path += "One";

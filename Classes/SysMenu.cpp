@@ -2,6 +2,7 @@
 #include "SysMenu.h"
 #include <iostream>
 #include <fstream>
+#include "Resource.h"
 
 using namespace cocos2d;
 
@@ -167,7 +168,7 @@ void SysMenu::OnStart(Ref* pSender)
 
 
 
-    fstream saveData("../saveData/gameOne.txt", std::ios::in | std::ios::out);
+    fstream saveData(Resource::getInstance()->getSavePath(1), std::ios::in | std::ios::out);
     if (saveData.is_open()) {
         auto Title1Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_9_1.png"));
         auto Title1Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_9_2.png"));
@@ -191,7 +192,7 @@ void SysMenu::OnStart(Ref* pSender)
     saveData.close();
 
 
-    saveData.open("../saveData/gameTwo.txt", std::ios::in | std::ios::out);
+    saveData.open(Resource::getInstance()->getSavePath(2), std::ios::in | std::ios::out);
     auto BG2Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_6_1.png"));
     auto BG2Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_6_2.png"));
     if (saveData.is_open()) {
@@ -219,7 +220,7 @@ void SysMenu::OnStart(Ref* pSender)
 
     auto BG3Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_6_1.png"));
     auto BG3Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_6_2.png"));
-    saveData.open("../saveData/gameThree.txt", std::ios::in | std::ios::out);
+    saveData.open(Resource::getInstance()->getSavePath(3), std::ios::in | std::ios::out);
     if (saveData.is_open()) {
         auto Title3Normal = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_11_1.png"));
         auto Title3Selected = Sprite::createWithSpriteFrame(SpriteFrameCache::getInstance()->getSpriteFrameByName("sys_menu_11_2.png"));

@@ -8,11 +8,11 @@ class VictoryScene : public cocos2d::Scene
 {
 public:
 
-    virtual bool init(const int& level, const int& result);
+    virtual bool init(const int level, const int result);
 
     void onReturnButtonClick(cocos2d::Ref* sender);
 
-    static VictoryScene* create(const int& level, const int& result) {
+    static VictoryScene* create(const int level, const int result) {
         VictoryScene* pRet = new(std::nothrow) VictoryScene(); if (pRet && pRet->init( level, result)) {
             pRet->autorelease(); return pRet;
         }

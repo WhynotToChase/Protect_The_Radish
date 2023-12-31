@@ -36,6 +36,7 @@ private:
     Radish* radish;
 
     bool isEnd = true;
+    float time = 0;
 
     void settle(const int hp);
 

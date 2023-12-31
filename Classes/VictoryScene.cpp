@@ -3,22 +3,22 @@
 using namespace cocos2d;
 
 
-bool VictoryScene::init(const int&level,const int&result )
+bool VictoryScene::init(const int level,const int result )
 {
     if (!Scene::init())
     {
         return false;
     }
-    music = SoundManager::getInstance();
+   music = SoundManager::getInstance();
 
-    Size WinSize = Director::getInstance()->getWinSize();
-    auto sp = Sprite::create("../Resources/MonsterNest_0.PNG");
-    Size spritesize = sp->getContentSize();
-    sp->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
-    sp->setScale(WinSize.width / spritesize.width, WinSize.height / spritesize.height); // 设置初始缩放
-    this->addChild(sp, -10, 1);
+     Size WinSize = Director::getInstance()->getWinSize();
+     auto sp = Sprite::create("../Resources/background101.png");
+     Size spritesize = sp->getContentSize();
+     sp->setAnchorPoint(Vec2::ANCHOR_BOTTOM_LEFT);
+     sp->setScale(WinSize.width/ spritesize.width,WinSize.height/ spritesize.height); // 设置初始缩放
+      this->addChild(sp, -10);
 
-    Sprite* background;
+     Sprite* background;
     Sprite* sprite;
     ScaleTo* scaleTo;
     if (result != 4) {
@@ -35,7 +35,7 @@ bool VictoryScene::init(const int&level,const int&result )
         music->onEffect(10);
     }
     else {
-        music->onEffect(9);
+         music->onEffect(9);
         background = Sprite::create("../Resources/defeat.png");
         sprite = Sprite::create("../Resources/RR.png");
     }
