@@ -4,6 +4,8 @@
 #include <fstream>
 #include <cstdio>
 
+//#define RELEASE
+
 using namespace cocos2d;
 
 SoundManager* SoundManager::instance = nullptr;
@@ -50,7 +52,14 @@ const std::vector<float> SoundManager::allEffectsLoud = { 1.5f,  1.5f,  3.0f, 1.
                                                                  1.5f,  1.5f, 1.5f ,1.5f, 0.5f };
 SoundManager::SoundManager() {
     // 在构造函数中初始化音频引擎
-    std::fstream in("../saveData/settings.txt", std::ios::in);
+#ifdef RELEASE
+    std::fstream in("Resources/settings.txt", std::ios::in);
+#endif // !RELEASE
+#ifndef RELEASE
+    std::fstream in("../Resources/settings.txt", std::ios::in);
+#endif // !RELEASE
+
+
 
     if (!in.is_open()) {
         Sounds = true;
@@ -91,7 +100,12 @@ void SoundManager::onEffect(const int ID)
 
 void SoundManager::saveSetting()
 {
-    std::fstream outFile("../saveData/settings.txt", std::ios::out | std::ios::trunc);
+#ifdef RELEASE
+    std::fstream outFile("Resources/settings.txt", std::ios::out | std::ios::trunc);
+#endif // !RELEASE
+#ifndef RELEASE
+    std::fstream outFile("../Resources/settings.txt", std::ios::out | std::ios::trunc);
+#endif // !RELEASE
     outFile << Sounds << std::endl << Effects;
     outFile.close();
 }
